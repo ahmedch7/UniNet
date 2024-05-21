@@ -2,7 +2,8 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
-
+import salleRoutes from './routes/salle.route.js';
+import examenRoutes from './routes/examen.route.js';
 
 const app = express();
 const databaseName = "uninet";
@@ -25,6 +26,9 @@ app.use(express.static("public"));
 
 const PORT = process.env.PORT || 9090;
 const hostname = "127.0.0.1";
+
+app.use('/salles', salleRoutes);
+app.use('/examens', examenRoutes);
 
 
 
