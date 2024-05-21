@@ -2,10 +2,16 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
+import niveauRouter from "./routes/niveauEtude.route.js";
+import coursRouter from "./routes/cours.route.js";
+import classeRouter from "./routes/classe.route.js";
 
 
 const app = express();
 const databaseName = "uninet";
+
+
+
 
 mongoose.connect(`mongodb://localhost:27017/${databaseName}`, { family: 4 })
     .then(() => {
@@ -26,7 +32,9 @@ app.use(express.static("public"));
 const PORT = process.env.PORT || 9090;
 const hostname = "127.0.0.1";
 
-
+app.use("/niveauEtude", niveauRouter );
+app.use("/cours", coursRouter );
+app.use("/classe", classeRouter );
 
 
 
