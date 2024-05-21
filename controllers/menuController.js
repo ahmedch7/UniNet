@@ -1,57 +1,53 @@
-const Menu = require('../models/Menu');
+import Menu from '../models/Menu.js';
+import { validationResult } from 'express-validator';
 
-exports.getMenus = async (req, res) => {
-    try {
-        const menus = await Menu.find().populate('restaurant');
-        res.json(menus);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const getMenus = async (req, res) => {
+  try {
+    const menus = await Menu.find();
+    res.status(200).json(menus);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting menus", error });
+  }
 };
 
-exports.createMenu = async (req, res) => {
-    const { date, description, image, restaurant } = req.body;
+export const createMenu = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    try {
-        const newMenu = new Menu({
-            date,
-            description,
-            image,
-            restaurant
-        });
-
-        const savedMenu = await newMenu.save();
-        res.status(201).json(savedMenu);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  const { title, description } = req.body;
+  try {
+    const newMenu = new Menu({ title, description });
+    await newMenu.save();
+    res.status(201).json({ message: "Menu created successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating menu", error });
+  }
 };
 
-exports.updateMenu = async (req, res) => {
-    const { id } = req.params;
-    const { date, description, image, restaurant } = req.body;
+export const updateMenu = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    try {
-        const updatedMenu = await Menu.findByIdAndUpdate(id, {
-            date,
-            description,
-            image,
-            restaurant
-        }, { new: true });
-
-        res.json(updatedMenu);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  const { id } = req.params;
+  const { title, description } = req.body;
+  try {
+    const updatedMenu = await Menu.findByIdAndUpdate(id, { title, description }, { new: true });
+    res.status(200).json({ message: "Menu updated successfully", updatedMenu });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating menu", error });
+  }
 };
 
-exports.deleteMenu = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        await Menu.findByIdAndDelete(id);
-        res.json({ message: 'Menu deleted' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const deleteMenu = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Menu.findByIdAndDelete(id);
+    res.status(200).json({ message: "Menu deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting menu", error });
+  }
 };

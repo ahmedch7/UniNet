@@ -1,49 +1,43 @@
-const Reservation = require('../models/Reservation');
-const Foyer = require('../models/Foyer');
+import Reservation from '../models/Reservation.js';
+import { validationResult } from 'express-validator';
 
-exports.getReservations = async (req, res) => {
-    try {
-        const reservations = await Reservation.find().populate('étudiant').populate('foyer');
-        res.json(reservations);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const getReservations = async (req, res) => {
+  try {
+    const reservations = await Reservation.find();
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting reservations", error });
+  }
 };
 
-exports.createReservation = async (req, res) => {
-    const { dateDebut, dateFin, étudiant, foyer } = req.body;
+export const createReservation = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    try {
-        const foyerData = await Foyer.findById(foyer);
-        if (foyerData.nombrePlacesDisponibles < 1) {
-            return res.status(400).json({ message: 'No available places in the foyer' });
-        }
-
-        const newReservation = new Reservation({
-            dateDebut,
-            dateFin,
-            étudiant,
-            foyer
-        });
-
-        foyerData.nombrePlacesDisponibles -= 1;
-        await foyerData.save();
-
-        const savedReservation = await newReservation.save();
-        res.status(201).json(savedReservation);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  const { customerName, date } = req.body;
+  try {
+    const newReservation = new Reservation({ customerName, date });
+    await newReservation.save();
+    res.status(201).json({ message: "Reservation created successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating reservation", error });
+  }
 };
 
-exports.updateReservationStatus = async (req, res) => {
-    const { id } = req.params;
-    const { statut } = req.body;
+export const updateReservationStatus = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
 
-    try {
-        const updatedReservation = await Reservation.findByIdAndUpdate(id, { statut }, { new: true });
-        res.json(updatedReservation);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const updatedReservation = await Reservation.findByIdAndUpdate(id, { status }, { new: true });
+    res.status(200).json({ message: "Reservation status updated successfully", updatedReservation });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating reservation status", error });
+  }
 };

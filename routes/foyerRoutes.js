@@ -1,9 +1,10 @@
-const express = require('express');
-const { getFoyers, createFoyer, getAvailablePlaces } = require('../controllers/foyerController');
+import express from 'express';
+import { getFoyers, createFoyer, getAvailablePlaces } from '../controllers/foyerController.js';
+
 const router = express.Router();
 
 router.get('/', getFoyers);
 router.post('/', createFoyer);
 router.get('/available', getAvailablePlaces);
 
-module.exports = router;
+export default router;

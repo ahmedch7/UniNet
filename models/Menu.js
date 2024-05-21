@@ -1,11 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const menuSchema = new mongoose.Schema({
-    date: { type: Date, required: true },
-    description: { type: String, required: true },
-    image: { type: String },
-    restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: true }
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 const Menu = mongoose.model('Menu', menuSchema);
-module.exports = Menu;
+
+export default Menu;

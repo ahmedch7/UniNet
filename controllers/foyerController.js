@@ -1,41 +1,30 @@
-const Foyer = require('../models/Foyer');
-const Reservation = require('../models/Reservation');
+import Foyer from '../models/Foyer.js';
 
-exports.getFoyers = async (req, res) => {
-    try {
-        const foyers = await Foyer.find();
-        res.json(foyers);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const getFoyers = async (req, res) => {
+  try {
+    const foyers = await Foyer.find();
+    res.status(200).json(foyers);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting foyers", error });
+  }
 };
 
-exports.createFoyer = async (req, res) => {
-    const { nom, nombrePlacesMax } = req.body;
-
-    try {
-        const newFoyer = new Foyer({
-            nom,
-            nombrePlacesMax,
-            nombrePlacesDisponibles: nombrePlacesMax
-        });
-
-        const savedFoyer = await newFoyer.save();
-        res.status(201).json(savedFoyer);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const createFoyer = async (req, res) => {
+  const { name, address, capacity } = req.body;
+  try {
+    const newFoyer = new Foyer({ name, address, capacity });
+    await newFoyer.save();
+    res.status(201).json(newFoyer);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating foyer", error });
+  }
 };
 
-exports.getAvailablePlaces = async (req, res) => {
-    try {
-        const foyers = await Foyer.find();
-        const availablePlaces = foyers.map(foyer => ({
-            nom: foyer.nom,
-            nombrePlacesDisponibles: foyer.nombrePlacesDisponibles
-        }));
-        res.json(availablePlaces);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+export const getAvailablePlaces = async (req, res) => {
+  try {
+    const foyers = await Foyer.find({ available: true });
+    res.status(200).json(foyers);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting available places", error });
+  }
 };

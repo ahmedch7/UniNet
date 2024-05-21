@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const foyerSchema = new mongoose.Schema({
-    nom: { type: String, required: true },
-    nombrePlacesMax: { type: Number, required: true },
-    nombrePlacesDisponibles: { type: Number, required: true }
+  name: { type: String, required: true },
+  address: { type: String, required: false },
+  capacity: { type: Number, required: false },
+  available: { type: Boolean, default: false }
 });
 
 const Foyer = mongoose.model('Foyer', foyerSchema);
-module.exports = Foyer;
+
+export default Foyer;
