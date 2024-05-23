@@ -1,11 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const universityController = require('../controllers/universityController');
+import { Router } from "express";
+import { create, getUniversityById, getUniversities, updateUniversity,deleteUniversity } from "../controllers/university.controller.js";
+import { body } from "express-validator";
 
-router.post('/', universityController.createUniversity);
-router.get('/', universityController.getUniversities);
-router.get('/:id', universityController.getUniversityById);
-router.put('/:id', universityController.updateUniversity);
-router.delete('/:id', universityController.deleteUniversity);
+const router = Router();
 
-module.exports = router;
+
+router.post("/", create);
+
+router.get("/", getUniversities)
+router.get("/:id", getUniversityById)
+router.patch("/:id", updateUniversity)
+router.delete("/:id", deleteUniversity)
+
+
+export default router;

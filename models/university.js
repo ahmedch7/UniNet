@@ -1,5 +1,4 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import {Schema , model} from "mongoose";
 
 // Définition du schéma pour l'université
 const universitySchema = new Schema({
@@ -9,6 +8,7 @@ const universitySchema = new Schema({
   telephoneContact: { type: String, required: true },
 });
 
-const University = mongoose.model("University", universitySchema);
+export default model("University", universitySchema);
 
-module.exports = University;
+
+

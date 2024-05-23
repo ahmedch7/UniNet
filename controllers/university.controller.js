@@ -1,17 +1,28 @@
-const University = require('../models/university');
+import University from "../models/University.js";
 
-exports.createUniversity = async (req, res) => {
+export const create = async (req, res) => {
   try {
-    const { nom, adresse, emailContact, telephoneContact } = req.body;
-    const university = new University({ nom, adresse, emailContact, telephoneContact });
+    
+    const university = new University(req.body);
     await university.save();
     res.status(201).json(university);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+// try {
+//   const task = new Task(req.body);
+  
 
-exports.getUniversities = async (req, res) => {
+//   await task.save();
+//   res.status(201).json(task)
+// } catch (e) {
+//   console.log(e);
+//   res.status(500).end("Internal Server Error")
+// }
+
+
+export const getUniversities = async (req, res) => {
   try {
     const universities = await University.find();
     res.status(200).json(universities);
@@ -20,7 +31,7 @@ exports.getUniversities = async (req, res) => {
   }
 };
 
-exports.getUniversityById = async (req, res) => {
+export const getUniversityById = async (req, res) => {
   try {
     const university = await University.findById(req.params.id);
     if (!university) return res.status(404).json({ error: 'University not found' });
@@ -30,7 +41,7 @@ exports.getUniversityById = async (req, res) => {
   }
 };
 
-exports.updateUniversity = async (req, res) => {
+export const updateUniversity = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedUniversity = await University.findByIdAndUpdate(id, req.body, { new: true });
@@ -41,7 +52,7 @@ exports.updateUniversity = async (req, res) => {
   }
 };
 
-exports.deleteUniversity = async (req, res) => {
+export const deleteUniversity = async (req, res) => {
   try {
     const { id } = req.params;
     const deletedUniversity = await University.findByIdAndDelete(id);
