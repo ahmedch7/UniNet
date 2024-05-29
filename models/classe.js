@@ -2,14 +2,25 @@ import {Schema , model, Types} from "mongoose";
 
 const classeSchema = new Schema({
 
-    NomClasse: String,
-    AnneUniversitaire: String,
-    
+    NomClasse: { 
+        type: String, 
+        required: true 
+    },
+    AnneUniversitaire: {
+        type: String,
+        required: true
+    },
     NiveauEducatifId: {
         type: Types.ObjectId,
-        ref: "niveauEducatif"
-    }
-    
+        ref: "niveauEducatif",
+        required: true 
+    },
+    StudentId: [{ 
+        type: Types.ObjectId, 
+        ref: 'student',
+        required: true 
+    }]
+
 })
 
 export default model("classe", classeSchema )

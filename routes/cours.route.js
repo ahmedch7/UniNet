@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { body } from "express-validator";
 import { createCours, getCours, getCoursById, updateCours, deleteCours } from "../controllers/cours.controllers.js";
 
 const router = Router();
 
-router.post("/", createCours)
+router.post("/create", createCours)
 
-router.get("/", getCours )
+router.get("/get", getCours )
 
 router.get("/:id", getCoursById)
 

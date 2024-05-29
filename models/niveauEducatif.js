@@ -1,8 +1,12 @@
-import {Schema , model} from "mongoose";
+import {Schema, model } from "mongoose";
+
 
 const niveauEducatifScheme = new Schema({
 
-    NomNiveau: String,
+    NomNiveau: { 
+        type: String, 
+        required: true 
+    }
     
 })
 

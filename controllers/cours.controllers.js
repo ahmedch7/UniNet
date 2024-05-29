@@ -1,14 +1,20 @@
 import Cours from "../models/cours.js";
+import { validationResult } from "express-validator";
 
 export const createCours = async (req, res) => {
-    try {
-      const { NomCours } = req.body;
-      const cours = new Cours({ NomCours });
-      await cours.save();
-      res.status(201).json(cours);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+  if(!validationResult(req).isEmpty()){
+    return res.status(400).json({
+        validationError: validationResult(req).array()
+    });
+  }
+  try {
+    const cours = new Cours(req.body)
+    await cours.save();
+    res.status(201).json(cours);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+     
 };
 
 export const getCours = async (req, res) => {
@@ -31,8 +37,10 @@ export const getCoursById = async (req, res) => {
   };
 
 export const updateCours = async (req, res) => {
+  
+  const { id } = req.params;
     try {
-      const { id } = req.params;
+      
       const updatedCours = await Cours.findByIdAndUpdate(id, req.body, { new: true });
       if (!updatedCours) return res.status(404).json({ error: 'cours not found' });
       res.status(200).json(updatedCours);

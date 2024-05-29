@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { body } from "express-validator";
-import { createClasse, getClasse, getClasseById, updateClasse, deleteClasse } from "../controllers/task.js";
+import { createClasse, getClasse, getClasseById, updateClasse, deleteClasse, getClassesByNiveau  } from "../controllers/classe.controllers.js";
 
 const router = Router();
 
-router.post("/", createClasse)
+router.post("/create", createClasse)
 
-router.get("/", getClasse )
+router.get("/get", getClasse )
 
 router.get("/:id", getClasseById)
+
+router.get("/classes/:id", getClassesByNiveau)
 
 router.patch("/:id", updateClasse)
 
