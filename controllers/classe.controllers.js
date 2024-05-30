@@ -1,4 +1,5 @@
 import Classe from "../models/classe.js"
+import Student from "../models/student.js";
 import { validationResult } from "express-validator";
 
 
@@ -64,14 +65,95 @@ export const getClasseById = async (req, res) => {
     }
   };
 
+
+
 export const getClassesByNiveau = async (req, res) => {
-    try {
-        const classes = await Classe.find({ NiveauEducatifId: req.params.id } ).exec();
-        return classes;
-    } catch (error) {
-        console.error("Error fetching classes:", error);
-        throw error;  
+  try {
+    const classes = await Classe.find({ NiveauEducatifId: req.params.id });
+    if (!classes.length) {
+      return res.status(404).json({ message: 'No classes found for this NiveauEducatif' });
     }
+    res.status(200).json(classes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-  
+export const getStudentsByClasse = async (req, res) => {
+  try {
+    const classe = await Classe.findById(req.params.id).populate('StudentId');
+    if (!classe) {
+      return res.status(404).json({ message: 'Classe not found' });
+    }
+    const students = classe.StudentId;
+    res.status(200).json(students);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+export const assignStudentsToClass = async (req, res) => {
+  const { studentIds } = req.body;
+  const { id } = req.params;
+
+  // Validate input
+  if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+    return res.status(400).json({ message: 'Invalid student IDs' });
+  }
+
+  try {
+    // Verify that all student IDs are valid and exist in the database
+    const validStudents = await Student.find({ '_id': { $in: studentIds } });
+    if (validStudents.length !== studentIds.length) {
+      return res.status(400).json({ message: 'One or more student IDs are invalid' });
+    }
+
+    // Find students already assigned to any class
+    const existingClasses = await Classe.find({ 'StudentId': { $in: studentIds } });
+    const existingStudentIds = new Set();
+    existingClasses.forEach(classe => {
+      classe.StudentId.forEach(studentId => existingStudentIds.add(studentId.toString()));
+    });
+
+    // Filter out students who are already assigned to a class
+    const newStudentIds = studentIds.filter(studentId => !existingStudentIds.has(studentId));
+
+    if (newStudentIds.length === 0) {
+      return res.status(400).json({ message: 'All students are already assigned to a class' });
+    }
+
+    // Assign students to the class
+    const updatedClass = await Classe.findByIdAndUpdate(
+      id,
+      { $addToSet: { StudentId: { $each: newStudentIds } } }, // $addToSet to avoid duplicates
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(200).json(updatedClass);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getUnassignedStudents = async (req, res) => {
+  try {
+    // Find all students
+    const allStudents = await Student.find({}, '_id');
+    
+    // Find all assigned student IDs
+    const assignedStudents = await Classe.distinct('StudentId');
+    
+    // Filter unassigned students
+    const unassignedStudents = allStudents.filter(student => !assignedStudents.includes(student._id));
+
+    res.status(200).json(unassignedStudents);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+

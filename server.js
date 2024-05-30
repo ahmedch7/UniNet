@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import niveauRouter from "./routes/niveauEtude.route.js";
 import coursRouter from "./routes/cours.route.js";
 import classeRouter from "./routes/classe.route.js";
+import studentRouter from "./routes/student.route.js"
 
 
 const app = express();
@@ -35,6 +36,7 @@ const hostname = "127.0.0.1";
 app.use("/niveauEtude", niveauRouter );
 app.use("/cours", coursRouter );
 app.use("/classe", classeRouter );
+app.use("/student", studentRouter );
 
 
 
