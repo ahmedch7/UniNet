@@ -28,9 +28,9 @@ app.use(express.static("public"));
 app.use('/api/users', userRoutes);
 app.use('/api/foyers', foyerRoutes);
 app.use('/api/menus', menuRoutes);
-app.use('/api/reservations', reservationRoutes);
+app.use('/api/reservations', reservationRoutes); 
 app.use('/api/comments', commentRoutes);  
-app.use('/api/restaurant', restaurantRoutes);  
+app.use('/api/restaurants', restaurantRoutes);  
 app.use('/api/rooms', roomRoutes);
  
 

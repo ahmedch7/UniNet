@@ -1,20 +1,24 @@
 import express from 'express';
 import { body, param } from 'express-validator';
-import { getReservations, createReservation, updateReservationStatus } from '../controllers/reservationController.js';
+import {
+  createReservation,
+  getReservations,
+  getReservationById,
+  updateReservation,
+  deleteReservation
+} from '../controllers/reservationController.js';
 
 const router = express.Router();
 
-const validateReservation = [
-  body('customerName').isLength({ min: 3 }).withMessage('Customer name must be at least 3 characters long'),
-  body('date').isISO8601().withMessage('Invalid date format')
+ const validateReservation = [
+  body('userId').isMongoId().withMessage('Invalid user ID'),
+  body('roomId').isMongoId().withMessage('Invalid room ID')
 ];
 
-const validateReservationId = [
-  param('id').isMongoId().withMessage('Invalid ID format')
-];
-
-router.get('/', getReservations);
+ router.get('/', getReservations);
+router.get('/:id', param('id').isMongoId().withMessage('Invalid ID format'), getReservationById);
 router.post('/', validateReservation, createReservation);
-router.put('/:id', validateReservationId, updateReservationStatus);
+router.put('/:id', param('id').isMongoId().withMessage('Invalid ID format'), validateReservation, updateReservation);
+router.delete('/:id', param('id').isMongoId().withMessage('Invalid ID format'), deleteReservation);
 
 export default router;
