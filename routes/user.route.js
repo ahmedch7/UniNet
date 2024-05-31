@@ -1,13 +1,20 @@
 import { Router } from "express";
-import { createUser, getUsers, getUserById, updateUser,deleteUser } from "../controllers/user.controller.js";
+import {
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getUsersByRole
+} from "../controllers/user.controller.js";
+import auth from "../middlewares/auth.js";
+import roleAuth from "../middlewares/roleAuth.js";
+import checkTokenBlacklist from '../middlewares/checkTokenBlacklist.js';
 
 const router = Router();
 
-
-router.post("/",createUser);
-
-router.get("/", getUsers)
-router.get("/:id", getUserById)
-router.patch("/:id",updateUser)
-router.delete("/:id",deleteUser)
+router.get("/", auth,checkTokenBlacklist, roleAuth(["admin"]), getUsers);
+router.get("/:id", auth, roleAuth(["admin", "responsable"]), getUserById);
+router.get('/role/:role',auth,roleAuth(["admin", "responsable"]), getUsersByRole);
+router.patch("/:id", auth, updateUser);
+router.delete("/:id", auth, roleAuth(["admin", "responsable"]), deleteUser);
 export default router;
