@@ -7,7 +7,7 @@ const niveauEducatifScheme = new Schema({
         type: String, 
         required: true 
     }
-    
+  
 })
 
 export default model("niveauEducatif", niveauEducatifScheme )

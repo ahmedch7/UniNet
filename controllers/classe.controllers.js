@@ -97,36 +97,34 @@ export const assignStudentsToClass = async (req, res) => {
   const { studentIds } = req.body;
   const { id } = req.params;
 
-  // Validate input
+ 
   if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
     return res.status(400).json({ message: 'Invalid student IDs' });
   }
 
   try {
-    // Verify that all student IDs are valid and exist in the database
+    
     const validStudents = await Student.find({ '_id': { $in: studentIds } });
     if (validStudents.length !== studentIds.length) {
       return res.status(400).json({ message: 'One or more student IDs are invalid' });
     }
 
-    // Find students already assigned to any class
+
     const existingClasses = await Classe.find({ 'StudentId': { $in: studentIds } });
     const existingStudentIds = new Set();
     existingClasses.forEach(classe => {
       classe.StudentId.forEach(studentId => existingStudentIds.add(studentId.toString()));
     });
 
-    // Filter out students who are already assigned to a class
     const newStudentIds = studentIds.filter(studentId => !existingStudentIds.has(studentId));
 
     if (newStudentIds.length === 0) {
       return res.status(400).json({ message: 'All students are already assigned to a class' });
     }
 
-    // Assign students to the class
     const updatedClass = await Classe.findByIdAndUpdate(
       id,
-      { $addToSet: { StudentId: { $each: newStudentIds } } }, // $addToSet to avoid duplicates
+      { $addToSet: { StudentId: { $each: newStudentIds } } },
       { new: true, runValidators: true }
     );
 
@@ -142,18 +140,22 @@ export const assignStudentsToClass = async (req, res) => {
 
 export const getUnassignedStudents = async (req, res) => {
   try {
-    // Find all students
-    const allStudents = await Student.find({}, '_id');
-    
-    // Find all assigned student IDs
-    const assignedStudents = await Classe.distinct('StudentId');
-    
-    // Filter unassigned students
-    const unassignedStudents = allStudents.filter(student => !assignedStudents.includes(student._id));
+  
+    const classes = await Classe.find({}, 'StudentId');
+    const assignedStudentIds = new Set();
+
+    classes.forEach(classe => {
+      classe.StudentId.forEach(studentId => assignedStudentIds.add(studentId.toString()));
+    });
+
+
+    const allStudents = await Student.find();
+
+
+    const unassignedStudents = allStudents.filter(student => !assignedStudentIds.has(student._id.toString()));
 
     res.status(200).json(unassignedStudents);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-

@@ -13,12 +13,10 @@ const classeSchema = new Schema({
     NiveauEducatifId: {
         type: Types.ObjectId,
         ref: "niveauEducatif",
-        required: true 
     },
     StudentId: [{ 
         type: Types.ObjectId, 
         ref: 'student',
-        required: true 
     }]
 
 })
