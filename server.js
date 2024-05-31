@@ -7,8 +7,17 @@ import universityRouter from "./routes/university.route.js";
 import authRoutes from "./routes/auth.route.js"
 import 'dotenv/config'
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
+import niveauRouter from "./routes/niveauEtude.route.js";
+import coursRouter from "./routes/cours.route.js";
+import classeRouter from "./routes/classe.route.js";
+import studentRouter from "./routes/student.route.js"
+
+
 const app = express();
 const databaseName = "uninet";
+
+
+
 
 mongoose.connect(`mongodb://localhost:27017/${databaseName}`, { family: 4 })
     .then(() => {
@@ -33,6 +42,10 @@ app.use('/api/auth', authRoutes)
 app.use("/user", userRouter)
 app.use("/university", universityRouter)
 
+app.use("/niveauEtude", niveauRouter );
+app.use("/cours", coursRouter );
+app.use("/classe", classeRouter );
+app.use("/student", studentRouter );
 
 
 app.use(notFoundError)
