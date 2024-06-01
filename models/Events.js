@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Comment from './Comment.js';
-
+import Participation from './participant.js';
 const EventSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -51,6 +51,8 @@ const EventSchema = new mongoose.Schema({
         ref: 'User',
     }],
     comments: [Comment.schema],
+    participants: [Participation.schema],
+
 }, {
     timestamps: true,
 });
