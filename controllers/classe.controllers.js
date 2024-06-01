@@ -1,5 +1,5 @@
 import Classe from "../models/classe.js"
-import Student from "../models/student.js";
+
 import { validationResult } from "express-validator";
 
 
