@@ -6,7 +6,7 @@ import {
   getCommentaireById,
   updateCommentaire,
   deleteCommentaire,
-  likecommentaire,
+  likeCommentaire,
   dislikecommentaire,
   
 } from "../controllers/commentaire.controller.js";
@@ -37,7 +37,7 @@ router.put(
 router.delete("/:id", deleteCommentaire);
 
 // Like Commentaire
-router.post("/:commentaireId",likecommentaire)
+router.post("/:commentaireId",likeCommentaire)
 
 // Dislike Commentaire
 router.post("/:commentaireId",dislikecommentaire)

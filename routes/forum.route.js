@@ -7,7 +7,7 @@ import {
     updateForum,
     deleteForum,
     getForumsByCategory,
-    
+
 } from '../controllers/forum.controller.js';
 
 const router = Router();

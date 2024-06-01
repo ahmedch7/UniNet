@@ -1,21 +1,30 @@
 import Forum from '../models/forum.js';
 import { validationResult } from 'express-validator';
+import  { sendNotificationEmail} from '../middlewares/mailer.js'
 
 // Create Forum
 export const createForum = async (req, res) => {
+    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
     try {
-        const forum = new Forum(req.body);
+        const { titreForum, descriptionForum, category, userId } = req.body;
+        const forum = new Forum({ titreForum, descriptionForum, category, userId }); // Pass properties as an object
         await forum.save();
+        sendNotificationEmail(
+            'intissar.najjar@gmail.com', // Replace with recipient email
+            'New Forum Created',
+            `A new forum titled "${titreForum}" has been created in the "${category}" category.`
+        );
         res.status(201).json(forum);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // Get all Forums
 export const getForums = async (req, res) => {

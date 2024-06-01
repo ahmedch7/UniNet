@@ -4,7 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import errorHandlers from "./middlewares/error-handler.js";
 const { errorHandler, notFoundError } = errorHandlers; // Destructure the required exports
-
+import { Server } from 'socket.io';
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";

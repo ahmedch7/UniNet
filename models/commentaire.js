@@ -9,9 +9,10 @@ const commentaireSchema = new Schema({
         type: Types.ObjectId,
         ref: "user"
     },
-    publicationId: {
+    postId: {
         type: Types.ObjectId,
-        ref: "publication"
+        ref: "post,forum"
+        
     }
 }, {
     timestamps: true

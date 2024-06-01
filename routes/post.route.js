@@ -9,8 +9,7 @@ import {
   likePost,
   dislikePost,
 
-} from "../controllers/publication.controller.js";
-import upload from "../middlewares/upload.js";
+} from "../controllers/post.controller.js";
 
 const router = Router();
 
@@ -44,10 +43,10 @@ router.put(
 router.delete("/:id", deletePost);
 
 // Like Post
-router.post("/:postId",likePost)
+router.post("/like/:postId",likePost)
 
 // Dislike Post
-router.post("/:postId",dislikePost)
+router.post("/dislike/:postId",dislikePost)
 
 
 

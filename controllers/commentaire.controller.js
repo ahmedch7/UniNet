@@ -75,7 +75,7 @@ export const deleteCommentaire = async (req, res) => {
 
 // like commentaire
 
-const likeCommentaire = async (req, res, next) => {
+export const likeCommentaire = async (req, res, next) => {
   const {commentaireId} = req.params;
   const {userId} = req.body;
   try {
@@ -98,7 +98,7 @@ const likeCommentaire = async (req, res, next) => {
 };
 
 // Dislike commentaire
-const dislikeCommentaire = async (req, res, next) => {
+export const dislikecommentaire = async (req, res, next) => {
     const {commentaireId} = req.params;
     const {userId} = req.body;
     try {
