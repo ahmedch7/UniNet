@@ -88,7 +88,6 @@ export const deleteEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 export const likeEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -100,6 +99,12 @@ export const likeEvent = async (req, res) => {
         }
 
         if (!event.likes.includes(userId)) {
+            // Remove user from dislikes if already disliked
+            const dislikeIndex = event.dislikes.indexOf(userId);
+            if (dislikeIndex !== -1) {
+                event.dislikes.splice(dislikeIndex, 1);
+            }
+
             event.likes.push(userId);
             await event.save();
         }
@@ -121,6 +126,12 @@ export const dislikeEvent = async (req, res) => {
         }
 
         if (!event.dislikes.includes(userId)) {
+            // Remove user from likes if already liked
+            const likeIndex = event.likes.indexOf(userId);
+            if (likeIndex !== -1) {
+                event.likes.splice(likeIndex, 1);
+            }
+
             event.dislikes.push(userId);
             await event.save();
         }
@@ -130,6 +141,7 @@ export const dislikeEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 export const addComment = async (io, req, res) => {
     try {
@@ -216,3 +228,55 @@ export const updateComment = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+export const participateEvent = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const { userId, username } = req.body;
+
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        const isParticipating = event.participants.some(participant => participant.user.toString() === userId);
+        if (isParticipating) {
+            return res.status(400).json({ message: 'User is already participating in this event' });
+        }
+
+        event.participants.push({ user: userId, username });
+        await event.save();
+
+        res.status(200).json(event);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+export const deleteParticipation = async (req, res) => {
+    try {
+        const { eventId, participationId } = req.params;
+
+        // Find the event by ID
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        // Find the index of the participation in the event's participants array
+        const participationIndex = event.participants.findIndex(participation => participation._id.toString() === participationId);
+        if (participationIndex === -1) {
+            return res.status(404).json({ message: 'Participation not found' });
+        }
+
+        // Remove the participation from the participants array
+        event.participants.splice(participationIndex, 1);
+        await event.save();
+
+        res.status(200).json({ message: 'Participation deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+
