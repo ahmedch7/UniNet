@@ -21,8 +21,6 @@ import userRoute from "./routes/user.route.js";
 import { init as initSocketService } from "./Socket/socketService.js";
 import http from "http";
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
-import errorHandlers from "./middlewares/error-handler.js";
-const { errorHandler, notFoundError } = errorHandlers; // Destructure the required exports
 import { Server } from 'socket.io';
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
