@@ -21,6 +21,12 @@ import userRoute from "./routes/user.route.js";
 import { init as initSocketService } from "./Socket/socketService.js";
 import http from "http";
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
+import errorHandlers from "./middlewares/error-handler.js";
+const { errorHandler, notFoundError } = errorHandlers; // Destructure the required exports
+import { Server } from 'socket.io';
+import commentaireRoutes from "./routes/commentaire.route.js";
+import forumRoutes from "./routes/forum.route.js";
+import postRoutes from "./routes/post.route.js";
 
 const app = express();
 const databaseName = "uninet";
@@ -62,6 +68,10 @@ app.use("/classe", classeRouter);
 
 app.use("/api/events", eventRoute(io));
 app.use("/api/user", userRoute);
+
+app.use("/commentaire", commentaireRoutes);
+app.use("/post", postRoutes);
+app.use("/forum", forumRoutes);
 
 app.use(notFoundError);
 app.use(errorHandler);
