@@ -15,18 +15,14 @@ const userSchema = new Schema({
     unique: true,
     match: [/^\S+@\S+\.\S+$/, "Email is invalid"],
   },
-  dateDeNaissance: { type: Date, required: true },
-  numTel: { type: String, required: true },
   motDePasse: { type: String, required: true },
   entreprise:{ type: String},
-  entreprise: { type: String },
   dateInscription: { type: Date, default: Date.now },
   derniereConnexion: { type: Date },
   role: {
     type: String,
     required: true,
     enum: ["etudiant", "responsable","collaborateur", "admin"],
-    enum: ["etudiant", "responsable", "collaborateur", "admin"],
   },niveauxEducatif: {
     type: String,
     required: true,
@@ -34,8 +30,7 @@ const userSchema = new Schema({
   },
   universiteAssociee: {
     type: Schema.Types.ObjectId,
-    ref: "University",
-    required: true,
+    ref: "University"
   },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
