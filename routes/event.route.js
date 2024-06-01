@@ -9,7 +9,9 @@ import {
     dislikeEvent,
     addComment,
     deleteComment,
-    updateComment
+    updateComment,
+    participateEvent,
+    deleteParticipation,
 } from '../controllers/event.controller.js';
 
 export default (io) => {
@@ -25,6 +27,8 @@ export default (io) => {
     router.post('/:id/comments', (req, res) => addComment(io, req, res));
     router.put('/:eventId/comments/:commentId', updateComment);
     router.delete('/:eventId/comments/:commentId', deleteComment);
+    router.post('/:id/participate', participateEvent);
+    router.delete('/:eventId/participants/:participationId', deleteParticipation);
 
     return router;
 };
