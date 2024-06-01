@@ -22,10 +22,8 @@ const CommentSchema = new mongoose.Schema({
 
 CommentSchema.pre('save', async function(next) {
     try {
-        // Fetch the associated user document
         const user = await mongoose.model('User').findById(this.user);
         if (user) {
-            // Populate the 'nom' field with the user's name
             this.nom = user.nom;
         }
         next();
