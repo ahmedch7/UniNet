@@ -12,7 +12,8 @@ import classeRouter from "./routes/classe.route.js";
 import foyerRoutes from "./routes/foyerRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
+import commentRoutes from './routes/commentRoutes.js';
+
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import paymentRoutes from "./routes/payment.route.js";
@@ -25,6 +26,10 @@ import { Server } from 'socket.io';
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
+import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
+
+
+
 
 const app = express();
 const databaseName = "uninet";
@@ -48,13 +53,16 @@ app.use(express.static("public"));
 const PORT = process.env.PORT || 9090;
 const hostname = "127.0.0.1";
 
+
+
+app.use("/api/restaurant-reservations", reservationRestaurantRoutes);
 app.use("/api/foyers", foyerRoutes);
 app.use("/api/menus", menuRoutes);
 app.use("/api/reservations", reservationRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/rooms", roomRoutes);
-
+app.use('/api/menus', commentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/user", userRouter);
 app.use("/university", universityRouter);

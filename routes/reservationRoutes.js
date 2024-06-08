@@ -10,12 +10,12 @@ import {
 
 const router = express.Router();
 
- const validateReservation = [
+const validateReservation = [
   body('userId').isMongoId().withMessage('Invalid user ID'),
   body('roomId').isMongoId().withMessage('Invalid room ID')
 ];
 
- router.get('/', getReservations);
+router.get('/', getReservations);
 router.get('/:id', param('id').isMongoId().withMessage('Invalid ID format'), getReservationById);
 router.post('/', validateReservation, createReservation);
 router.put('/:id', param('id').isMongoId().withMessage('Invalid ID format'), validateReservation, updateReservation);
