@@ -1,0 +1,8 @@
+import { body } from 'express-validator';
+
+export const validateUniversity = [
+  body('name').notEmpty().withMessage('Name is required'),
+  body('address').notEmpty().withMessage('Address is required'),
+  body('phone').isMobilePhone().withMessage('Phone is invalid'),
+  body('email').isEmail().withMessage('Email is invalid')
+];

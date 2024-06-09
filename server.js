@@ -25,6 +25,8 @@ import { Server } from 'socket.io';
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
+import salleRoutes from './routes/salle.route.js';
+import examenRoutes from './routes/examen.route.js';
 
 const app = express();
 const databaseName = "uninet";
@@ -48,17 +50,19 @@ app.use(express.static("public"));
 const PORT = process.env.PORT || 9090;
 const hostname = "127.0.0.1";
 
-app.use("/api/foyers", foyerRoutes);
-app.use("/api/menus", menuRoutes);
-app.use("/api/reservations", reservationRoutes);
-app.use("/api/comments", commentRoutes);
-app.use("/api/restaurants", restaurantRoutes);
-app.use("/api/rooms", roomRoutes);
-
+//user Routes
 app.use("/api/auth", authRoutes);
 app.use("/user", userRouter);
 app.use("/university", universityRouter);
 app.use("/api/payment", paymentRoutes);
+
+app.use("/api/foyers", foyerRoutes);
+app.use("/api/menus", menuRoutes);
+app.use("/api/reservations", reservationRoutes);
+app.use("/api/comments", commentRoutes);
+app.use('/api/menus', commentRoutes);
+app.use("/api/restaurants", restaurantRoutes);
+app.use("/api/rooms", roomRoutes);
 
 app.use("/niveauEtude", niveauRouter);
 app.use("/cours", coursRouter);
@@ -70,6 +74,8 @@ app.use("/api/user", userRoute);
 app.use("/commentaire", commentaireRoutes);
 app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
+app.use('/salles', salleRoutes);
+app.use('/examens', examenRoutes);
 
 app.use(notFoundError);
 app.use(errorHandler);
