@@ -27,12 +27,37 @@ export const getUsersByRole = async (req, res) => {
     const users = await User.find({ role });
 
     if (users.length === 0) {
-      return res.status(404).send({ error: 'No users found with the specified role' });
+      return res
+        .status(404)
+        .send({ error: "No users found with the specified role" });
     }
 
     res.status(200).send(users);
   } catch (error) {
-    res.status(500).send({ error: 'Server error' });
+    res.status(500).send({ error: "Server error" });
+  }
+};
+
+export const getUsersByRoleAndUniversity = async (req, res) => {
+  try {
+    const { role, universityId, niveauxEducatif } = req.params;
+    const users = await User.find({
+      role,
+      universiteAssociee: universityId,
+      niveauxEducatif,
+    });
+
+    if (users.length === 0) {
+      return res
+        .status(404)
+        .send({
+          error: "No users found with the specified role and university",
+        });
+    }
+
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(500).send({ error: "Server error" });
   }
 };
 

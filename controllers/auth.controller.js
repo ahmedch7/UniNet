@@ -203,11 +203,19 @@ export const signin = async (req, res) => {
   try {
     const { email, motDePasse } = req.body;
     const user = await User.findOne({ email });
+
     if (!user || !(await user.comparePassword(motDePasse))) {
       return res
         .status(400)
         .send({ error: "Login failed! Check authentication credentials" });
     }
+
+    if (!user.isActive) {
+      return res
+        .status(403)
+        .send({ error: "Your account is not active. Please contact support." });
+    }
+
     const token = user.generateAuthToken();
     res.send({ user, token });
   } catch (error) {

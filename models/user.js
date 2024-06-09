@@ -23,10 +23,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
     enum: ["etudiant", "responsable","collaborateur", "admin"],
-  },niveauxEducatif: {
+  },
+  niveauxEducatif: {
     type: String,
     required: true,
-    enum: ["premiere année", "deuxieme année", "troisieme année"],
+    enum: ["1année", "2année", "3année"],
   },
   universiteAssociee: {
     type: Schema.Types.ObjectId,
