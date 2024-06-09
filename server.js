@@ -12,7 +12,8 @@ import classeRouter from "./routes/classe.route.js";
 import foyerRoutes from "./routes/foyerRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
-import commentRoutes from "./routes/commentRoutes.js";
+import commentRoutes from './routes/commentRoutes.js';
+
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import paymentRoutes from "./routes/payment.route.js";
@@ -27,6 +28,10 @@ import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
 import salleRoutes from './routes/salle.route.js';
 import examenRoutes from './routes/examen.route.js';
+import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
+
+
+
 
 const app = express();
 const databaseName = "uninet";

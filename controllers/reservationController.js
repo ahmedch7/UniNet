@@ -8,7 +8,7 @@ export const createReservation = async (req, res) => {
   const { userId, roomId } = req.body;
 
   try {
-    const room = await Room.findById(roomId);
+    const room = await Room.findById(roomId).populate('foyerId');  
     if (!room) {
       return res.status(404).json({ message: 'Room not found' });
     }
@@ -22,10 +22,19 @@ export const createReservation = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+     const existingReservation = await Reservation.findOne({
+      userId,
+      roomId: { $in: await Room.find({ foyerId: room.foyerId }).select('_id') }
+    });
+
+    if (existingReservation) {
+      return res.status(400).json({ message: 'User has already made a reservation in this foyer' });
+    }
+
     const newReservation = new Reservation({
       userId,
       roomId,
-      userName: user.nom,   
+      userName: user.nom,
       places: 1
     });
     await newReservation.save();
@@ -62,7 +71,7 @@ export const getReservationById = async (req, res) => {
 };
 
 export const updateReservation = async (req, res) => {
- 
+  // Fonctionnalité de mise à jour des réservations
 };
 
 export const deleteReservation = async (req, res) => {
