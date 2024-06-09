@@ -68,7 +68,7 @@ app.use("/api/comments", commentRoutes);
 app.use('/api/menus', commentRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/rooms", roomRoutes);
-
+app.use("/api/restaurant-reservation", reservationRestaurantRoutes);
 app.use("/niveauEtude", niveauRouter);
 app.use("/cours", coursRouter);
 app.use("/classe", classeRouter);
