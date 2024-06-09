@@ -12,16 +12,16 @@ export const getRestaurants = async (req, res) => {
     res.status(500).json({ message: "Error getting restaurants", error: error.message });
   }
 };
-
 export const createRestaurant = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, address, available } = req.body;
+  const { name, address, available, facultyId } = req.body;
+
   try {
-    const newRestaurant = new Restaurant({ name, address, available });
+    const newRestaurant = new Restaurant({ name, address, available, facultyId });
     await newRestaurant.save();
     res.status(201).json(newRestaurant);
   } catch (error) {
