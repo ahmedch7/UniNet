@@ -6,7 +6,11 @@ const examScheduleSchema = new Schema({
     classe: { type: String, required: true },
     module: { type: String, required: true },
     heureDebut: { type: String, required: true },
-    heureFin: { type: String, required: true }
+    heureFin: { type: String, required: true },
+    sessionType: { type: String, required: true }
+
+
+    
 });
 
 const salleSchema = new Schema(

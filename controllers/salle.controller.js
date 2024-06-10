@@ -72,7 +72,7 @@ export const createExamForSalle = async (req, res) => {
   }
 
   try {
-    const { date, duration, classe, module, heureDebut, heureFin } = req.body;
+    const { date, classe, module, heureDebut, heureFin, sessionType } = req.body;
     const salle = await Salle.findById(req.params.id);
 
     if (!salle) {
@@ -96,6 +96,19 @@ export const createExamForSalle = async (req, res) => {
         .json({ message: "An exam is already scheduled for the same time" });
     }
 
+    // Determine the duration based on the session type
+    let duration;
+    switch (sessionType) {
+      case 'devoir surveillé':
+        duration = 60; // Duration in minutes
+        break;
+      case 'examen':
+        duration = 120; // Duration in minutes
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid session type' });
+    }
+
     salle.schedules.push({
       date,
       duration,
@@ -103,6 +116,7 @@ export const createExamForSalle = async (req, res) => {
       module,
       heureDebut,
       heureFin,
+      sessionType
     });
 
     await salle.save();
@@ -112,3 +126,15 @@ export const createExamForSalle = async (req, res) => {
     res.status(500).end("Internal Server Error");
   }
 };
+
+
+export const findAllSalles = async (req, res) => {
+  try {
+    const salles = await Salle.find();
+    res.status(200).json(salles);
+  } catch (e) {
+    console.log(e);
+    res.status(500).end("Internal Server Error");
+  }
+};
+

@@ -1,6 +1,7 @@
 {
   "name": "uninet",
   "version": "1.0.0",
+  "description": "",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -11,26 +12,16 @@
   "license": "ISC",
   "dependencies": {
     "add-gitignore": "^1.1.1",
-    "bcrypt": "^5.1.1",
-    "connect-mongodb-session": "^5.0.0",
-    "cookie-parser": "^1.4.6",
+    "agenda": "^5.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-session": "^1.18.0",
     "express-validator": "^7.0.1",
-    "helmet": "^7.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.0",
+    "mongoose": "^8.3.5",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.13",
-    "stripe": "^15.8.0",
-    "socket.io": "^4.0.0"
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
-  },
-  "keywords": [],
-  "description": ""
+  }
 }
