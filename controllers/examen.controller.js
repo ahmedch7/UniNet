@@ -2,7 +2,6 @@ import { validationResult } from 'express-validator';
 import Examen from '../models/examen.js';
 
 export const createExamen = async (req, res) => {
-    
     try {
         const examen = new Examen(req.body);
         await examen.save();

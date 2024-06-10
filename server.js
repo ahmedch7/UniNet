@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import salleRoutes from './routes/salle.route.js';
 import examenRoutes from './routes/examen.route.js';
+import './controllers/schedule.js'; 
 
 const app = express();
 const databaseName = "uninet";
