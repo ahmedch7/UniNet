@@ -1,0 +1,24 @@
+<div class="section left">
+  <button *ngIf="sidebarTag" class="sidebar-toggle" (click)="toggleSidebar()">
+    <i class="nb-menu"></i>
+  </button>
+  <div class="logo">
+    <a routerLink="/">ngx-admin</a>
+    <span class="version">v{{ currentVersion }}</span>
+  </div>
+</div>
+<div class="section middle">
+  <div class="first-section">
+    <nb-menu [items]="headerMenu"></nb-menu>
+    <ng-content></ng-content>
+  </div>
+</div>
+<div class="section right">
+
+  <iframe *ngIf="isDocs"
+          class="stars"
+          src="https://ghbtns.com/github-btn.html?user=akveo&repo=ngx-admin&type=star&count=true"
+          frameborder="0"
+          scrolling="0">
+  </iframe>
+</div>
