@@ -1,13 +1,23 @@
-import {Schema , model, Types} from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const chatSchema = new Schema({
-
-    NomChat: String,
-    NiveauEducatifId: {
+    message: {
+        type: String,
+        required: true
+    },
+    sender: {
+        type: String,
+        required: true
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now
+    },
+    niveauEducatifId: {
         type: Types.ObjectId,
-        ref: "niveauEducatif"
+        ref: "niveauEducatif",
+        required: true
     }
-    
-})
+});
 
-export default model("chat", chatSchema )
+export default model("chat", chatSchema);

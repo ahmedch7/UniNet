@@ -1,4 +1,5 @@
 import Classe from "../models/classe.js"
+import User from "../models/User.js"
 
 import { validationResult } from "express-validator";
 
@@ -81,7 +82,7 @@ export const getClassesByNiveau = async (req, res) => {
 
 export const getStudentsByClasse = async (req, res) => {
   try {
-    const classe = await Classe.findById(req.params.id).populate('StudentId');
+    const classe = await Classe.findById(req.params.id).populate('_id');
     if (!classe) {
       return res.status(404).json({ message: 'Classe not found' });
     }
@@ -104,7 +105,7 @@ export const assignStudentsToClass = async (req, res) => {
 
   try {
     
-    const validStudents = await Student.find({ '_id': { $in: studentIds } });
+    const validStudents = await User.find({ '_id': { $in: studentIds } });
     if (validStudents.length !== studentIds.length) {
       return res.status(400).json({ message: 'One or more student IDs are invalid' });
     }
@@ -138,19 +139,52 @@ export const assignStudentsToClass = async (req, res) => {
   }
 };
 
+export const getUsersByRoleAndUniversity = async (req, res) => {
+  try {
+    const { role, universityId, niveauxEducatif } = req.params || req;
+    const users = await User.find({
+      role,
+      universiteAssociee: universityId,
+      niveauxEducatif,
+    });
+
+    if (users.length === 0) {
+      if (res) {
+        return res.status(404).send({ error: "No users found with the specified role and university" });
+      } else {
+        return []; // Return empty array if called programmatically
+      }
+    }
+
+    if (res) {
+      return res.status(200).send(users);
+    } else {
+      return users; // Return users if called programmatically
+    }
+  } catch (error) {
+    if (res) {
+      res.status(500).send({ error: "Server error" });
+    } else {
+      throw new Error("Server error");
+    }
+  }
+};
+
+
 export const getUnassignedStudents = async (req, res) => {
   try {
-  
-    const classes = await Classe.find({}, 'StudentId');
+    
+    const { role, universityId, niveauxEducatif } = req.params;
+
+   
+    const allStudents = await getUsersByRoleAndUniversity({ role, universityId, niveauxEducatif });
+
+    const classes = await User.find({}, 'StudentId');
     const assignedStudentIds = new Set();
 
     classes.forEach(classe => {
       classe.StudentId.forEach(studentId => assignedStudentIds.add(studentId.toString()));
     });
-
-
-    const allStudents = await Student.find();
-
 
     const unassignedStudents = allStudents.filter(student => !assignedStudentIds.has(student._id.toString()));
 

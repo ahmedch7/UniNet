@@ -9,7 +9,7 @@ const coursSchema = new Schema({
         type: String, 
         required: true 
     },
-    AnneUniversitaire: {
+    Datepub: {
         type: Date,
         default: Date.now
     },
@@ -23,12 +23,10 @@ const coursSchema = new Schema({
                 {
                     fileType: {
                         type: String,
-                        enum: ["word", "excel", "pdf"],
-                        required: true
+                        enum: ["word", "excel", "pdf"]
                     },
                     filePath: {
-                        type: String,
-                        required: true
+                        type: String
                     }
                 }
             ]
@@ -36,7 +34,8 @@ const coursSchema = new Schema({
     ],
     classeId: {
         type: Types.ObjectId,
-        ref: "classe"
+        ref: "classe",
+        required: true
     }
 });
 
