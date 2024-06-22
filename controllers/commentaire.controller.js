@@ -1,5 +1,9 @@
 import Commentaire from "../models/commentaire.js";
 import { validationResult } from "express-validator";
+import Filter from 'bad-words';
+const filter = new Filter();
+
+
 
 // Create Commentaire
 export const createCommentaire = async (req, res) => {
@@ -9,13 +13,34 @@ export const createCommentaire = async (req, res) => {
   }
 
   try {
-    const commentaire = new Commentaire(req.body);
+    let { contenuCommentaire } = req.body;
+    console.log('Original content:', contenuCommentaire);
+
+    // Ensure contenuCommentaire is defined and is a string
+    if (typeof contenuCommentaire !== 'string') {
+      return res.status(400).json({ message: 'Content must be a string' });
+    }
+
+    // Clean the content and check for bad words
+    contenuCommentaire = filter.clean(contenuCommentaire);
+    console.log('Cleaned content:', contenuCommentaire);
+
+    if (filter.isProfane(contenuCommentaire)) {
+      contenuCommentaire = filter.clean(contenuCommentaire);
+      console.log('Content after removing bad words:', contenuCommentaire);  // This replaces bad words with asterisks
+    } else {
+      console.log('No bad words detected');
+    }
+
+    const commentaire = new Commentaire({ ...req.body, contenuCommentaire });
     await commentaire.save();
     res.status(201).json(commentaire);
   } catch (error) {
+    console.error('Error creating comment:', error);
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get all Commentaires
 export const getCommentaires = async (req, res) => {

@@ -11,19 +11,41 @@
   "license": "ISC",
   "dependencies": {
     "add-gitignore": "^1.1.1",
+<<<<<<< Updated upstream
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "mailer": "^0.6.7",
+=======
+    "bad-words": "^3.0.4",
+    "bcrypt": "^5.1.1",
+    "connect-mongodb-session": "^5.0.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+>>>>>>> Stashed changes
     "mongoose": "^8.4.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
+<<<<<<< Updated upstream
     "socket.io": "^4.7.5"
+=======
+    "npm": "^10.8.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "stripe": "^15.8.0"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.2"
   },
   "keywords": [],
   "description": ""

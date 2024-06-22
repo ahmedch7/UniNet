@@ -13,8 +13,21 @@ const commentaireSchema = new Schema({
         type: Types.ObjectId,
         ref: "post,forum"
         
-    }
-}, {
+    },
+
+
+    likes: [{
+        type: String,
+        ref: "user"
+    }],
+
+    dislikes: [{
+        type: String,
+        ref: "user"
+    }]
+}, 
+
+{
     timestamps: true
 });
 

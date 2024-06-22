@@ -8,6 +8,7 @@ import {
   deletePost,
   likePost,
   dislikePost,
+  reportPost
 
 } from "../controllers/post.controller.js";
 
@@ -48,6 +49,7 @@ router.post("/like/:postId",likePost)
 // Dislike Post
 router.post("/dislike/:postId",dislikePost)
 
+router.post("/report/:postId",reportPost)
 
 
 export default router;

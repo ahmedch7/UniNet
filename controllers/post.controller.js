@@ -127,3 +127,26 @@ export const dislikePost = async (req, res, next) => {
 }
 };
 
+export const reportPost = async (req, res) => {
+  const { postId } = req.params;
+  
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    post.reportCount = (post.reportCount || 0) + 1;
+
+    if (post.reportCount >= 5) {
+      await Post.findByIdAndDelete(postId);
+      return res.status(200).json({ message: "Post deleted due to multiple reports" });
+    } else {
+      await post.save();
+      return res.status(200).json({ message: "Post reported successfully", reportCount: post.reportCount });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
