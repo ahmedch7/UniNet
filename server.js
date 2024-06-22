@@ -27,8 +27,7 @@ import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
 import salleRoutes from './routes/salle.route.js';
 import examenRoutes from './routes/examen.route.js';
-import chatModel from "./models/chat.js"
-import chatRoutes from "./routes/chat.route.js";
+
 
 
 const app = express();
@@ -44,29 +43,6 @@ mongoose
   });
 const server = http.createServer(app);
 const io = initSocketService(server);
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  
-  socket.on('joinRoom', (niveauEducatifId) => {
-      socket.join(niveauEducatifId);
-      console.log(`User joined room: ${niveauEducatifId}`);
-  });
-
-  socket.on('chatMessage', async (msg) => {
-      const { message, sender, niveauEducatifId } = msg;
-      const chatMessage = new chatModel({
-          message,
-          sender,
-          niveauEducatifId
-      });
-      await chatMessage.save();
-      io.to(niveauEducatifId).emit('chatMessage', chatMessage);
-  });
-
-  socket.on('disconnect', () => {
-      console.log('user disconnected');
-  });
-});
 
 app.use(cors());
 app.use(express.json());
@@ -94,7 +70,6 @@ app.use("/api/rooms", roomRoutes);
 app.use("/niveauEtude", niveauRouter);
 app.use("/cours", coursRouter);
 app.use("/classe", classeRouter);
-app.use('/chat', chatRoutes);
 
 app.use("/api/events", eventRoute(io));
 app.use("/api/user", userRoute);
