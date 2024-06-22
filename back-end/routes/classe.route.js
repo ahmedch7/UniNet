@@ -1,11 +1,14 @@
 import { Router } from "express";
-import { createClasse, getClasse, getClasseById, updateClasse, deleteClasse, getClassesByNiveau, getStudentsByClasse, assignStudentsToClass, getUnassignedStudents  } from "../controllers/classe.controllers.js";
+import { createClasse, getClasse, getClasseById, updateClasse, deleteClasse, getClassesByNiveau, getStudentsByClasse, assignStudentsToClass, getUnassignedStudents } from "../controllers/classe.controllers.js";
 
 const router = Router();
 
 router.post("/create", createClasse)
 
 router.post('/classes/:id/assign-students', assignStudentsToClass)
+
+
+
 
 router.get("/get", getClasse )
 

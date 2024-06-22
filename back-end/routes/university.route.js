@@ -12,7 +12,7 @@ import auth from "../middlewares/auth.js";
 
 const router = Router();
 
-router.post("/", roleAuth(["admin"]), create);
+router.post("/",  create);
 
 router.get("/", auth, roleAuth(["admin"]), getUniversities);
 router.get("/:id", roleAuth(["admin"]), getUniversityById);

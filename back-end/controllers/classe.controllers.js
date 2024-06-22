@@ -1,4 +1,5 @@
 import Classe from "../models/classe.js"
+import User from "../models/User.js"
 
 import { validationResult } from "express-validator";
 
@@ -81,7 +82,7 @@ export const getClassesByNiveau = async (req, res) => {
 
 export const getStudentsByClasse = async (req, res) => {
   try {
-    const classe = await Classe.findById(req.params.id).populate('StudentId');
+    const classe = await Classe.findById(req.params.id).populate('_id');
     if (!classe) {
       return res.status(404).json({ message: 'Classe not found' });
     }
@@ -104,7 +105,7 @@ export const assignStudentsToClass = async (req, res) => {
 
   try {
     
-    const validStudents = await Student.find({ '_id': { $in: studentIds } });
+    const validStudents = await User.find({ '_id': { $in: studentIds } });
     if (validStudents.length !== studentIds.length) {
       return res.status(400).json({ message: 'One or more student IDs are invalid' });
     }
@@ -138,6 +139,8 @@ export const assignStudentsToClass = async (req, res) => {
   }
 };
 
+
+
 export const getUnassignedStudents = async (req, res) => {
   try {
   
@@ -149,7 +152,7 @@ export const getUnassignedStudents = async (req, res) => {
     });
 
 
-    const allStudents = await Student.find();
+    const allStudents = await User.find();
 
 
     const unassignedStudents = allStudents.filter(student => !assignedStudentIds.has(student._id.toString()));

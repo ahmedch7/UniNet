@@ -33,6 +33,8 @@ import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js
 
 
 
+
+
 const app = express();
 const databaseName = "uninet";
 
@@ -46,6 +48,7 @@ mongoose
   });
 const server = http.createServer(app);
 const io = initSocketService(server);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

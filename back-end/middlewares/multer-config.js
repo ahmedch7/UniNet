@@ -6,10 +6,16 @@ const MIME_TYPES = {
   "image/jpg": "jpg",
   "image/jpeg": "jpg",
   "image/png": "png",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "application/pdf": "pdf",
+  "application/vnd.ms-powerpoint": "ppt",
 };
 
 export default function (image, size) {
+
   return multer({
+    
     storage: diskStorage({
       destination: (req, file, callback) => {
         const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -22,6 +28,9 @@ export default function (image, size) {
         callback(null, newFileName);
       },
     }),
+    
     limits: size,
+  
   }).single(image);
+
 }

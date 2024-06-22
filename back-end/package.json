@@ -25,8 +25,8 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
-    "stripe": "^15.8.0",
-    "socket.io": "^4.0.0"
+    "socket.io": "^4.7.5",
+    "stripe": "^15.8.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
