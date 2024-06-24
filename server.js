@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import userRouter from "./routes/user.route.js";
 import universityRouter from "./routes/university.route.js";
 import authRoutes from "./routes/auth.route.js";
-import "dotenv/config";
 import niveauRouter from "./routes/niveauEtude.route.js";
 import coursRouter from "./routes/cours.route.js";
 import classeRouter from "./routes/classe.route.js";
@@ -13,12 +12,10 @@ import foyerRoutes from "./routes/foyerRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";
 import reservationRoutes from "./routes/reservationRoutes.js";
 import commentRoutes from './routes/commentRoutes.js';
-
 import restaurantRoutes from "./routes/restaurantRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import paymentRoutes from "./routes/payment.route.js";
 import eventRoute from "./routes/event.route.js";
-import userRoute from "./routes/user.route.js";
 import { init as initSocketService } from "./Socket/socketService.js";
 import http from "http";
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
@@ -27,9 +24,6 @@ import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
-
-
-
 
 const app = express();
 const databaseName = "uninet";
@@ -42,8 +36,10 @@ mongoose
   .catch((e) => {
     console.log(e);
   });
+
 const server = http.createServer(app);
 const io = initSocketService(server);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -53,8 +49,7 @@ app.use(express.static("public"));
 const PORT = process.env.PORT || 9090;
 const hostname = "127.0.0.1";
 
-
-
+// Routes
 app.use("/api/restaurant-reservations", reservationRestaurantRoutes);
 app.use("/api/foyers", foyerRoutes);
 app.use("/api/menus", menuRoutes);
@@ -62,25 +57,23 @@ app.use("/api/reservations", reservationRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/restaurants", restaurantRoutes);
 app.use("/api/rooms", roomRoutes);
-app.use('/api/menus', commentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/user", userRouter);
 app.use("/university", universityRouter);
 app.use("/api/payment", paymentRoutes);
-
 app.use("/niveauEtude", niveauRouter);
 app.use("/cours", coursRouter);
 app.use("/classe", classeRouter);
-
 app.use("/api/events", eventRoute(io));
-app.use("/api/user", userRoute);
-
+app.use("/api/user", userRouter); // corrected path
 app.use("/commentaire", commentaireRoutes);
 app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
 
+// Error handling
 app.use(notFoundError);
 app.use(errorHandler);
-app.listen(PORT, hostname, () => {
+
+server.listen(PORT, hostname, () => {
   console.log(`Server running on http://${hostname}:${PORT}`);
 });

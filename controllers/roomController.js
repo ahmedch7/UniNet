@@ -1,5 +1,6 @@
 import Room from '../models/Room.js';
 import Foyer from '../models/Foyer.js';
+import Reservation from '../models/Reservation.js';
 
 export const createRoom = async (req, res) => {
   const { roomNumber, type, capacity, foyerId } = req.body;
@@ -76,27 +77,5 @@ export const reserveRoom = async (req, res) => {
     res.status(200).json({ message: "Room reserved successfully", room });
   } catch (error) {
     res.status(500).json({ message: "Error reserving room", error });
-  }
-};
-
-export const cancelReservation = async (req, res) => {
-  const { reservationId } = req.params;
-  try {
-    const room = await Room.findOneAndUpdate(
-      { "reservation._id": reservationId },
-      { $unset: { reservation: 1 } },
-      { new: true }
-    );
-
-    if (!room) {
-      return res.status(404).json({ message: "Reservation not found" });
-    }
-
-    room.availablePlaces += room.reservation.places;
-    await room.save();
-
-    res.status(200).json({ message: "Reservation cancelled successfully", room });
-  } catch (error) {
-    res.status(500).json({ message: "Error cancelling reservation", error });
   }
 };

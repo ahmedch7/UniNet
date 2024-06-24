@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class RoomService {
   private apiUrl = 'http://localhost:9090/api/rooms';
+  private reservationApiUrl = 'http://localhost:9090/api/reservations';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +18,6 @@ export class RoomService {
   getRoomsByFoyerId(foyerId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}?foyerId=${foyerId}`);
   }
-  
 
   createRoom(room: any): Observable<any> {
     return this.http.post(this.apiUrl, room);
@@ -32,11 +32,10 @@ export class RoomService {
   }
 
   reserveRoom(reservation: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reserve`, reservation);
+    return this.http.post(this.reservationApiUrl, reservation);
   }
-  
 
   cancelReservation(reservationId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/cancel/${reservationId}`);
+    return this.http.delete(`${this.reservationApiUrl}/${reservationId}`);
   }
 }

@@ -90,7 +90,7 @@ export const deleteReservation = async (req, res) => {
 
     res.status(200).json({ message: 'Reservation deleted successfully' });
   } catch (error) {
-    res.status500().json({ message: 'Error deleting reservation', error });
+    res.status(500).json({ message: 'Error deleting reservation', error });
   }
 };
 
