@@ -3,6 +3,9 @@ import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { blacklistedTokens } from '../utils/blackList.js';
+import handlebars from "handlebars";
+import fs from "fs";
+import path from "path";
 
 // send validation email 
 export const sendValidationEmail = async (req, res) => {
@@ -75,9 +78,7 @@ export const forgotPassword = async (req, res) => {
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-    console.log("reset token", resetToken);
-    const resetTokenExpiry = Date.now() + 3600000; // 1 heure
-    console.log("reset token expiry = ", resetTokenExpiry);
+    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
 
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = resetTokenExpiry;
@@ -86,24 +87,27 @@ export const forgotPassword = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL, // Votre email
-        pass: process.env.EMAIL_PASSWORD, // Votre mot de passe
+        user: process.env.EMAIL, // Your email
+        pass: process.env.EMAIL_PASSWORD, // Your email password
       },
     });
 
+    const templatePath = path.resolve('emailTemplates', 'forgotPassword.hbs');
+    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const template = handlebars.compile(templateSource);
+
     const resetURL = `http://${req.headers.host}/api/auth/reset-password/${resetToken}`;
+    const htmlToSend = template({ resetURL });
+
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL,
       subject: "Password Reset",
-      text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
-      Please click on the following link, or paste this into your browser to complete the process:\n\n
-      ${resetURL}\n\n
-      If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+      html: htmlToSend,
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Sent");
+
     res.status(200).send({ message: "Password reset email sent" });
   } catch (error) {
     res.status(500).send(error);
@@ -180,14 +184,17 @@ export const signup = async (req, res) => {
       },
     });
 
+    const templatePath = path.resolve('emailTemplates', 'accountActivation.hbs');
+    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const template = handlebars.compile(templateSource);
+
+    const htmlToSend = template({ validationCode });
+
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL,
       subject: "Account Activation",
-      text: `You are receiving this because you (or someone else) have requested the activation of your account.\n\n
-      Please use the following 6-digit code to activate your account:\n\n
-      ${validationCode}\n\n
-      If you did not request this, please ignore this email.\n`,
+      html: htmlToSend,
     };
 
     await transporter.sendMail(mailOptions);
