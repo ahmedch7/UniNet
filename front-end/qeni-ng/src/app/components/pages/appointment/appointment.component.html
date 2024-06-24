@@ -1,0 +1,81 @@
+<!-- Start Inner Banner -->
+<div class="inner-banner inner-bg1">
+    <div class="container">
+        <div class="inner-title text-center">
+            <h3> Prendre un rendez-vous </h3>
+            <ul>
+                <li><a routerLink="/">Home</a></li>
+                <li><i class='bx bxs-chevron-right'></i></li>
+                <li> Prendre un rendez-vous </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Inner Banner End -->
+
+<!-- Start Appointment Area -->
+<div class="appointment-area pt-100 pb-70">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 col-md-12">
+                <div class="appointment-form">
+                    <div class="section-title">
+                        <h2>Prendre un rendez-vous</h2>
+                       
+                    </div>
+                    <form id="contactForm" [formGroup]="makeAppoinementForm">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="date" name="dateRDVDto" id="dateRDVDto" class="form-control" placeholder="Selectionner ton date de RDV" formControlName="dateRDVDto">
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="number" name="kilometrageDto" id="kilometrageDto" class="form-control" placeholder="Kilometrae current de votre voiture" formControlName="kilometrageDto">
+                                </div>
+                            </div>
+    
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="text" name="descriptionDto" id="descriptionDto" class="form-control" placeholder="Description" formControlName="descriptionDto">
+                                </div>
+                            </div>
+                            <div style="display: flex ;">
+                                <div class="col-lg-12 text-center" style="flex: 1 ;">
+                                    <button (click)="backToHome()" class="default-btn">Annuler</button>
+                                </div>
+                                <div class="col-lg-12 text-center" style="flex: 1 ;">
+                                    <button type="submit" (click)="makeAppoinement()" class="default-btn">Enregistrer</button>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-5 col-md-12">
+                <div class="appointment-img">
+                    <img src="assets/img/home-one/appointment-img.jpg" alt="Images">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Appointment Area End -->
+<!-- <mat-card>
+    <mat-card-content>
+      <h2 class="example-h2">Angular Material Checkbox Example</h2>
+       <form [formGroup]="form" (ngSubmit)="submit()">
+        <section class="example-section" *ngFor="let cartoon of cartoonsData">
+          <mat-checkbox class="example-margin"
+              (change)="onChangeEventFunc(cartoon.name, $event)">
+          {{ cartoon.name }}
+          </mat-checkbox>
+        </section>
+        <button mat-raised-button color="accent">Submit</button>
+       </form>
+    </mat-card-content>
+    </mat-card> -->

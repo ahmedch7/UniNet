@@ -1,0 +1,69 @@
+<!-- Start Sign Up Area -->
+<div class="sign-up-area pt-100 pb-70">
+    <div class="container">
+        <div class="user-all-form">
+            <div class="contact-form">
+                <div class="section-title text-center">
+                    <h2>Ajouter une voiture !</h2>
+                </div>
+
+                <form id="contactForm" [formGroup]="updateVoiture">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="number" name="kilometragedto" id="kilometrageDto" class="form-control"
+                                    placeholder="kilometrage" formControlName="kilometrageDto">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="text" name="matriculeDto" id="matriculeDto" class="form-control"
+                                    placeholder="Matricule" formControlName="matriculeDto">
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="text" name="numchassisDto" id="numChassisDto" class="form-control"
+                                    placeholder="No. chassis" formControlName="numChassisDto">
+                            </div>
+                        </div>
+                        <div style="display: flex ;margin-bottom: 20px ;">
+                            <div class="col-lg-12" style=" flex:1">
+                                <div class="form-group">
+                                    <select class="form-control" formControlName="marqueDto" >
+                                        <option *ngFor="let item of marques" [ngValue]="item">{{item}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style=" flex:1; margin-left: 5%;">
+                                <div class="form-group">
+                                    <input type="text" name="modeleDto" id="modeleDto" class="form-control"
+                                        placeholder="modele" formControlName="modeleDto">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <input type="date" name="AnneeDto" id="AnneeDto" class="form-control"
+                                    placeholder="Annee de mise en circulation" formControlName="AnneeDto">
+                            </div>
+                        </div>
+
+                        <div style="display: flex ;">
+                            <div class="col-lg-12 text-center" style="flex:1 ;">
+                                <button (click)="cancel()" class="default-btn">Annuler</button>
+                            </div>
+                            <div class="col-lg-12 text-center" style="flex:1 ;">
+                                <button type="submit" (click)="add()" class="default-btn">Ajouter</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Sign Up Area End -->
