@@ -7,8 +7,8 @@ const userSchema = new Schema({
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  dateDeNaissance: { type: Date, required: true},
-  numTel: { type: Number, required: true},
+  dateDeNaissance: { type: Date, required: true },
+  numTel: { type: Number, required: true },
   email: {
     type: String,
     required: true,
@@ -16,13 +16,13 @@ const userSchema = new Schema({
     match: [/^\S+@\S+\.\S+$/, "Email is invalid"],
   },
   motDePasse: { type: String, required: true },
-  entreprise:{ type: String},
+  entreprise: { type: String },
   dateInscription: { type: Date, default: Date.now },
   derniereConnexion: { type: Date },
   role: {
     type: String,
     required: true,
-    enum: ["etudiant", "responsable","collaborateur", "admin"],
+    enum: ["etudiant", "responsable", "collaborateur", "admin"],
   },
   niveauxEducatif: {
     type: String,
@@ -31,13 +31,15 @@ const userSchema = new Schema({
   },
   universiteAssociee: {
     type: Schema.Types.ObjectId,
-    ref: "University"
+    ref: "University",
   },
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },
   validationCode: { type: String },
   validationCodeExpires: { type: Date },
   isActive: { type: Boolean, default: false },
+  twoFactorSecret: { type: String },
+  twoFactorEnabled: { type: Boolean, default: false },
 });
 
 // Index unique sur l'email

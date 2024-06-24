@@ -2,12 +2,14 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
-import { blacklistedTokens } from '../utils/blackList.js';
+import { blacklistedTokens } from "../utils/blackList.js";
 import handlebars from "handlebars";
 import fs from "fs";
 import path from "path";
+import speakeasy from "speakeasy";
+import QRCode from "qrcode";
 
-// send validation email 
+// send validation email
 export const sendValidationEmail = async (req, res) => {
   try {
     const { email } = req.body;
@@ -16,7 +18,9 @@ export const sendValidationEmail = async (req, res) => {
       return res.status(404).send({ error: "No user found with that email" });
     }
 
-    const validationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    const validationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString(); // 6-digit code
     const validationCodeExpires = Date.now() + 3600000; // 1 hour
 
     user.validationCode = validationCode;
@@ -55,7 +59,9 @@ export const validateAccount = async (req, res) => {
     const user = await User.findOne({ email, validationCode });
 
     if (!user || user.validationCodeExpires < Date.now()) {
-      return res.status(400).send({ error: "Invalid or expired validation code." });
+      return res
+        .status(400)
+        .send({ error: "Invalid or expired validation code." });
     }
 
     user.isActive = true; // Mark the account as validated
@@ -92,8 +98,8 @@ export const forgotPassword = async (req, res) => {
       },
     });
 
-    const templatePath = path.resolve('emailTemplates', 'forgotPassword.hbs');
-    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const templatePath = path.resolve("emailTemplates", "forgotPassword.hbs");
+    const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
 
     const resetURL = `http://${req.headers.host}/api/auth/reset-password/${resetToken}`;
@@ -117,16 +123,18 @@ export const forgotPassword = async (req, res) => {
 export const verifyToken = async (req, res) => {
   try {
     const { token } = req.params;
-    const user = await User.findOne({ 
-      resetPasswordToken: token, 
-      resetPasswordExpires: { $gt: Date.now() } 
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res.status(404).send({ message: 'Password reset token is invalid or has expired.' });
+      return res
+        .status(404)
+        .send({ message: "Password reset token is invalid or has expired." });
     }
 
-    res.status(200).send({ message: 'Password reset token is valid.' });
+    res.status(200).send({ message: "Password reset token is valid." });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -162,14 +170,15 @@ export const resetPassword = async (req, res) => {
   }
 };
 
-
 // Inscription
 export const signup = async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
 
-    const validationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    const validationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString(); // 6-digit code
     const validationCodeExpires = Date.now() + 3600000; // 1 hour
 
     user.validationCode = validationCode;
@@ -184,8 +193,11 @@ export const signup = async (req, res) => {
       },
     });
 
-    const templatePath = path.resolve('emailTemplates', 'accountActivation.hbs');
-    const templateSource = fs.readFileSync(templatePath, 'utf-8');
+    const templatePath = path.resolve(
+      "emailTemplates",
+      "accountActivation.hbs"
+    );
+    const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
 
     const htmlToSend = template({ validationCode });
@@ -199,7 +211,9 @@ export const signup = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).send({ message: "User registered. Validation email sent." });
+    res
+      .status(201)
+      .send({ message: "User registered. Validation email sent." });
   } catch (error) {
     res.status(400).send(error);
   }
@@ -208,26 +222,114 @@ export const signup = async (req, res) => {
 //Connexion
 export const signin = async (req, res) => {
   try {
-    const { email, motDePasse } = req.body;
+    const { email, motDePasse, token } = req.body;
     const user = await User.findOne({ email });
 
     if (!user || !(await user.comparePassword(motDePasse))) {
-      return res
-        .status(400)
-        .send({ error: "Login failed! Check authentication credentials" });
+      return res.status(400).send({ error: 'Login failed! Check authentication credentials' });
     }
 
     if (!user.isActive) {
-      return res
-        .status(403)
-        .send({ error: "Your account is not active. Please contact support." });
+      return res.status(403).send({ error: 'Your account is not active. Please contact support.' });
     }
 
-    const token = user.generateAuthToken();
-    res.send({ user, token });
+    if (user.twoFactorEnabled) {
+      const verified = speakeasy.totp.verify({
+        secret: user.twoFactorSecret,
+        encoding: 'base32',
+        token,
+      });
+      if (!verified) {
+        return res.status(400).send({ error: 'Invalid 2FA token' });
+      }
+    }
+
+    const authToken = user.generateAuthToken();
+    res.send({ user, token: authToken });
   } catch (error) {
     res.status(500).send(error);
-    console.log(error);
+  }
+};
+
+
+// setup 2FA
+export const setupTwoFactorAuth = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send({ error: "No user found with that email" });
+    }
+
+    const secret = speakeasy.generateSecret({ length: 20 });
+    user.twoFactorSecret = secret.base32;
+    await user.save();
+
+    const otpauth = speakeasy.otpauthURL({
+      secret: secret.ascii,
+      label: email,
+      issuer: "uninet",
+    });
+
+    QRCode.toDataURL(otpauth, (err, qrCodeUrl) => {
+      if (err) {
+        return res.status(500).send({ error: "Error generating QR code" });
+      }
+      res.status(200).send({ qrCodeUrl });
+    });
+  } catch (error) {
+    res.status(500).send({ error: "Server error" });
+  }
+};
+// Verify 2FA token
+export const verifyTwoFactorAuth = async (req, res) => {
+  try {
+    const { email, token } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send({ error: "No user found with that email" });
+    }
+
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: "base32",
+      token,
+    });
+
+    if (!verified) {
+      return res.status(400).send({ error: "Invalid token" });
+    }
+
+    user.twoFactorEnabled = true;
+    await user.save();
+
+    res.status(200).send({ message: "2FA enabled successfully" });
+  } catch (error) {
+    res.status(500).send({ error: "Server error" });
+  }
+};
+// disable 2FA status
+export const disableTwoFactor = async (req, res) => {
+  try {
+    const { userId } = req.body; // Assuming you send userId in the request body
+
+    // Find the user by userId
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+
+    // Disable 2FA
+    user.twoFactorEnabled = false;
+    user.twoFactorSecret = undefined; // Clear the 2FA secret
+    await user.save();
+
+    res.status(200).send({ message: 'Two-Factor Authentication disabled successfully' });
+  } catch (error) {
+    res.status(500).send({ error: 'Server error. Unable to disable Two-Factor Authentication' });
   }
 };
 
@@ -235,11 +337,11 @@ export const signin = async (req, res) => {
 
 export const signout = async (req, res) => {
   try {
-    const token = req.header('Authorization').replace('Bearer ', '');
+    const token = req.header("Authorization").replace("Bearer ", "");
     blacklistedTokens.add(token);
-    res.status(200).send({ message: 'Logout successful' });
+    res.status(200).send({ message: "Logout successful" });
   } catch (error) {
-    res.status(500).send({ error: 'Error logging out' });
+    res.status(500).send({ error: "Error logging out" });
     console.error(error);
   }
 };
