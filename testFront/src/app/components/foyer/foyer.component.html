@@ -1,0 +1,78 @@
+<div class="container">
+    <h2>List of Foyers</h2>
+    <ul>
+      <li *ngFor="let foyer of foyers">
+        <strong>Name:</strong> {{ foyer.name }} <br>
+        <strong>Address:</strong> {{ foyer.address }} <br>
+        <strong>Faculty ID:</strong> {{ foyer.facultyId }} <br>
+        <button (click)="deleteFoyer(foyer._id)">Delete</button>
+        <button (click)="selectFoyerForUpdate(foyer)">Update</button>
+        <button (click)="viewRooms(foyer)">View Rooms</button>
+        <button (click)="createNewRoom(foyer._id)">Create New Room</button> <!-- New button -->
+        <hr>
+  
+        <!-- List of Rooms for the selected Foyer -->
+        <div *ngIf="showRooms && showRooms[foyer._id] && roomsByFoyer && roomsByFoyer[foyer._id] && roomsByFoyer[foyer._id].length > 0">
+          <h3>Rooms in {{ foyer.name }}</h3>
+          <ul>
+            <li *ngFor="let room of roomsByFoyer[foyer._id]">
+              <strong>Room Number:</strong> {{ room.roomNumber }} <br>
+              <strong>Type:</strong> {{ room.type }} <br>
+              <strong>Capacity:</strong> {{ room.capacity }} <br>
+              <strong>Available Places:</strong> {{ room.availablePlaces }} <br>
+              <button (click)="deleteRoom(room._id)">Delete</button>
+              <button (click)="selectRoomForUpdate(room)">Update</button>
+              <button (click)="reserveRoom(room._id)">Reserve</button>
+              <button *ngIf="room.reservation" (click)="cancelReservation(room.reservation._id)">Cancel Reservation</button>
+              <hr>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  
+    <h2>Create New Foyer</h2>
+    <form (submit)="createFoyer()">
+      <label>Name: <input type="text" [(ngModel)]="newFoyer.name" name="name" required></label><br>
+      <label>Address: <input type="text" [(ngModel)]="newFoyer.address" name="address" required></label><br>
+      <label>Faculty ID: <input type="text" [(ngModel)]="newFoyer.facultyId" name="facultyId" required></label><br>
+      <button type="submit">Create</button>
+    </form>
+  
+    <h2>Edit Foyer</h2>
+    <form *ngIf="selectedFoyer" (submit)="onUpdateFoyer(selectedFoyer._id)">
+      <label>Name: <input type="text" [(ngModel)]="selectedFoyer.name" name="name" required></label><br>
+      <label>Address: <input type="text" [(ngModel)]="selectedFoyer.address" name="address" required></label><br>
+      <button type="submit">Update</button>
+    </form>
+  
+    <div *ngIf="selectedFoyer">
+      <h3>Create New Room</h3>
+      <form (submit)="createRoom(selectedFoyer._id)">
+        <label>Room Number: <input type="number" [(ngModel)]="newRoom.roomNumber" name="roomNumber" required></label><br>
+        <label>Type:
+          <select [(ngModel)]="newRoom.type" name="type" required>
+            <option value="double">Double</option>
+            <option value="triple">Triple</option>
+          </select>
+        </label><br>
+        <label>Capacity: <input type="number" [(ngModel)]="newRoom.capacity" name="capacity" required></label><br>
+        <button type="submit">Create Room</button>
+      </form>
+  
+      <h3>Edit Room</h3>
+      <form *ngIf="selectedRoom" (submit)="updateRoom(selectedRoom._id)">
+        <label>Room Number: <input type="number" [(ngModel)]="selectedRoom.roomNumber" name="roomNumber" required></label><br>
+        <label>Type:
+          <select [(ngModel)]="selectedRoom.type" name="type" required>
+            <option value="double">Double</option>
+            <option value="triple">Triple</option>
+          </select>
+        </label><br>
+        <label>Capacity: <input type="number" [(ngModel)]="selectedRoom.capacity" name="capacity" required></label><br>
+        <label>Available Places: <input type="number" [(ngModel)]="selectedRoom.availablePlaces" name="availablePlaces" required></label><br>
+        <button type="submit">Update Room</button>
+      </form>
+    </div>
+  </div>
+  
