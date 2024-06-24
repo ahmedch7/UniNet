@@ -145,15 +145,18 @@ export const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;
 
+    // Validate the new password
+    if (newPassword.length < 6) {
+      return res.status(400).send({ error: "Password must be at least 6 characters long" });
+    }
+
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
     });
 
     if (!user) {
-      return res
-        .status(400)
-        .send({ error: "Password reset token is invalid or has expired" });
+      return res.status(400).send({ error: "Password reset token is invalid or has expired" });
     }
 
     // Update the password field
@@ -164,9 +167,46 @@ export const resetPassword = async (req, res) => {
     // Save the user, triggering the pre-save middleware
     await user.save();
 
+    // Create reusable transporter object using SMTP transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    // Read the Handlebars template file
+    const templatePath = path.resolve("emailTemplates", "resetPassword.hbs");
+    const templateSource = fs.readFileSync(templatePath, "utf-8");
+
+    // Compile the template
+    const template = handlebars.compile(templateSource);
+
+    // Prepare data to be passed into the template
+    const context = {
+      user: {
+        prenom: user.prenom, // Replace with appropriate user properties
+      },
+    };
+
+    // Generate HTML for the email using the compiled template
+    const htmlToSend = template(context);
+
+    // Send mail with defined transport object
+    const mailOptions = {
+      to: user.email,
+      from: process.env.EMAIL,
+      subject: "Password Successfully Reset",
+      html: htmlToSend,
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.status(200).send({ message: "Password has been reset" });
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error resetting password:", error);
+    res.status(500).send({ error: "An error occurred while resetting the password" });
   }
 };
 
@@ -222,35 +262,45 @@ export const signup = async (req, res) => {
 //Connexion
 export const signin = async (req, res) => {
   try {
-    const { email, motDePasse, token } = req.body;
+    const { email, motDePasse, token, rememberMe } = req.body;
     const user = await User.findOne({ email });
 
     if (!user || !(await user.comparePassword(motDePasse))) {
-      return res.status(400).send({ error: 'Login failed! Check authentication credentials' });
+      return res
+        .status(400)
+        .send({ error: "Login failed! Check authentication credentials" });
     }
 
     if (!user.isActive) {
-      return res.status(403).send({ error: 'Your account is not active. Please contact support.' });
+      return res
+        .status(403)
+        .send({ error: "Your account is not active. Please contact support." });
     }
 
     if (user.twoFactorEnabled) {
       const verified = speakeasy.totp.verify({
         secret: user.twoFactorSecret,
-        encoding: 'base32',
+        encoding: "base32",
         token,
       });
       if (!verified) {
-        return res.status(400).send({ error: 'Invalid 2FA token' });
+        return res.status(400).send({ error: "Invalid 2FA token" });
       }
     }
 
-    const authToken = user.generateAuthToken();
+    const authToken = user.generateAuthToken(rememberMe);
+
+    // Save long-lived token if rememberMe is true
+    if (rememberMe) {
+      user.longLivedToken = authToken;
+      await user.save();
+    }
+
     res.send({ user, token: authToken });
   } catch (error) {
     res.status(500).send(error);
   }
 };
-
 
 // setup 2FA
 export const setupTwoFactorAuth = async (req, res) => {
@@ -319,7 +369,7 @@ export const disableTwoFactor = async (req, res) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "User not found" });
     }
 
     // Disable 2FA
@@ -327,21 +377,14 @@ export const disableTwoFactor = async (req, res) => {
     user.twoFactorSecret = undefined; // Clear the 2FA secret
     await user.save();
 
-    res.status(200).send({ message: 'Two-Factor Authentication disabled successfully' });
+    res
+      .status(200)
+      .send({ message: "Two-Factor Authentication disabled successfully" });
   } catch (error) {
-    res.status(500).send({ error: 'Server error. Unable to disable Two-Factor Authentication' });
-  }
-};
-
-// log out
-
-export const signout = async (req, res) => {
-  try {
-    const token = req.header("Authorization").replace("Bearer ", "");
-    blacklistedTokens.add(token);
-    res.status(200).send({ message: "Logout successful" });
-  } catch (error) {
-    res.status(500).send({ error: "Error logging out" });
-    console.error(error);
+    res
+      .status(500)
+      .send({
+        error: "Server error. Unable to disable Two-Factor Authentication",
+      });
   }
 };

@@ -6,15 +6,14 @@ import jwt from "jsonwebtoken";
 const userSchema = new Schema({
   nom: { type: String, required: true },
   prenom: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  dateDeNaissance: { type: Date, required: true },
-  numTel: { type: Number, required: true },
   email: {
     type: String,
     required: true,
     unique: true,
     match: [/^\S+@\S+\.\S+$/, "Email is invalid"],
   },
+  dateDeNaissance: { type: Date, required: true },
+  numTel: { type: Number, required: true },
   motDePasse: { type: String, required: true },
   entreprise: { type: String },
   dateInscription: { type: Date, default: Date.now },
@@ -38,6 +37,7 @@ const userSchema = new Schema({
   validationCode: { type: String },
   validationCodeExpires: { type: Date },
   isActive: { type: Boolean, default: false },
+  longLivedToken: { type: String },
   twoFactorSecret: { type: String },
   twoFactorEnabled: { type: Boolean, default: false },
 });
@@ -59,11 +59,11 @@ userSchema.methods.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.motDePasse);
 };
 
-// Méthode pour générer un jeton JWT// Méthode pour générer un jeton JWT
-userSchema.methods.generateAuthToken = function () {
-  return jwt.sign({ _id: this._id, role: this.role }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+userSchema.methods.generateAuthToken = function (rememberMe = false) {
+  const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: rememberMe ? "7d" : "12h", // Long-lived token for 'remember me'
   });
+  return token;
 };
 
 const User = model("User", userSchema);
