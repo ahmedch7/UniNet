@@ -15,8 +15,8 @@
         <div *ngIf="showRooms && showRooms[foyer._id] && roomsByFoyer && roomsByFoyer[foyer._id] && roomsByFoyer[foyer._id].length > 0">
           <h3>Rooms in {{ foyer.name }}</h3>
           <ul>
-            <li *ngFor="let room of roomsByFoyer[foyer._id]">
-              <strong>Room Number:</strong> {{ room.roomNumber }} <br>
+            <li *ngFor="let room of selectedFoyer.rooms">
+              <strong>Room Number test:</strong> {{ room.roomNumber }} <br>
               <strong>Type:</strong> {{ room.type }} <br>
               <strong>Capacity:</strong> {{ room.capacity }} <br>
               <strong>Available Places:</strong> {{ room.availablePlaces }} <br>

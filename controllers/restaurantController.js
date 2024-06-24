@@ -12,16 +12,17 @@ export const getRestaurants = async (req, res) => {
     res.status(500).json({ message: "Error getting restaurants", error: error.message });
   }
 };
+
 export const createRestaurant = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, address, available, facultyId } = req.body;
+  const { name, address, available, capacity, availablePlaces, facultyId } = req.body;
 
   try {
-    const newRestaurant = new Restaurant({ name, address, available, facultyId });
+    const newRestaurant = new Restaurant({ name, address, available, capacity, availablePlaces, facultyId });
     await newRestaurant.save();
     res.status(201).json(newRestaurant);
   } catch (error) {
@@ -37,9 +38,19 @@ export const updateRestaurant = async (req, res) => {
   }
 
   const { id } = req.params;
-  const { name, address, available } = req.body;
+  const { name, address, available, capacity, availablePlaces } = req.body;
+
   try {
-    const updatedRestaurant = await Restaurant.findByIdAndUpdate(id, { name, address, available }, { new: true });
+    const updatedRestaurant = await Restaurant.findByIdAndUpdate(
+      id,
+      { name, address, available, capacity, availablePlaces },
+      { new: true }
+    );
+
+    if (!updatedRestaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
     res.status(200).json(updatedRestaurant);
   } catch (error) {
     console.error('Error updating restaurant:', error);

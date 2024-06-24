@@ -12,6 +12,15 @@ export class RestaurantReservationComponent implements OnInit {
   selectedRestaurant: any = null;
   reservations: any[] = [];
   editMode = false;
+  createMode = false;
+  newRestaurant: any = {
+    name: '',
+    address: '',
+    available: false,
+    capacity: 0,
+    availablePlaces: 0,
+    facultyId: ''
+  };
 
   constructor(private restaurantService: RestaurantService, private reservationService: ReservationRestaurantService) { }
 
@@ -30,15 +39,45 @@ export class RestaurantReservationComponent implements OnInit {
     );
   }
 
+  toggleCreateMode(): void {
+    this.createMode = !this.createMode;
+  }
+
+  createRestaurant(): void {
+    this.restaurantService.createRestaurant(this.newRestaurant).subscribe(
+      (data) => {
+        console.log('Restaurant created successfully', data);
+        this.createMode = false;
+        this.newRestaurant = {
+          name: '',
+          address: '',
+          available: false,
+          capacity: 0,
+          availablePlaces: 0,
+          facultyId: ''
+        };
+        this.loadRestaurants(); // Rechargez la liste des restaurants après la création
+      },
+      (error) => {
+        console.error('Error creating restaurant', error);
+      }
+    );
+  }
+
+  cancelCreate(): void {
+    this.createMode = false;
+  }
+
   createReservation(restaurantId: string): void {
-    const userId = 'your_user_id_here'; // Remplacez par la logique pour obtenir l'ID utilisateur
+    // Ici, vous devrez implémenter la logique pour récupérer l'ID de l'utilisateur approprié
+    const userId = 'votre_id_utilisateur_ici';
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
-        console.log('Reservation created successfully', data);
+        console.log('Reservation créée avec succès', data);
         this.loadRestaurants(); // Rechargez la liste des restaurants après la réservation
       },
       (error) => {
-        console.error('Error creating reservation', error);
+        console.error('Erreur lors de la création de la réservation', error);
       }
     );
   }
@@ -57,12 +96,12 @@ export class RestaurantReservationComponent implements OnInit {
     const { _id, name, address, available, capacity, availablePlaces, facultyId } = this.selectedRestaurant;
     this.restaurantService.updateRestaurant(_id, { name, address, available, capacity, availablePlaces, facultyId }).subscribe(
       (data) => {
-        console.log('Restaurant updated successfully', data);
+        console.log('Restaurant mis à jour avec succès', data);
         this.editMode = false;
         this.loadRestaurants(); // Rechargez la liste des restaurants après la mise à jour
       },
       (error) => {
-        console.error('Error updating restaurant', error);
+        console.error('Erreur lors de la mise à jour du restaurant', error);
       }
     );
   }
@@ -75,11 +114,11 @@ export class RestaurantReservationComponent implements OnInit {
   deleteRestaurant(restaurantId: string): void {
     this.restaurantService.deleteRestaurant(restaurantId).subscribe(
       (data) => {
-        console.log('Restaurant deleted successfully', data);
+        console.log('Restaurant supprimé avec succès', data);
         this.loadRestaurants(); // Rechargez la liste des restaurants après la suppression
       },
       (error) => {
-        console.error('Error deleting restaurant', error);
+        console.error('Erreur lors de la suppression du restaurant', error);
       }
     );
   }
@@ -90,7 +129,7 @@ export class RestaurantReservationComponent implements OnInit {
         this.reservations = data;
       },
       (error) => {
-        console.error('Error loading reservations', error);
+        console.error('Erreur lors du chargement des réservations', error);
       }
     );
   }
@@ -98,11 +137,11 @@ export class RestaurantReservationComponent implements OnInit {
   deleteReservation(reservationId: string): void {
     this.reservationService.deleteRestaurantReservation(reservationId).subscribe(
       (data) => {
-        console.log('Reservation deleted successfully', data);
+        console.log('Réservation supprimée avec succès', data);
         this.loadReservations(this.selectedRestaurant._id); // Rechargez les réservations après la suppression
       },
       (error) => {
-        console.error('Error deleting reservation', error);
+        console.error('Erreur lors de la suppression de la réservation', error);
       }
     );
   }

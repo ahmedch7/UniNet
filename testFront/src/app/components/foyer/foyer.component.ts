@@ -75,6 +75,16 @@ export class FoyerComponent implements OnInit {
   }
 
   viewRooms(foyer: any): void {
+
+    console.log("test",foyer._id)
+    console.log("this.selectedFoyer",this.selectedFoyer)
+
+
+    this.foyers.forEach(element => {
+      if(element._id!=foyer._id)
+      this.showRooms[element._id] = false;
+    });
+    
     this.selectedFoyer = foyer; // Set the selected foyer
     if (this.showRooms[foyer._id]) {
       this.showRooms[foyer._id] = false; // Hide rooms if already visible
@@ -135,16 +145,15 @@ export class FoyerComponent implements OnInit {
     this.selectedRoom = { ...room }; // Make a copy of room object to avoid mutating the original
   }
 
+  id_user = '664f89f28fb320b8082864b5';  // ID utilisateur statique
+
   reserveRoom(roomId: string): void {
     const existingReservation = this.roomsByFoyer[this.selectedFoyer._id].find(room => room._id === roomId)?.reservation;
   
-    // If there's an existing reservation, prompt user to cancel it
     if (existingReservation) {
       if (confirm('You already have a reservation. Do you want to cancel it and reserve this room instead?')) {
-        // Cancel existing reservation
         this.cancelReservation(existingReservation._id).subscribe(
           () => {
-            // Proceed with new reservation after cancellation
             this.makeReservation(roomId);
           },
           (error) => {
@@ -153,17 +162,19 @@ export class FoyerComponent implements OnInit {
         );
       }
     } else {
-      // No existing reservation, proceed with new reservation
       this.makeReservation(roomId);
     }
   }
   
+  
   private makeReservation(roomId: string): void {
-    const reservation = { roomId, places: 1 };
+    const reservation = { roomId, userId: this.id_user, places: 1 };  // Inclure l'ID utilisateur statique
     this.roomService.reserveRoom(reservation).subscribe(
       (data) => {
+        this.loadFoyers();
+        this.viewRooms(this.selectedFoyer);
         console.log('Room reserved successfully', data);
-        this.loadRooms(this.selectedFoyer._id); // Refresh the list
+        this.loadRooms(this.selectedFoyer._id); // Rafraîchir la liste
       },
       (error: any) => {
         console.error('Error reserving room', error);

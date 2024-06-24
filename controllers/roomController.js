@@ -59,7 +59,7 @@ export const deleteRoom = async (req, res) => {
 };
 
 export const reserveRoom = async (req, res) => {
-  const { roomId, places } = req.body;
+  const { userId, roomId, places } = req.body;
   try {
     const room = await Room.findById(roomId);
 
@@ -70,11 +70,15 @@ export const reserveRoom = async (req, res) => {
     room.availablePlaces -= places;
     await room.save();
 
+    const newReservation = new Reservation({ userId, roomId, places });
+    await newReservation.save();
+
     res.status(200).json({ message: "Room reserved successfully", room });
   } catch (error) {
     res.status(500).json({ message: "Error reserving room", error });
   }
 };
+
 export const cancelReservation = async (req, res) => {
   const { reservationId } = req.params;
   try {

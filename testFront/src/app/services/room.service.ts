@@ -34,6 +34,7 @@ export class RoomService {
   reserveRoom(reservation: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reserve`, reservation);
   }
+  
 
   cancelReservation(reservationId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/cancel/${reservationId}`);
