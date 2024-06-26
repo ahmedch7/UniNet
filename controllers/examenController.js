@@ -1,6 +1,5 @@
 import { validationResult } from 'express-validator';
 import Examen from '../models/examen.js';
-
 import { addSchedule } from './salleController.js'; // Importation nommée correcte
 
 // Fonction pour vérifier la disponibilité de la salle
@@ -123,5 +122,23 @@ export const deleteExamen = async (req, res) => {
     } catch (e) {
         console.log(e);
         res.status(500).end('Internal Server Error');
+    }
+};
+// get exam by salle
+export const getExamensBySalleId = async (req, res) => {
+    const { salleId } = req;
+    console.log(salleId);
+    try {
+        // Trouver tous les examens associés à la salle spécifiée
+        const examens = await Examen.find({ salle: salleId });
+        console.log(examens);
+        if (!examens) {
+            return res.status(404).json({ message: "Aucun examen trouvé pour cette salle." });
+        }
+
+        res.status(200).json(examens);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des examens :', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des examens.' });
     }
 };
