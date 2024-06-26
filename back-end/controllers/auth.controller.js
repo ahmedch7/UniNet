@@ -213,18 +213,40 @@ export const resetPassword = async (req, res) => {
 // Inscription
 export const signup = async (req, res) => {
   try {
-    const user = new User(req.body);
+    // Extract user data from request body
+    const { nom, prenom, email, motDePasse, dateDeNaissance, numTel, entreprise, role, niveauxEducatif, universiteAssociee } = req.body;
+
+    // Create a new user object
+    const user = new User({
+      nom,
+      prenom,
+      email,
+      motDePasse,
+      dateDeNaissance,
+      numTel,
+      entreprise,
+      role,
+      niveauxEducatif,
+      universiteAssociee,
+    });
+
+    // If an avatar is uploaded, save its path to the user profile
+    if (req.file) {
+      user.avatar = req.file.path;
+    }
+
+    // Save the user to the database
     await user.save();
 
-    const validationCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString(); // 6-digit code
+    // Generate validation code
+    const validationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
     const validationCodeExpires = Date.now() + 3600000; // 1 hour
 
     user.validationCode = validationCode;
     user.validationCodeExpires = validationCodeExpires;
     await user.save();
 
+    // Configure nodemailer
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -233,15 +255,15 @@ export const signup = async (req, res) => {
       },
     });
 
-    const templatePath = path.resolve(
-      "emailTemplates",
-      "accountActivation.hbs"
-    );
+    // Read email template
+    const templatePath = path.resolve("emailTemplates", "accountActivation.hbs");
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
 
+    // Generate email content
     const htmlToSend = template({ validationCode });
 
+    // Set up email options
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL,
@@ -249,11 +271,11 @@ export const signup = async (req, res) => {
       html: htmlToSend,
     };
 
+    // Send validation email
     await transporter.sendMail(mailOptions);
 
-    res
-      .status(201)
-      .send({ message: "User registered. Validation email sent." });
+    // Send response
+    res.status(201).send({ message: "User registered. Validation email sent." });
   } catch (error) {
     res.status(400).send(error);
   }

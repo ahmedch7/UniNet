@@ -64,10 +64,21 @@ export const getUsersByRoleAndUniversity = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+    const updateData = { ...req.body };
+
+    if (req.file) {
+      // If an avatar file is uploaded, add its filename to the update data
+      updateData.avatar = req.file.filename;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, {
       new: true,
     });
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(400).json({ error: error.message });
