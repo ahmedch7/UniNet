@@ -1,6 +1,6 @@
 import express from 'express';
 import { check } from 'express-validator';
-import { createSalle, getSalle, updateSalle, deleteSalle ,createExamForSalle, findAllSalles} from '../controllers/salle.controller.js';
+import { createSalle, getSalle, updateSalle, deleteSalle ,createExamForSalle, findAllSalles} from '../controllers/salleController.js';
 import { releaseExpiredExams } from '../controllers/schedule.js'
 
 const router = express.Router();

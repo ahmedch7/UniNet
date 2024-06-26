@@ -138,3 +138,17 @@ export const findAllSalles = async (req, res) => {
   }
 };
 
+export const addSchedule = async (salleId, schedule) => {
+  try {
+      const salle = await Salle.findById(salleId);
+      if (!salle) {
+          throw new Error("Salle non trouvée.");
+      }
+
+      salle.schedules.push(schedule);
+      await salle.save();
+      return salle;
+  } catch (error) {
+      console.error("Erreur lors de l'ajout du planning :", error);
+  }
+};
