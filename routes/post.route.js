@@ -8,8 +8,8 @@ import {
   deletePost,
   likePost,
   dislikePost,
-  reportPost
-
+  reportPost,
+  verifyPost,
 } from "../controllers/post.controller.js";
 
 const router = Router();
@@ -17,10 +17,7 @@ const router = Router();
 // Create Post
 router.post(
   "/",
-  [
-    body("contenuPost").isString().notEmpty(),
-    body("userId").isMongoId(),
-  ],
+  [body("contenuPost").isString().notEmpty(), body("userId").isMongoId()],
   createPost
 );
 
@@ -33,10 +30,7 @@ router.get("/:id", getPostById);
 // Update Post
 router.put(
   "/:id",
-  [
-    body("contenuPost").isString().notEmpty(),
-    body("userId").isMongoId(),
-  ],
+  [body("contenuPost").isString().notEmpty(), body("userId").isMongoId()],
   updatePost
 );
 
@@ -44,12 +38,12 @@ router.put(
 router.delete("/:id", deletePost);
 
 // Like Post
-router.post("/like/:postId",likePost)
+router.post("/like/:postId", likePost);
 
 // Dislike Post
-router.post("/dislike/:postId",dislikePost)
+router.post("/dislike/:postId", dislikePost);
 
-router.post("/report/:postId",reportPost)
-
+router.post("/report/:postId", reportPost);
+router.put("/verify/:postId", verifyPost);
 
 export default router;
