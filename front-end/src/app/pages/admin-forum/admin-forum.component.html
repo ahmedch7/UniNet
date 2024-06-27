@@ -1,0 +1,72 @@
+<style>
+  .top-padding {
+    padding-top: 50px; /* Adjust as needed */
+    background-color: #f0f0f0; /* Optional background color */
+  }
+</style>
+<div class="top-padding"></div>
+<div class="container mt-5">
+  <h1>Manage Forums</h1>
+
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="toggleCreateForm()">Create New Forum</button>
+  </div>
+
+  <div *ngIf="showCreateForm" class="mb-3">
+    <h2>Create Forum</h2>
+    <form (ngSubmit)="createForum()">
+      <div class="mb-3">
+        <label for="titreForum" class="form-label">Title</label>
+        <input type="text" class="form-control" id="titreForum" [(ngModel)]="newForum.titreForum" name="titreForum" required>
+      </div>
+      <div class="mb-3">
+        <label for="descriptionForum" class="form-label">Description</label>
+        <input type="text" class="form-control" id="descriptionForum" [(ngModel)]="newForum.descriptionForum" name="descriptionForum">
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Category</label>
+        <input type="text" class="form-control" id="category" [(ngModel)]="newForum.category" name="category" required>
+      </div>
+      <button type="submit" class="btn btn-success">Create</button>
+    </form>
+  </div>
+
+  <div *ngIf="forums.length > 0">
+    <h2>Forum List</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let forum of forums">
+        <td>{{ forum.titreForum }}</td>
+        <td>{{ forum.descriptionForum }}</td>
+        <td>{{ forum.category }}</td>
+        <td>
+        <!--  <button class="btn btn-primary btn-sm" (click)="editForum(forum)">Edit</button>-->
+          <button class="btn btn-danger btn-sm" (click)="deleteForum(forum._id)">Delete</button>
+          <button class="btn btn-info btn-sm" (click)="showDetails(forum)">Details</button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedForum && selectedForum._id === selectedForum._id">
+        <td colspan="4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ selectedForum.titreForum }}</h5>
+              <p class="card-text"><strong>Description:</strong> {{ selectedForum.descriptionForum }}</p>
+              <p class="card-text"><strong>Category:</strong> {{ selectedForum.category }}</p>
+              <p class="card-text"><strong>User ID:</strong> {{ selectedForum.userId }}</p>
+              <button class="btn btn-secondary" (click)="closeDetails()">Close</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
