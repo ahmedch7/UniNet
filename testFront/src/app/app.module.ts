@@ -8,12 +8,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FoyerService } from './services/foyer.service';
 import { FormsModule } from '@angular/forms';
 import { RestaurantReservationComponent } from './components/restaurant-reservation/restaurant-reservation.component';
+import { MenuListComponent } from './components/menu-list/menu-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FoyerComponent,
-    RestaurantReservationComponent
+    RestaurantReservationComponent,
+    MenuListComponent
   ],
   imports: [
     BrowserModule,

@@ -33,13 +33,22 @@
       <button (click)="deleteRestaurant(restaurant._id)">Supprimer</button>
       <button (click)="editRestaurant(restaurant)">Modifier</button>
       <button (click)="loadReservations(restaurant._id)">Voir Réservations</button>
+      
+      <!-- Liste des réservations -->
+    <!-- Liste des réservations -->
+<div *ngIf="selectedRestaurant && selectedRestaurant._id === restaurant._id">
+  <h4>Réservations pour {{ restaurant.name }}</h4>
+  <ul>
+    <li *ngFor="let reservation of reservations">
+      <p>Utilisateur: {{ reservation.userName }}</p>
+      <p>Date: {{ reservation.date | date }}</p>
+      <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
     </li>
   </ul>
+</div>
 
-  <div *ngIf="selectedRestaurant">
-    <h2>Réservation pour {{ selectedRestaurant.name }}</h2>
-    <!-- Formulaire ou détails de la réservation -->
-  </div>
+    </li>
+  </ul>
 
   <div *ngIf="editMode">
     <h2>Modifier {{ selectedRestaurant.name }}</h2>
@@ -54,13 +63,13 @@
     </form>
   </div>
 
+  <!-- Affichage de la liste des utilisateurs ayant réservé -->
   <div *ngIf="reservations.length > 0">
-    <h2>Réservations</h2>
+    <h2>Utilisateurs ayant réservé</h2>
     <ul>
       <li *ngFor="let reservation of reservations">
-        <p>Utilisateur: {{ reservation.userName }}</p>
-        <p>Date: {{ reservation.date | date }}</p>
-        <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
+        <p>{{ reservation.userName }}</p>
+        <!-- Ajoutez d'autres détails de la réservation si nécessaire -->
       </li>
     </ul>
   </div>

@@ -3,7 +3,6 @@ import Restaurant from '../models/Restaurant.js';
 import User from '../models/User.js';
 import { validationResult } from 'express-validator';
 
-// Créer une réservation pour un restaurant
 export const createRestaurantReservation = async (req, res) => {
   const { userId, restaurantId } = req.body;
 
@@ -52,8 +51,9 @@ export const createRestaurantReservation = async (req, res) => {
     // Sauvegarder la nouvelle réservation
     await newReservation.save();
 
-    // Mettre à jour la capacité disponible du restaurant
+    // Mettre à jour la capacité disponible et le nombre de réservations du restaurant
     restaurant.availablePlaces -= 1;
+    restaurant.numberOfReservations += 1;
     await restaurant.save();
 
     // Répondre avec la nouvelle réservation créée
@@ -70,7 +70,7 @@ export const getRestaurantReservations = async (req, res) => {
     // Récupérer toutes les réservations avec les détails de l'utilisateur et du restaurant associés
     const reservations = await ReservationRestaurant.find()
       .populate('userId', 'nom') // Remplacez 'nom' par les champs appropriés de votre modèle User
-      .populate('restaurantId'); // Populer les détails du restaurant
+      .populate('restaurantId', 'name address numberOfReservations'); // Populer les détails du restaurant
 
     // Répondre avec les réservations récupérées
     res.status(200).json(reservations);
@@ -79,6 +79,7 @@ export const getRestaurantReservations = async (req, res) => {
     res.status(500).json({ message: 'Error getting reservations', error });
   }
 };
+
 
 // Obtenir une réservation spécifique par son ID
 export const getRestaurantReservationById = async (req, res) => {
@@ -117,8 +118,9 @@ export const deleteRestaurantReservation = async (req, res) => {
     // Trouver le restaurant associé à la réservation
     const restaurant = await Restaurant.findById(reservation.restaurantId);
 
-    // Augmenter la capacité disponible du restaurant
+    // Augmenter la capacité disponible et mettre à jour le nombre de réservations du restaurant
     restaurant.availablePlaces += 1;
+    restaurant.numberOfReservations -= 1;
     await restaurant.save();
 
     // Supprimer la réservation

@@ -1,0 +1,39 @@
+<!-- menu-list.component.html -->
+
+<h2>Créer un nouveau menu</h2>
+
+<form (submit)="createMenu()">
+  <label for="text">Texte du menu:</label>
+  <textarea id="text" name="text" [(ngModel)]="newMenu.text" required></textarea><br>
+
+  <!-- Ajoutez d'autres champs comme pour l'image ou le restaurantId -->
+
+  <button type="submit">Créer Menu</button>
+</form>
+
+<hr>
+
+<h2>Liste des menus</h2>
+
+<div *ngFor="let menu of menus">
+  <h3>{{ menu.text }}</h3>
+  <!-- Afficher d'autres détails du menu si nécessaire -->
+
+  <h4>Commentaires</h4>
+  <ul>
+    <li *ngFor="let comment of menu.comments">
+      <p>{{ comment.content }}</p>
+      <!-- Afficher d'autres détails du commentaire si nécessaire -->
+    </li>
+  </ul>
+
+  <form (submit)="addComment(menu._id)">
+    <label for="content">Ajouter un commentaire:</label>
+    <textarea id="content" name="content" [(ngModel)]="newComment.content" required></textarea><br>
+    <!-- Ajoutez d'autres champs comme pour l'auteur -->
+
+    <button type="submit">Ajouter Commentaire</button>
+  </form>
+
+  <hr>
+</div>
