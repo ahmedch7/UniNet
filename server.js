@@ -24,7 +24,7 @@ import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
-
+ 
 const app = express();
 const databaseName = "uninet";
 

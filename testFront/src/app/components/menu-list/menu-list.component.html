@@ -1,12 +1,11 @@
-<!-- menu-list.component.html -->
-
 <h2>Créer un nouveau menu</h2>
 
 <form (submit)="createMenu()">
   <label for="text">Texte du menu:</label>
   <textarea id="text" name="text" [(ngModel)]="newMenu.text" required></textarea><br>
 
-  <!-- Ajoutez d'autres champs comme pour l'image ou le restaurantId -->
+  <label for="image">Image du menu:</label>
+  <input type="file" id="image" (change)="onFileChange($event)" /><br>
 
   <button type="submit">Créer Menu</button>
 </form>
@@ -14,26 +13,46 @@
 <hr>
 
 <h2>Liste des menus</h2>
-
 <div *ngFor="let menu of menus">
   <h3>{{ menu.text }}</h3>
-  <!-- Afficher d'autres détails du menu si nécessaire -->
+  <img *ngIf="menu.image" [src]="'http://localhost:9090/' + menu.image" alt="Menu image" /><br>
 
-  <h4>Commentaires</h4>
-  <ul>
-    <li *ngFor="let comment of menu.comments">
-      <p>{{ comment.content }}</p>
-      <!-- Afficher d'autres détails du commentaire si nécessaire -->
-    </li>
-  </ul>
+  <!-- Bouton pour afficher/masquer les commentaires -->
+  <button (click)="toggleComments(menu._id)">Afficher Commentaires</button>
+
+  <!-- Affichage conditionnel des commentaires -->
+  <div *ngIf="menu.showComments">
+    <h4>Commentaires</h4>
+    <ul>
+      <li *ngFor="let comment of menu.comments">
+        <p>{{ comment.content }}</p>
+      </li>
+    </ul>
+  </div>
 
   <form (submit)="addComment(menu._id)">
     <label for="content">Ajouter un commentaire:</label>
     <textarea id="content" name="content" [(ngModel)]="newComment.content" required></textarea><br>
-    <!-- Ajoutez d'autres champs comme pour l'auteur -->
-
     <button type="submit">Ajouter Commentaire</button>
   </form>
+
+  <!-- Boutons de mise à jour et de suppression -->
+  <button (click)="editMenu(menu)">Modifier Menu</button>
+  <button (click)="deleteMenu(menu._id)">Supprimer Menu</button>
+
+  <!-- Formulaire de mise à jour -->
+  <div *ngIf="menu.editMode">
+    <h4>Modifier le menu</h4>
+    <form (submit)="updateMenu(menu._id)">
+      <label for="editText">Texte du menu:</label>
+      <textarea id="editText" name="editText" [(ngModel)]="menu.editText" required></textarea><br>
+
+      <label for="editImage">Image du menu:</label>
+      <input type="file" id="editImage" (change)="onFileChange($event, menu)" /><br>
+
+      <button type="submit">Mettre à jour Menu</button>
+    </form>
+  </div>
 
   <hr>
 </div>
