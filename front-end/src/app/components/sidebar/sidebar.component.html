@@ -1,21 +1,22 @@
 <nav class="navbar navbar-vertical navbar-expand-md navbar-light bg-white" id="sidenav-main">
   <div class="container-fluid">
     <!-- Toggler -->
-    <button class="navbar-toggler" type="button" (click)="isCollapsed=!isCollapsed"
-       aria-controls="sidenav-collapse-main">
+    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" aria-controls="sidenav-collapse-main">
       <span class="navbar-toggler-icon"></span>
     </button>
+    
     <!-- Brand -->
     <a class="navbar-brand pt-0" routerLinkActive="active" [routerLink]="['/dashboard']">
       <img src="./assets/img/brand/red.png" class="navbar-brand-img" alt="...">
     </a>
+    
     <!-- User -->
     <ul class="nav align-items-center d-md-none">
       <li class="nav-item" ngbDropdown placement="bottom-right">
         <a class="nav-link nav-link-icon" role="button" ngbDropdownToggle>
           <i class="ni ni-bell-55"></i>
         </a>
-        <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
+        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
           <a class="dropdown-item" href="javascript:void(0)">Action</a>
           <a class="dropdown-item" href="javascript:void(0)">Another action</a>
           <div class="dropdown-divider"></div>
@@ -30,8 +31,8 @@
             </span>
           </div>
         </a>
-        <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
-          <div class=" dropdown-header noti-title">
+        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+          <div class="dropdown-header noti-title">
             <h6 class="text-overflow m-0">Welcome!</h6>
           </div>
           <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
@@ -58,25 +59,24 @@
         </div>
       </li>
     </ul>
+    
     <!-- Collapse -->
-    <div class="collapse navbar-collapse"  [ngbCollapse]="isCollapsed" id="sidenav-collapse-main">
-      <!-- Collapse header -->
+    <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed" id="sidenav-collapse-main">
       <div class="navbar-collapse-header d-md-none">
         <div class="row">
           <div class="col-6 collapse-brand">
-            <a  routerLinkActive="active" [routerLink]="['/dashboard']">
+            <a routerLinkActive="active" [routerLink]="['/dashboard']">
               <img src="./assets/img/brand/blue.png">
             </a>
           </div>
           <div class="col-6 collapse-close">
-            <button type="button" class="navbar-toggler" (click)="isCollapsed=!isCollapsed">
+            <button type="button" class="navbar-toggler" (click)="isCollapsed = !isCollapsed">
               <span></span>
               <span></span>
             </button>
           </div>
         </div>
       </div>
-      <!-- Form -->
       <form class="mt-4 mb-3 d-md-none">
         <div class="input-group input-group-rounded input-group-merge">
           <input type="search" class="form-control form-control-rounded form-control-prepended" placeholder="Search" aria-label="Search">
@@ -87,20 +87,30 @@
           </div>
         </div>
       </form>
-      <!-- Navigation -->
-      <ul class="navbar-nav">
-          <li *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
-              <a routerLinkActive="active" [routerLink]="[menuItem.path]" class="nav-link">
-                  <i class="ni {{menuItem.icon}}"></i>
-                  {{menuItem.title}}
+      <div class="collapse navbar-collapse" [ngbCollapse]="isCollapsed" id="sidenav-collapse-main">
+
+        <ul class="navbar-nav">
+          <ng-container *ngFor="let menuItem of menuItems">
+            <li class="nav-item" [ngClass]="{'dropdown': menuItem.children}">
+              <a class="nav-link" *ngIf="!menuItem.children" [routerLink]="[menuItem.path]">
+                <i class="ni {{menuItem.icon}}"></i>
+                {{menuItem.title}}
               </a>
-          </li>
-      </ul>
-      <!-- Divider -->
+              <div class="nav-link dropdown-toggle" *ngIf="menuItem.children" [ngClass]="{'show': menuItem.showDropdown}" (click)="toggleDropdown(menuItem)">
+                <i class="ni {{menuItem.icon}}"></i>
+                {{menuItem.title}}
+                <span class="dropdown-arrow"></span> <!-- Added arrow indicator -->
+              </div>
+              <ul class="dropdown-menu" [ngClass]="{'show': menuItem.showDropdown}">
+                <li *ngFor="let subItem of menuItem.children">
+                  <a class="dropdown-item" [routerLink]="[subItem.path]" (click)="closeDropdown(menuItem)">{{subItem.title}}</a>
+                </li>
+              </ul>
+            </li>
+          </ng-container>
+        </ul>
       <hr class="my-3">
-      <!-- Heading -->
       <h6 class="navbar-heading text-muted">Documentation</h6>
-      <!-- Navigation -->
       <ul class="navbar-nav mb-md-3">
         <li class="nav-item">
           <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard-angular/documentation/tutorial">
@@ -119,5 +129,6 @@
         </li>
       </ul>
     </div>
+  </div>
   </div>
 </nav>

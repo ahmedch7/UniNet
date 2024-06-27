@@ -1,0 +1,47 @@
+/* Dropdown styles for sidebar */
+.navbar-vertical .dropdown-menu {
+    display: none; /* Hide dropdowns by default */
+    position: relative; /* Position relative within the vertical navbar */
+    float: none; /* Override default float */
+    width: auto; /* Adjust width as needed */
+    box-shadow: none; /* Remove default shadow for a cleaner look */
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */
+  }
+  
+  .navbar-vertical .dropdown-menu.show {
+    display: block; /* Show dropdown when class "show" is added */
+  }
+  
+  .navbar-vertical .dropdown-toggle::after {
+    display: none; /* Hide default arrow */
+  }
+  
+  .navbar-vertical .dropdown-item {
+    color: #333; /* Adjust color if needed */
+    padding: 0.5rem 1rem; /* Consistent padding */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+  }
+  
+  .navbar-vertical .dropdown-item:hover {
+    background-color: #f8f9fa; /* Adjust hover background color if needed */
+  }
+  
+  .navbar-vertical .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem; /* Consistent padding */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+    cursor: pointer; /* Pointer cursor on hover */
+    color: #333; /* Adjust link color */
+  }
+  
+  .navbar-vertical .nav-link:hover {
+    background-color: #f8f9fa; /* Adjust hover background color */
+  }
+  .dropdown-arrow {
+    margin-left: auto; /* Ensure the arrow is at the end */
+    font-size: 1rem; /* Adjust size as needed */
+    color: #333; /* Adjust color as needed */
+  }
+  

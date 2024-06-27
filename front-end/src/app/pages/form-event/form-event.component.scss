@@ -1,0 +1,11 @@
+agm-map {
+    height: 500px; /* Adjust the height as needed */
+  }
+  
+  .select-location-button {
+    position: absolute;
+    top: 600x; /* Adjust top position as needed */
+    left: 20px; /* Adjust left position as needed */
+    z-index: 1000; /* Ensure button appears above the map */
+  }
+  

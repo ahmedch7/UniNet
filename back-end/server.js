@@ -31,15 +31,11 @@ import examenRoutes from './routes/examen.route.js';
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
 
 
-
-
-
-
 const app = express();
 const databaseName = "uninet";
 
 mongoose
-  .connect(`mongodb://localhost:27017/${databaseName}`, { family: 4 })
+  .connect('mongodb://127.0.0.1:27017/PI')
   .then(() => {
     console.log("database connected");
   })
@@ -55,8 +51,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
-const PORT = process.env.PORT || 9090;
-const hostname = "127.0.0.1";
+const PORT = process.env.PORT || 3000;
+
 
 //user Routes
 app.use("/api/auth", authRoutes);
@@ -87,6 +83,6 @@ app.use('/examens', examenRoutes);
 
 app.use(notFoundError);
 app.use(errorHandler);
-app.listen(PORT, hostname, () => {
-  console.log(`Server running on http://${hostname}:${PORT}`);
+app.listen(PORT,() => {
+  console.log(`Server running on ${PORT}`);
 });

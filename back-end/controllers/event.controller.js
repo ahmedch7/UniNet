@@ -1,6 +1,8 @@
 import Event from '../models/Events.js';
 import User from '../models/User.js';
-import Comment from '../models/Comment.js';
+import CommentEvent from '../models/CommentEvents.js';
+import { sendParticipationEmail } from '../controllers/email.controller.js';
+
 export const getEvents = async (req, res) => {
     try {
         const { name, date, location, status, sortField, sortOrder } = req.query;
@@ -88,6 +90,7 @@ export const deleteEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const likeEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -99,7 +102,6 @@ export const likeEvent = async (req, res) => {
         }
 
         if (!event.likes.includes(userId)) {
-            // Remove user from dislikes if already disliked
             const dislikeIndex = event.dislikes.indexOf(userId);
             if (dislikeIndex !== -1) {
                 event.dislikes.splice(dislikeIndex, 1);
@@ -126,7 +128,6 @@ export const dislikeEvent = async (req, res) => {
         }
 
         if (!event.dislikes.includes(userId)) {
-            // Remove user from likes if already liked
             const likeIndex = event.likes.indexOf(userId);
             if (likeIndex !== -1) {
                 event.likes.splice(likeIndex, 1);
@@ -141,7 +142,6 @@ export const dislikeEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 export const addComment = async (io, req, res) => {
     try {
@@ -168,6 +168,7 @@ export const addComment = async (io, req, res) => {
             nom: user.nom,
             createdAt: new Date()
         };
+        const comment = await CommentEvent.create(newComment);
 
         event.comments.push(newComment);
         await event.save();
@@ -195,6 +196,7 @@ export const deleteComment = async (req, res) => {
         if (commentIndex === -1) {
             return res.status(404).json({ message: 'Comment not found' });
         }
+        const comment = await CommentEvent.create(newComment);
 
         event.comments.splice(commentIndex, 1);
         await event.save();
@@ -228,6 +230,7 @@ export const updateComment = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const participateEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -246,11 +249,18 @@ export const participateEvent = async (req, res) => {
         event.participants.push({ user: userId, username });
         await event.save();
 
+        // Send participation email
+        const user = await User.findById(userId);
+        if (user) {
+            await sendParticipationEmail(user.email, user.nom, user.prenom, event.name, event.location, event.date, event.description);
+        }
+
         res.status(200).json(event);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const deleteParticipation = async (req, res) => {
     try {
         const { eventId, participationId } = req.params;
@@ -276,7 +286,3 @@ export const deleteParticipation = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-
-
-

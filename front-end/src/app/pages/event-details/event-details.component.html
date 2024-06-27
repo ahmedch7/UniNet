@@ -1,0 +1,76 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body"></div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div *ngIf="event" class="event-details">
+      <div class="event-header">
+        <h2>{{ event.name }}</h2>
+        <button class="btn btn-danger" (click)="deleteEvent()">Delete Event</button>
+      </div>
+      
+      <div class="event-body">
+        <div class="event-image-container">
+          <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="event-image" />
+        </div>
+        <div class="event-info">
+          <p>{{ event.description }}</p>
+          <p><strong>Status:</strong> {{ event.status }}</p>
+          <p><strong>Date:</strong> {{ event.date | date:'short' }}</p>
+          <p><strong>Location:</strong> {{ event.location }}</p>
+          <p><strong>Tags:</strong> {{ event.tags.join(', ') }}</p>
+          <p><strong>Categories:</strong> {{ event.categories.join(', ') }}</p>
+          <p><strong>N° Places:</strong> {{ event.Nbplaces }}</p>
+          <button class="btn btn-success" [disabled]="event.Nbplaces === 0" (click)="participate()">Participate</button>
+          <button class="btn btn-warning" (click)="enableEditing()">Update</button>
+        </div>
+      </div>
+      
+      <div *ngIf="isEditing" class="event-editing">
+        <h2>
+          <input [(ngModel)]="event.name" placeholder="Event Name" />
+        </h2>
+        <div>
+          <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="event-image" />
+          <input type="file" (change)="onFileSelected($event)" />
+        </div>
+        <textarea [(ngModel)]="event.description" placeholder="Event Description"></textarea>
+        <label>
+          <strong>Status:</strong>
+          <select [(ngModel)]="event.status">
+            <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+          </select>
+        </label>
+        <input type="date" [(ngModel)]="event.date" placeholder="Event Date" />
+        <input [(ngModel)]="event.location" placeholder="Event Location" />
+        <input [(ngModel)]="event.tags" placeholder="Event Tags" />
+        <input [(ngModel)]="event.categories" placeholder="Event Categories" />
+        <input type="number" [(ngModel)]="event.Nbplaces" placeholder="Number of Places" />
+        <button class="btn btn-primary" (click)="updateEvent()">Save</button>
+        <button class="btn btn-secondary" (click)="cancelEditing()">Cancel</button>
+      </div>
+      
+      <div class="event-actions">
+        <button class="btn btn-outline-primary" (click)="likeEvent()">Like ({{ event.likes?.length || 0 }})</button>
+        <button class="btn btn-outline-danger" (click)="dislikeEvent()">Dislike ({{ event.dislikes?.length || 0 }})</button>
+      </div>
+      
+      <div class="comments-section">
+        <h3>Comments</h3>
+        <div *ngFor="let comment of event.comments" class="comment-item">
+          <p><strong>{{ comment.nom }}:</strong> {{ comment.text }} ({{ comment.createdAt | date:'short' }})</p>
+          <button class="btn btn-danger btn-sm" (click)="deleteComment(event._id, comment._id)">Delete</button>
+          <button class="btn btn-warning btn-sm" (click)="updateComment(event._id, comment._id)">Update</button>
+        </div>
+      </div>
+      
+      <div class="add-comment">
+        <h4>Add a comment</h4>
+        <textarea [(ngModel)]="newCommentText" placeholder="Enter your comment here" class="form-control"></textarea>
+        <button class="btn btn-primary mt-2" (click)="addComment()">Add Comment</button>
+      </div>
+    </div>
+  </div>
+  
