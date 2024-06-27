@@ -69,18 +69,18 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   createReservation(restaurantId: string): void {
-    // Ici, vous devrez implémenter la logique pour récupérer l'ID de l'utilisateur approprié
-    const userId = 'votre_id_utilisateur_ici';
+    const userId = '6679be5c0a809410213874ad'; // Your static user ID for testing
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Reservation créée avec succès', data);
-        this.loadRestaurants(); // Rechargez la liste des restaurants après la réservation
+        this.loadRestaurants(); // Reload the list of restaurants after the reservation
       },
       (error) => {
         console.error('Erreur lors de la création de la réservation', error);
       }
     );
   }
+  
 
   selectRestaurant(restaurant: any): void {
     this.selectedRestaurant = restaurant;
