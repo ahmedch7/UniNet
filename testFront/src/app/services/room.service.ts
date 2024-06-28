@@ -16,8 +16,15 @@ export class RoomService {
   }
 
   getRoomsByFoyerId(foyerId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}?foyerId=${foyerId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/getByIdFoyer/${foyerId}`);
   }
+
+
+  getRoomReservationById(foyerId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/getRoomReservationById/${foyerId}`);
+  }
+ 
+
 
   createRoom(room: any): Observable<any> {
     return this.http.post(this.apiUrl, room);
@@ -38,4 +45,8 @@ export class RoomService {
   cancelReservation(reservationId: string): Observable<any> {
     return this.http.delete(`${this.reservationApiUrl}/${reservationId}`);
   }
+
+
+ 
+
 }

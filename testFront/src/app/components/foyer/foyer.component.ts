@@ -75,6 +75,7 @@ export class FoyerComponent implements OnInit {
   }
 
   viewRooms(foyer: any): void {
+    this.UsersReserved=null;
     console.log("test", foyer._id)
     console.log("this.selectedFoyer", this.selectedFoyer)
 
@@ -96,12 +97,15 @@ export class FoyerComponent implements OnInit {
     this.roomService.getRoomsByFoyerId(foyerId).subscribe(
       (data) => {
         this.roomsByFoyer[foyerId] = data;
+        console.log("-----------data------",foyerId)
+        console.log(data)
       },
       (error) => {
         console.error('Error loading rooms', error);
       }
     );
   }
+  
 
   createRoom(foyerId: string): void {
     this.newRoom.foyerId = foyerId;
@@ -146,6 +150,7 @@ export class FoyerComponent implements OnInit {
   id_user = '664f89f28fb320b8082864b5';  // ID utilisateur statique
 
   reserveRoom(roomId: string): void {
+
     const existingReservation = this.roomsByFoyer[this.selectedFoyer._id].find(room => room._id === roomId)?.reservation;
 
     if (existingReservation) {
@@ -188,5 +193,23 @@ export class FoyerComponent implements OnInit {
     this.selectedFoyer = this.foyers.find(foyer => foyer._id === foyerId); // Set the selected foyer
     this.newRoom = {}; // Clear previous newRoom data
     this.newRoom.foyerId = foyerId; // Assign the foyerId to newRoom
+  }
+
+
+  UsersReserved:any=[];
+  getusersreservationRooms(roomId: string){
+    this.roomService.getRoomReservationById(roomId).subscribe(
+      (data) => {
+       this.UsersReserved=data;
+       
+        console.log('Room reserved successfully', data);
+       
+      },
+      (error: any) => {
+        console.error('Error reserving room', error);
+      }
+    );
+    
+
   }
 }

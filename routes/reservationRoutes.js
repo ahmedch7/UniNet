@@ -1,24 +1,27 @@
 import express from 'express';
-import { body, param } from 'express-validator';
+import { param } from 'express-validator';
 import {
-  createReservation,
   getReservations,
   getReservationById,
+  createReservation,
   updateReservation,
-  deleteReservation
+  deleteReservation,
+  getReservationsByRoomId
 } from '../controllers/reservationController.js';
 
 const router = express.Router();
 
-const validateReservation = [
-  body('userId').isMongoId().withMessage('Invalid user ID'),
-  body('roomId').isMongoId().withMessage('Invalid room ID')
-];
+// Middleware de validation des paramètres
+const validateId = param('id').isMongoId().withMessage('Invalid ID format');
 
+// Routes des réservations
 router.get('/', getReservations);
-router.get('/:id', param('id').isMongoId().withMessage('Invalid ID format'), getReservationById);
-router.post('/', validateReservation, createReservation);
-router.put('/:id', param('id').isMongoId().withMessage('Invalid ID format'), validateReservation, updateReservation);
-router.delete('/:id', param('id').isMongoId().withMessage('Invalid ID format'), deleteReservation);
+router.get('/:id', validateId, getReservationById);
+router.post('/', createReservation);
+router.put('/:id', validateId, updateReservation);
+router.delete('/:id', validateId, deleteReservation);
+
+// Route pour récupérer les réservations par chambre
+router.get('/room/:roomId', param('roomId').isMongoId().withMessage('Invalid room ID'), getReservationsByRoomId);
 
 export default router;

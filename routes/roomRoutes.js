@@ -6,7 +6,7 @@ import {
   getRoomById,
   updateRoom,
   deleteRoom,
-  reserveRoom
+  reserveRoom,getRoomByIdFoyer,getRoomReservationById
 } from '../controllers/roomController.js';
 
 const router = express.Router();
@@ -27,6 +27,13 @@ router.get('/:id', param('id').isMongoId().withMessage('Invalid ID format'), get
 router.post('/', validateRoom, createRoom);
 router.put('/:id', param('id').isMongoId().withMessage('Invalid ID format'), validateRoom, updateRoom);
 router.delete('/:id', param('id').isMongoId().withMessage('Invalid ID format'), deleteRoom);
+
+router.get('/getByIdFoyer/:id', param('id').isMongoId().withMessage('Invalid ID format'), getRoomByIdFoyer);
+router.get('/getRoomReservationById/:id', param('id').isMongoId().withMessage('Invalid ID format'), getRoomReservationById);
+
+
+
+
 
 router.post('/reserve', validateReservation, reserveRoom);
 

@@ -114,3 +114,16 @@ export const cancelReservation = async (req, res) => {
     res.status(500).json({ message: 'Error cancelling reservation', error });
   }
 };
+
+export const getReservationsByRoomId = async (req, res) => {
+  console.log(req.params)
+  const { roomId } = req.params;
+  try {
+    const reservations = await Reservation.find({ roomId }).populate('userId', 'nom email');
+
+    console.log(reservations)
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting reservations by room', error });
+  }
+};

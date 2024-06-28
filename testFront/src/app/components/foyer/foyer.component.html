@@ -24,7 +24,23 @@
               <button (click)="selectRoomForUpdate(room)">Update</button>
               <button (click)="reserveRoom(room._id)">Reserve</button>
               <button *ngIf="room.reservation" (click)="cancelReservation(room.reservation._id)">Cancel Reservation</button>
+
+
+
+              <button (click)="getusersreservationRooms(room._id)">Test</button>
+              <ul>
+                <ng-container *ngIf="UsersReserved && UsersReserved.length > 0">
+                  <li *ngFor="let reservation of UsersReserved">
+                    {{ reservation.userId.nom}}  - {{reservation.date}}<!-- Affiche le nom de l'utilisateur -->
+                  </li>
+                </ng-container>
+               <li *ngIf=" UsersReserved.length == 0">No reservations yet.</li> 
+              </ul>
+           
+
               <hr>
+
+
             </li>
           </ul>
         </div>
