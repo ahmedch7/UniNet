@@ -16,7 +16,7 @@ export class MenuListComponent implements OnInit {
   };
   newComment: any = {
     content: '',
-    author: '',
+    author: '664f89f28fb320b8082864b5',//ID statique d auteur
     menuId: ''
   };
 
@@ -130,6 +130,16 @@ export class MenuListComponent implements OnInit {
       // Si un autre menu a showComments true, mettez-le à false
       if (menu._id === menuId) {
         menu.showComments = !menu.showComments;
+        if (menu.showComments) {
+          this.commentService.getComments(menuId).subscribe(
+            (comments) => {
+              menu.comments = comments;
+            },
+            (error) => {
+              console.error('Error loading comments', error);
+            }
+          );
+        }
       } else {
         menu.showComments = false;
       }

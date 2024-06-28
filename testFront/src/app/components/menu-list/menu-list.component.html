@@ -30,11 +30,12 @@
     </ul>
   </div>
 
-  <form (submit)="addComment(menu._id)">
+  <form (ngSubmit)="addComment(menu._id)">
     <label for="content">Ajouter un commentaire:</label>
     <textarea id="content" name="content" [(ngModel)]="newComment.content" required></textarea><br>
     <button type="submit">Ajouter Commentaire</button>
   </form>
+  
 
   <!-- Boutons de mise à jour et de suppression -->
   <button (click)="editMenu(menu)">Modifier Menu</button>

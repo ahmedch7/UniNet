@@ -69,8 +69,7 @@ app.use("/api/user", userRouter); // corrected path
 app.use("/commentaire", commentaireRoutes);
 app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
-
-// Error handling
+ // Error handling
 app.use(notFoundError);
 app.use(errorHandler);
 
