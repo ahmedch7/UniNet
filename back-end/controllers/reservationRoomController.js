@@ -1,6 +1,5 @@
 
-
-import Reservation from '../models/Reservation.js';
+import Reservation from '../models/ReservationRoom.js';
 import Room from '../models/Room.js';
 import User from '../models/User.js';
 
@@ -22,7 +21,8 @@ export const createReservation = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-     const existingReservation = await Reservation.findOne({
+    // Vérifier si l'utilisateur a déjà une réservation dans ce foyer
+    const existingReservation = await Reservation.findOne({
       userId,
       roomId: { $in: await Room.find({ foyerId: room.foyerId }).select('_id') }
     });
@@ -92,5 +92,39 @@ export const deleteReservation = async (req, res) => {
     res.status(200).json({ message: 'Reservation deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting reservation', error });
+  }
+};
+
+export const cancelReservation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const reservation = await Reservation.findById(id);
+
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reservation not found' });
+    }
+
+    const room = await Room.findById(reservation.roomId);
+    room.availablePlaces += reservation.places;
+    await room.save();
+
+    await reservation.remove();
+
+    res.status(200).json({ message: 'Reservation cancelled successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error cancelling reservation', error });
+  }
+};
+
+export const getReservationsByRoomId = async (req, res) => {
+  console.log(req.params)
+  const { roomId } = req.params;
+  try {
+    const reservations = await Reservation.find({ roomId }).populate('userId', 'nom email');
+
+    console.log(reservations)
+    res.status(200).json(reservations);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting reservations by room', error });
   }
 };

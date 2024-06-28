@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { addComment, getComments } from '../controllers/commentController.js';
+import { addComment, getComments } from '../controllers/commentMenuRestauController.js';
 
 const router = express.Router();
 

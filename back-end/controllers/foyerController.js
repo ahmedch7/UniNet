@@ -1,5 +1,4 @@
 import Foyer from '../models/Foyer.js';
-import Room from '../models/Room.js';
 
 export const getFoyers = async (req, res) => {
   try {
@@ -9,6 +8,7 @@ export const getFoyers = async (req, res) => {
     res.status(500).json({ message: "Error getting foyers", error });
   }
 };
+
 
 export const createFoyer = async (req, res) => {
   const { name, address, facultyId } = req.body;
@@ -51,5 +51,15 @@ export const getAvailablePlaces = async (req, res) => {
     res.status(200).json(foyers);
   } catch (error) {
     res.status(500).json({ message: "Error getting available places", error });
+  }
+};
+
+export const getRoomsByFoyerId = async (req, res) => {
+  const { foyerId } = req.query;
+  try {
+    const rooms = await Room.find({ foyerId }).populate('foyerId');
+    res.status(200).json(rooms);
+  } catch (error) {
+    res.status(500).json({ message: "Error getting rooms by foyerId", error });
   }
 };

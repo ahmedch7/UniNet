@@ -1,6 +1,5 @@
 import Event from '../models/Events.js';
 import User from '../models/User.js';
-import Comment from '../models/Comment.js';
 export const getEvents = async (req, res) => {
     try {
         const { name, date, location, status, sortField, sortOrder } = req.query;
