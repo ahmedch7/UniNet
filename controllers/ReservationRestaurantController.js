@@ -82,33 +82,37 @@ export const getRestaurantReservations = async (req, res) => {
 
 
 // Obtenir une réservation spécifique par son ID
+
 export const getRestaurantReservationById = async (req, res) => {
   const { id } = req.params;
   try {
-    // Rechercher la réservation par ID avec les détails de l'utilisateur et du restaurant
-    const reservation = await ReservationRestaurant.findById(id)
-      .populate('userId', 'nom') // Remplacez 'nom' par les champs appropriés de votre modèle User
-      .populate('restaurantId'); // Populer les détails du restaurant
+    // Rechercher toutes les réservations pour un restaurant donné par ID
+    const reservations = await ReservationRestaurant.find({ restaurantId: id })
+      .populate('userId', 'nom email') // Ajouter les champs appropriés de votre modèle User (e.g., 'nom' et 'email')
+      .populate('restaurantId', 'nom'); // Ajouter les champs appropriés du modèle Restaurant (e.g., 'nom')
 
-    // Vérifier si la réservation existe
-    if (!reservation) {
-      return res.status(404).json({ message: 'Reservation not found' });
+    // Vérifier si des réservations existent pour ce restaurant
+    if (!reservations || reservations.length === 0) {
+      return res.status(404).json({ message: 'No reservations found for this restaurant' });
     }
 
-    // Répondre avec la réservation récupérée
-    res.status(200).json(reservation);
+    // Répondre avec les réservations récupérées
+    res.status(200).json(reservations);
   } catch (error) {
     // Gérer les erreurs
-    res.status(500).json({ message: 'Error getting reservation', error });
+    res.status(500).json({ message: 'Error getting reservations', error });
   }
 };
 
 // Supprimer une réservation de restaurant spécifique par son ID
 export const deleteRestaurantReservation = async (req, res) => {
   const { id } = req.params;
+
+  console.log(id)
   try {
     // Rechercher la réservation par ID
     const reservation = await ReservationRestaurant.findById(id);
+    
 
     // Vérifier si la réservation existe
     if (!reservation) {
@@ -117,19 +121,22 @@ export const deleteRestaurantReservation = async (req, res) => {
 
     // Trouver le restaurant associé à la réservation
     const restaurant = await Restaurant.findById(reservation.restaurantId);
-
+    console.log(reservation)
+    console.log(restaurant)
     // Augmenter la capacité disponible et mettre à jour le nombre de réservations du restaurant
     restaurant.availablePlaces += 1;
     restaurant.numberOfReservations -= 1;
     await restaurant.save();
 
     // Supprimer la réservation
-    await reservation.remove();
+    await reservation.deleteOne();
 
     // Répondre avec un message de succès
     res.status(200).json({ message: 'Reservation deleted successfully' });
   } catch (error) {
     // Gérer les erreurs
+
+    console.log(error)
     res.status(500).json({ message: 'Error deleting reservation', error });
   }
 };

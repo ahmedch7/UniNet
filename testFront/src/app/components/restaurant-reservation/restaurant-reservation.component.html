@@ -32,17 +32,16 @@
       <button (click)="createReservation(restaurant._id)">Réserver</button>
       <button (click)="deleteRestaurant(restaurant._id)">Supprimer</button>
       <button (click)="editRestaurant(restaurant)">Modifier</button>
-      <button (click)="loadReservations(restaurant._id)">Voir Réservations</button>
+      <button (click)="loadReservations(restaurant._id)">Voir Réservations test</button>
       
       <!-- Liste des réservations -->
     <!-- Liste des réservations -->
-<div *ngIf="selectedRestaurant && selectedRestaurant._id === restaurant._id">
+<div *ngIf="reservations.length > 0">
   <h4>Réservations pour {{ restaurant.name }}</h4>
   <ul>
     <li *ngFor="let reservation of reservations">
-      <p>Utilisateur: {{ reservation.userName }}</p>
-      <p>Date: {{ reservation.date | date }}</p>
-      <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
+      <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date  | date  }}</p>
+       <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
     </li>
   </ul>
 </div>
@@ -64,13 +63,12 @@
   </div>
 
   <!-- Affichage de la liste des utilisateurs ayant réservé -->
-  <div *ngIf="reservations.length > 0">
+  <!-- <div *ngIf="reservations.length > 0">
     <h2>Utilisateurs ayant réservé</h2>
     <ul>
       <li *ngFor="let reservation of reservations">
         <p>{{ reservation.userName }}</p>
-        <!-- Ajoutez d'autres détails de la réservation si nécessaire -->
-      </li>
+       </li>
     </ul>
-  </div>
+  </div> -->
 </div>

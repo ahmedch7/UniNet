@@ -143,7 +143,7 @@ export class FoyerComponent implements OnInit {
     this.selectedRoom = { ...room }; // Make a copy of room object to avoid mutating the original
   }
 
-  id_user = '6679be5c0a809410213874ad';  // ID utilisateur statique
+  id_user = '664f89f28fb320b8082864b5';  // ID utilisateur statique
 
   reserveRoom(roomId: string): void {
     const existingReservation = this.roomsByFoyer[this.selectedFoyer._id].find(room => room._id === roomId)?.reservation;

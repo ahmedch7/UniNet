@@ -69,7 +69,7 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   createReservation(restaurantId: string): void {
-    const userId = '6679be5c0a809410213874ad'; // Votre ID utilisateur statique pour les tests
+    const userId = '664f89f28fb320b8082864b5'; // Votre ID utilisateur statique pour les tests
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Réservation créée avec succès', data);
@@ -123,8 +123,11 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   loadReservations(restaurantId: string): void {
+    console.log(restaurantId)
     this.reservationService.getRestaurantReservations(restaurantId).subscribe(
       (data) => {
+        console.log("data")
+        console.log(data)
         this.reservations = data;
         console.log('Réservations chargées :', this.reservations); // Vérifiez dans la console du navigateur si les données sont correctement chargées
       },
