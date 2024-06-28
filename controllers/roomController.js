@@ -1,6 +1,6 @@
 import Room from '../models/Room.js';
 import Foyer from '../models/Foyer.js';
-import Reservation from '../models/Reservation.js';
+import Reservation from '../models/ReservationRoom.js';
 
 export const createRoom = async (req, res) => {
   const { roomNumber, type, capacity, foyerId } = req.body;

@@ -7,7 +7,7 @@ import {
   updateReservation,
   deleteReservation,
   getReservationsByRoomId
-} from '../controllers/reservationController.js';
+} from '../controllers/reservationRoomController.js';
 
 const router = express.Router();
 

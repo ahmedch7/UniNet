@@ -20,7 +20,6 @@
       <button (click)="cancelCreate()">Annuler</button>
     </form>
   </div>
-  
   <ul>
     <li *ngFor="let restaurant of restaurants">
       <h3>{{ restaurant.name }}</h3>
@@ -35,19 +34,20 @@
       <button (click)="loadReservations(restaurant._id)">Voir Réservations</button>
       
       <!-- Liste des réservations -->
-    <!-- Liste des réservations -->
-<div *ngIf="reservations.length > 0">
-  <h4>Réservations pour {{ restaurant.name }}</h4>
-  <ul>
-    <li *ngFor="let reservation of reservations">
-      <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date  | date  }}</p>
-       <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
+      <div *ngIf="reservationsByRestaurant[restaurant._id] && reservationsByRestaurant[restaurant._id].length > 0">
+        <h4>Réservations pour {{ restaurant.name }}</h4>
+        <ul>
+          <li *ngFor="let reservation of reservationsByRestaurant[restaurant._id]">
+            <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}</p>
+            <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
+          </li>
+        </ul>
+      </div>
     </li>
   </ul>
-</div>
-
-    </li>
-  </ul>
+  
+  
+  
 
   <div *ngIf="editMode">
     <h2>Modifier {{ selectedRestaurant.name }}</h2>

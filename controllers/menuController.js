@@ -1,5 +1,5 @@
 import Menu from '../models/Menu.js';
-import Comment from '../models/Comment.js';
+import Comment from '../models/CommentMenuRestau.js';
 import { validationResult } from 'express-validator';
 
 
