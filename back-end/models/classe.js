@@ -1,5 +1,5 @@
 import {Schema , model, Types} from "mongoose";
-
+import Chat from './chat.js';
 const classeSchema = new Schema({
 
     NomClasse: { 
@@ -18,7 +18,9 @@ const classeSchema = new Schema({
     StudentId: [{ 
         type: Types.ObjectId, 
         ref: 'student',
-    }]
+    }],
+   
+    chat :[Chat.schema]
 
 })
 

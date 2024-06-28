@@ -13,25 +13,7 @@ const coursSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    chapitres: [
-        {
-            titre: {
-                type: String,
-                required: true
-            },
-            files: [
-                {
-                    fileType: {
-                        type: String,
-                        enum: ["word", "excel", "pdf"]
-                    },
-                    filePath: {
-                        type: String
-                    }
-                }
-            ]
-        }
-    ],
+    files: String,
     classeId: {
         type: Types.ObjectId,
         ref: "classe",
