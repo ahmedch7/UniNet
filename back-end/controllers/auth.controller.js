@@ -102,7 +102,7 @@ export const forgotPassword = async (req, res) => {
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
 
-    const resetURL = `http://${req.headers.host}/api/auth/reset-password/${resetToken}`;
+    const resetURL = `http://localhost:4200/reset-password?token=${resetToken}`;
     const htmlToSend = template({ resetURL });
 
     const mailOptions = {
