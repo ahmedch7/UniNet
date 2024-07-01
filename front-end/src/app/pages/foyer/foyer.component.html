@@ -1,0 +1,224 @@
+<!-- Page content -->
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">List of Foyers</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Name</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Faculty ID</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let foyer of foyers">
+                  <th scope="row">
+                    {{ foyer.name }}
+                  </th>
+                  <td>
+                    {{ foyer.address }}
+                  </td>
+                  <td>
+                    {{ foyer.facultyId }}
+                  </td>
+                  <td>
+                    <button (click)="deleteFoyer(foyer._id)" class="btn btn-danger btn-sm">Delete</button>
+                    <button (click)="selectFoyerForUpdate(foyer)" class="btn btn-warning btn-sm">Update</button>
+                    <button (click)="viewRooms(foyer)" class="btn btn-info btn-sm">View Rooms</button>
+                    <button (click)="createNewRoom(foyer._id)" class="btn btn-primary btn-sm">Create New Room</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Room details -->
+    <div class="row mt-4" *ngIf="selectedFoyer">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Rooms in {{ selectedFoyer.name }}</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Room Number</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Capacity</th>
+                  <th scope="col">Available Places</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let room of roomsByFoyer[selectedFoyer._id]">
+                  <th scope="row">
+                    {{ room.roomNumber }}
+                  </th>
+                  <td>
+                    {{ room.type }}
+                  </td>
+                  <td>
+                    {{ room.capacity }}
+                  </td>
+                  <td>
+                    {{ room.availablePlaces }}
+                  </td>
+                  <td>
+                    <button (click)="deleteRoom(room._id)" class="btn btn-danger btn-sm">Delete</button>
+                    <button (click)="selectRoomForUpdate(room)" class="btn btn-warning btn-sm">Update</button>
+                    <button (click)="reserveRoom(room._id)" class="btn btn-success btn-sm">Reserve</button>
+                    <button *ngIf="room.reservation" (click)="cancelReservation(room.reservation._id)" class="btn btn-secondary btn-sm">Cancel Reservation</button>
+                    <button (click)="getusersreservationRooms(room._id)" class="btn btn-info btn-sm">View Reservations</button>
+                  </td>
+                </tr>
+                <tr *ngIf="UsersReserved && UsersReserved.length > 0">
+                  <td colspan="5">
+                    <ul>
+                      <li *ngFor="let reservation of UsersReserved">
+                        {{ reservation.userId.nom }} - {{ reservation.date | date }}
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr *ngIf="UsersReserved && UsersReserved.length === 0">
+                  <td colspan="5">No reservations yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+        <!-- Create New Foyer -->
+    <div  *ngIf="showCard === 'createFoyer'">
+    <div class="row mt-4">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Create New Foyer</h3>
+          </div>
+          <div class="card-body">
+            <form (submit)="createFoyer()">
+              <div class="form-group">
+                <label>Name:</label>
+                <input type="text" [(ngModel)]="newFoyer.name" name="name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Address:</label>
+                <input type="text" [(ngModel)]="newFoyer.address" name="address" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Faculty ID:</label>
+                <input type="text" [(ngModel)]="newFoyer.facultyId" name="facultyId" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <!-- Edit Foyer -->
+    <div  *ngIf="showCard === 'editFoyer'">
+
+    <div class="row mt-4" *ngIf="selectedFoyer">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Edit Foyer</h3>
+          </div>
+          <div class="card-body">
+            <form (submit)="onUpdateFoyer(selectedFoyer._id)">
+              <div class="form-group">
+                <label>Name:</label>
+                <input type="text" [(ngModel)]="selectedFoyer.name" name="name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Address:</label>
+                <input type="text" [(ngModel)]="selectedFoyer.address" name="address" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- Create New Room -->
+    <div  *ngIf="showCard === 'createRoom'">
+
+    <div class="row mt-4" *ngIf="selectedFoyer">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Create New Room</h3>
+          </div>
+          <div class="card-body">
+            <form (submit)="createRoom(selectedFoyer._id)">
+              <div class="form-group">
+                <label>Room Number:</label>
+                <input type="number" [(ngModel)]="newRoom.roomNumber" name="roomNumber" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Type:</label>
+                <select [(ngModel)]="newRoom.type" name="type" class="form-control" required>
+                  <option value="double">Double</option>
+                  <option value="triple">Triple</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Capacity:</label>
+                <input type="number" [(ngModel)]="newRoom.capacity" name="capacity" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Create Room</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+    <!-- Edit Room -->
+    <div  *ngIf="showCard === 'editRoom'">
+
+    <div class="row mt-4" *ngIf="selectedRoom">
+      <div class="col">
+        <div class="card shadow">
+          <div class="card-header border-0">
+            <h3 class="mb-0">Edit Room</h3>
+          </div>
+          <div class="card-body">
+            <form (submit)="updateRoom(selectedRoom._id)">
+              <div class="form-group">
+                <label>Room Number:</label>
+                <input type="number" [(ngModel)]="selectedRoom.roomNumber" name="roomNumber" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Type:</label>
+                <select [(ngModel)]="selectedRoom.type" name="type" class="form-control" required>
+                  <option value="double">Double</option>
+                  <option value="triple">Triple</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Capacity:</label>
+                <input type="number" [(ngModel)]="selectedRoom.capacity" name="capacity" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Update Room</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div></div>
+
+  </div>
+</div>

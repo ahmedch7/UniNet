@@ -12,6 +12,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
+import { FoyerComponent } from './pages/foyer/foyer.component';
+import { RestaurantReservationComponent } from './pages/restaurant-reservation/restaurant-reservation.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { ComponentsModule } from './components/components.module';
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    AuthLayoutComponent
+    AuthLayoutComponent,
+    FoyerComponent,
+    RestaurantReservationComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
