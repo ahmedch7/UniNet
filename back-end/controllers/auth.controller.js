@@ -232,7 +232,7 @@ export const signup = async (req, res) => {
 
     // If an avatar is uploaded, save its path to the user profile
     if (req.file) {
-      user.avatar = req.file.path;
+      user.avatar = req.file.filename;
     }
 
     // Save the user to the database
