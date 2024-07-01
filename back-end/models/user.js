@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
 // Définition du schéma pour l'utilisateur
 const userSchema = new Schema({
   nom: { type: String, required: true },
