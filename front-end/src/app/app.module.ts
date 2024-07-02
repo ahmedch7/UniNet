@@ -15,6 +15,7 @@ import { ComponentsModule } from './components/components.module';
 import { FoyerComponent } from './pages/foyer/foyer.component';
 import { RestaurantReservationComponent } from './pages/restaurant-reservation/restaurant-reservation.component';
 import { FilterPipe } from './filter.pipe';
+import { MenuRestauComponent } from './pages/menu-restau/menu-restau.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { FilterPipe } from './filter.pipe';
     AuthLayoutComponent,
     FoyerComponent,
     RestaurantReservationComponent,
-    FilterPipe
+    FilterPipe,
+    MenuRestauComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

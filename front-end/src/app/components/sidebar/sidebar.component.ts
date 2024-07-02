@@ -14,7 +14,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/user-profile', title: 'User profile',  icon:'ni-single-02 text-yellow', class: '' },
     { path: '/foyer', title: 'Foyer',  icon: 'ni-building text-red', class: '' },
     { path: '/restaurant', title: 'Restaurant',  icon: 'ni-building text-red', class: '' },
-    { path: '/menu-Restau', title: 'Menu-Restau',  icon: 'ni-building text-red', class: '' },
+    { path: '/menu-Restau', title: 'Menu-Restaurant',  icon: 'ni-building text-red', class: '' },
 
 
 
