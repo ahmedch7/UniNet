@@ -13,6 +13,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { NiveauComponent } from './pages/niveau/niveau.component';
+import { NiveauedudetailComponent } from './pages/niveauedudetail/niveauedudetail.component';
 
 
 
@@ -31,7 +32,8 @@ import { NiveauComponent } from './pages/niveau/niveau.component';
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    NiveauComponent
+    NiveauComponent,
+    NiveauedudetailComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

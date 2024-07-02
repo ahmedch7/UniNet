@@ -6,10 +6,12 @@ import { MapsComponent } from '../../pages/maps/maps.component';
 import { UserProfileComponent } from '../../pages/user-profile/user-profile.component';
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { NiveauComponent } from 'src/app/pages/niveau/niveau.component';
+import { NiveauedudetailComponent } from 'src/app/pages/niveauedudetail/niveauedudetail.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
-    { path: 'niveau',      component: NiveauComponent },
+    { path: 'niveau',         component: NiveauComponent },
+    { path: 'niveau-detail/:id',   component:NiveauedudetailComponent},
 
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'tables',         component: TablesComponent },
