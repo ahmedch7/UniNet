@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RestaurantService } from '../../services/restaurant.service';
-import { ReservationRestaurantService } from '../../services/reservation-restau.service';
+import { RestaurantService } from 'src/app/Services/restaurant.service';
+import { ReservationRestaurantService } from 'src/app/Services/reservation-restau.service';
 
 @Component({
   selector: 'app-restaurant-reservation',
@@ -8,9 +8,8 @@ import { ReservationRestaurantService } from '../../services/reservation-restau.
   styleUrls: ['./restaurant-reservation.component.scss']
 })
 export class RestaurantReservationComponent implements OnInit {
-  restaurants: any[] = [];
+  restaurants: any[] = []; // Initialisez à un tableau vide
   selectedRestaurant: any = null;
-  reservations: any[] = [];
   editMode = false;
   createMode = false;
   newRestaurant: any = {
@@ -20,11 +19,14 @@ export class RestaurantReservationComponent implements OnInit {
     capacity: 0,
     availablePlaces: 0,
     facultyId: '',
-    CurrResto : null
+    CurrResto: null
   };
   reservationsByRestaurant: { [key: string]: any[] } = {};
 
-  constructor(private restaurantService: RestaurantService, private reservationService: ReservationRestaurantService) { }
+  constructor(
+    private restaurantService: RestaurantService, 
+    private reservationService: ReservationRestaurantService
+  ) {}
 
   ngOnInit(): void {
     this.loadRestaurants();
@@ -33,6 +35,7 @@ export class RestaurantReservationComponent implements OnInit {
   loadRestaurants(): void {
     this.restaurantService.getRestaurants().subscribe(
       (data) => {
+        console.log('Restaurants loaded:', data);
         this.restaurants = data;
       },
       (error) => {
@@ -58,7 +61,7 @@ export class RestaurantReservationComponent implements OnInit {
           availablePlaces: 0,
           facultyId: ''
         };
-        this.loadRestaurants(); // Rechargez la liste des restaurants après la création
+        this.loadRestaurants();
       },
       (error) => {
         console.error('Error creating restaurant', error);
@@ -71,25 +74,27 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   createReservation(restaurantId: string): void {
-    const userId = '6679be5c0a809410213874ad'; // Votre ID utilisateur statique pour les tests
+    const userId = '664f89f28fb320b8082864b5'; // Static user ID for testing
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Réservation créée avec succès', data);
-        this.loadReservations(restaurantId); // Rechargez les réservations après la création
+        // Mettre à jour localement le nombre de places disponibles
+        const restaurant = this.restaurants.find(r => r._id === restaurantId);
+        if (restaurant) {
+          restaurant.availablePlaces--; // Décrémente les places disponibles
+        }
+        // Mettre à jour les réservations après réservation réussie
+        this.loadReservations(restaurantId);
       },
       (error) => {
         console.error('Erreur lors de la création de la réservation', error);
       }
     );
   }
-
-  selectRestaurant(restaurant: any): void {
-    this.selectedRestaurant = restaurant;
-    // Ajoutez ici la logique supplémentaire si nécessaire
-  }
+  
 
   editRestaurant(restaurant: any): void {
-    this.selectedRestaurant = { ...restaurant }; // Cloner l'objet pour éviter la modification directe
+    this.selectedRestaurant = { ...restaurant };
     this.editMode = true;
   }
 
@@ -99,7 +104,7 @@ export class RestaurantReservationComponent implements OnInit {
       (data) => {
         console.log('Restaurant mis à jour avec succès', data);
         this.editMode = false;
-        this.loadRestaurants(); // Rechargez la liste des restaurants après la mise à jour
+        this.loadRestaurants();
       },
       (error) => {
         console.error('Erreur lors de la mise à jour du restaurant', error);
@@ -116,7 +121,7 @@ export class RestaurantReservationComponent implements OnInit {
     this.restaurantService.deleteRestaurant(restaurantId).subscribe(
       (data) => {
         console.log('Restaurant supprimé avec succès', data);
-        this.loadRestaurants(); // Rechargez la liste des restaurants après la suppression
+        this.loadRestaurants();
       },
       (error) => {
         console.error('Erreur lors de la suppression du restaurant', error);
@@ -125,31 +130,53 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   loadReservations(restaurantId: string): void {
-    console.log(restaurantId);
     this.reservationService.getRestaurantReservations(restaurantId).subscribe(
       (data) => {
-        console.log("data");
-        console.log(data);
         this.reservationsByRestaurant[restaurantId] = data;
-        console.log('Réservations chargées :', this.reservationsByRestaurant[restaurantId]); // Vérifiez dans la console du navigateur si les données sont correctement chargées
+        console.log('Réservations chargées :', this.reservationsByRestaurant[restaurantId]);
       },
       (error) => {
         console.error('Erreur lors du chargement des réservations', error);
       }
     );
   }
-
   deleteReservation(reservationId: string): void {
     this.reservationService.deleteRestaurantReservation(reservationId).subscribe(
       (data) => {
         console.log('Réservation supprimée avec succès', data);
         if (this.selectedRestaurant) {
-          this.loadReservations(this.selectedRestaurant._id); // Rechargez les réservations après la suppression
+          // Charger à nouveau les réservations après suppression
+          this.loadReservations(this.selectedRestaurant._id);
+          // Incrémenter localement les places disponibles
+          const restaurant = this.restaurants.find(r => r._id === this.selectedRestaurant._id);
+          if (restaurant) {
+            restaurant.availablePlaces++; // Incrémente les places disponibles
+          }
+  
+          // Vérifier si la liste des réservations est vide après suppression
+          const reservations = this.reservationsByRestaurant[this.selectedRestaurant._id];
+          if (reservations && reservations.length === 1 && reservations[0]._id === reservationId) {
+            // Si la seule réservation restante est celle que l'on vient de supprimer, vider la liste localement
+            this.reservationsByRestaurant[this.selectedRestaurant._id] = [];
+          } else {
+            // Sinon, supprimer la réservation de la liste localement
+            this.reservationsByRestaurant[this.selectedRestaurant._id] = this.reservationsByRestaurant[this.selectedRestaurant._id]
+              .filter(reservation => reservation._id !== reservationId);
+          }
         }
       },
       (error) => {
         console.error('Erreur lors de la suppression de la réservation', error);
       }
     );
+  }
+  
+  
+  
+
+  // Nouvelle méthode pour charger les réservations et sélectionner un restaurant
+  loadReservationsAndSelect(restaurant: any): void {
+    this.selectedRestaurant = restaurant;
+    this.loadReservations(restaurant._id);
   }
 }

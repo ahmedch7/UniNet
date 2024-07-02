@@ -1,78 +1,126 @@
 <!-- Page content -->
 <div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
   <div class="container-fluid mt--7">
-<div *ngIf="restaurants.length > 0">
-  <h2>Liste des restaurants</h2>
-  <div>
-    <button (click)="toggleCreateMode()">Créer Restaurant</button>
-  </div>
-  <div *ngIf="createMode">
-    <h2>Créer un nouveau restaurant</h2>
-    <form (submit)="createRestaurant()">
-      <label>Nom:</label>
-      <input type="text" [(ngModel)]="newRestaurant.name" name="name" required><br>
-      <label>Adresse:</label>
-      <input type="text" [(ngModel)]="newRestaurant.address" name="address"><br>
-      <label>Capacité:</label>
-      <input type="number" [(ngModel)]="newRestaurant.capacity" name="capacity" required><br>
-      <label>Places disponibles:</label>
-      <input type="number" [(ngModel)]="newRestaurant.availablePlaces" name="availablePlaces" required><br>
-      <label>ID Faculté:</label>
-      <input type="text" [(ngModel)]="newRestaurant.facultyId" name="facultyId" required><br>
-      <button type="submit">Créer</button>
-      <button (click)="cancelCreate()">Annuler</button>
-    </form>
-  </div>
-  <ul>
-    <li *ngFor="let restaurant of restaurants">
-      <h3>{{ restaurant.name }}</h3>
-      <p>{{ restaurant.address }}</p>
-      <p>Capacité totale: {{ restaurant.capacity }}</p>
-      <p>Places disponibles: {{ restaurant.availablePlaces }}</p>
-      <p>Nombre de réservations: {{ restaurant.numberOfReservations }}</p>
-      <button (click)="selectRestaurant(restaurant)">Sélectionner</button>
-      <button (click)="createReservation(restaurant._id)">Réserver</button>
-      <button (click)="deleteRestaurant(restaurant._id)">Supprimer</button>
-      <button (click)="editRestaurant(restaurant)">Modifier</button>
-      <button (click)="loadReservations(restaurant._id)">Voir Réservations</button>
-      
-      <!-- Liste des réservations -->
-      <div *ngIf="reservationsByRestaurant[restaurant._id] && reservationsByRestaurant[restaurant._id].length > 0">
-        <h4>Réservations pour {{ restaurant.name }}</h4>
-        <ul>
-          <li *ngFor="let reservation of reservationsByRestaurant[restaurant._id]">
-            <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}</p>
-            <button (click)="deleteReservation(reservation._id)">Supprimer Réservation</button>
-          </li>
-        </ul>
+    <div *ngIf="restaurants && restaurants.length > 0">
+      <div class="card shadow">
+        <div class="card-header border-0 bg-gradient-secondary">
+          <h2 class="mb-0">Liste des restaurants</h2>
+          <div>
+            <button (click)="toggleCreateMode()" class="btn btn-primary">Créer Restaurant</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Adresse</th>
+                <th scope="col">Capacité</th>
+                <th scope="col">Places disponibles</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let restaurant of restaurants" >
+                <td>{{ restaurant.name }}</td>
+                <td>{{ restaurant.address }}</td>
+                <td>{{ restaurant.capacity }}</td>
+                <td>{{ restaurant.availablePlaces }}</td>
+                <td>
+                  <!-- Appel de createReservation directement -->
+                  <button (click)="createReservation(restaurant._id)" class="btn btn-success btn-sm">Réserver</button>
+                  <button (click)="editRestaurant(restaurant)" class="btn btn-warning btn-sm">Modifier</button>
+                  <button (click)="deleteRestaurant(restaurant._id)" class="btn btn-danger btn-sm">Supprimer</button>
+                  <!-- Mettre à jour le bouton pour inclure l'action de sélection -->
+                  <button (click)="loadReservationsAndSelect(restaurant)" class="btn btn-secondary btn-sm">Voir Réservations</button>
+                </td>
+              </tr>
+            </tbody>
+            
+          </table>
+        </div>
+        
+        <!-- Modal pour l'édition -->
+        <div *ngIf="editMode" class="modal" tabindex="-1" role="dialog" style="display: block;">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Modifier {{ selectedRestaurant.name }}</h5>
+                <button type="button" class="close" (click)="cancelEdit()">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form (submit)="updateRestaurant()">
+                  <div class="form-group">
+                    <label>Nom:</label>
+                    <input type="text" [(ngModel)]="selectedRestaurant.name" name="name" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Adresse:</label>
+                    <input type="text" [(ngModel)]="selectedRestaurant.address" name="address" class="form-control">
+                  </div>
+                  <!-- Ajoutez d'autres champs si nécessaire -->
+                  <button type="submit" class="btn btn-primary">Enregistrer</button>
+                  <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Annuler</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal pour la création -->
+        <div *ngIf="createMode" class="modal" tabindex="-1" role="dialog" style="display: block;">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Créer un nouveau restaurant</h5>
+                <button type="button" class="close" (click)="cancelCreate()">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form (submit)="createRestaurant()">
+                  <div class="form-group">
+                    <label>Nom:</label>
+                    <input type="text" [(ngModel)]="newRestaurant.name" name="name" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Adresse:</label>
+                    <input type="text" [(ngModel)]="newRestaurant.address" name="address" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label>Capacité:</label>
+                    <input type="number" [(ngModel)]="newRestaurant.capacity" name="capacity" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Places disponibles:</label>
+                    <input type="number" [(ngModel)]="newRestaurant.availablePlaces" name="availablePlaces" class="form-control" required>
+                  </div>
+                  <div class="form-group">
+                    <label>ID Faculté:</label>
+                    <input type="text" [(ngModel)]="newRestaurant.facultyId" name="facultyId" class="form-control" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Créer</button>
+                  <button type="button" class="btn btn-secondary" (click)="cancelCreate()">Annuler</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Liste des réservations -->
+        <div *ngIf="reservationsByRestaurant[selectedRestaurant._id] && reservationsByRestaurant[selectedRestaurant._id].length > 0">
+          <h4>Réservations pour restaurant: <span class="highlightNameRest">{{ selectedRestaurant.name }}</span></h4>
+          <ul>
+            <li *ngFor="let reservation of reservationsByRestaurant[selectedRestaurant._id]" >
+              <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}  <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm">Supprimer Réservation</button>
+              </p>
+            </li>
+          </ul>
+        </div>
       </div>
-    </li>
-  </ul>
-  
-  
-  
-
-  <div *ngIf="editMode">
-    <h2>Modifier {{ selectedRestaurant.name }}</h2>
-    <form (submit)="updateRestaurant()">
-      <label>Nom:</label>
-      <input type="text" [(ngModel)]="selectedRestaurant.name" name="name" required><br>
-      <label>Adresse:</label>
-      <input type="text" [(ngModel)]="selectedRestaurant.address" name="address"><br>
-      <!-- Ajouter d'autres champs si nécessaire -->
-      <button type="submit">Enregistrer</button>
-      <button (click)="cancelEdit()">Annuler</button>
-    </form>
+    </div>
   </div>
-
-  <!-- Affichage de la liste des utilisateurs ayant réservé -->
-  <!-- <div *ngIf="reservations.length > 0">
-    <h2>Utilisateurs ayant réservé</h2>
-    <ul>
-      <li *ngFor="let reservation of reservations">
-        <p>{{ reservation.userName }}</p>
-       </li>
-    </ul>
-  </div> -->
 </div>
-</div></div>
