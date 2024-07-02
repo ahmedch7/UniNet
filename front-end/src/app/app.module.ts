@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { FoyerComponent } from './pages/foyer/foyer.component';
 import { RestaurantReservationComponent } from './pages/restaurant-reservation/restaurant-reservation.component';
+import { FilterPipe } from './filter.pipe';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { RestaurantReservationComponent } from './pages/restaurant-reservation/r
     AdminLayoutComponent,
     AuthLayoutComponent,
     FoyerComponent,
-    RestaurantReservationComponent
+    RestaurantReservationComponent,
+    FilterPipe
   ],
   providers: [],
   bootstrap: [AppComponent]

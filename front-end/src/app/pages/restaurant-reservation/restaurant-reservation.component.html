@@ -9,6 +9,15 @@
             <button (click)="toggleCreateMode()" class="btn btn-primary">Créer Restaurant</button>
           </div>
         </div>
+
+     <!-- Barre de recherche et bouton de filtrage -->
+<div class="form-group mx-3 mt-3 d-flex align-items-center">
+  <input type="text" [(ngModel)]="searchText" class="form-control mr-2" placeholder="Rechercher par nom">
+  <button (click)="toggleAvailabilityFilter()" class="btn btn-sm btn-primary">
+    {{ showOnlyAvailablePlaces ? 'Afficher Tous les Restaurants' : 'Masquer Restaurants sans Places Disponibles' }}
+  </button>
+</div>
+
         <div class="table-responsive">
           <table class="table align-items-center table-flush">
 
@@ -22,7 +31,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let restaurant of restaurants" >
+              <tr *ngFor="let restaurant of filteredRestaurants()">
                 <td>{{ restaurant.name }}</td>
                 <td>{{ restaurant.address }}</td>
                 <td>{{ restaurant.capacity }}</td>

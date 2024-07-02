@@ -18,6 +18,7 @@ export class FoyerComponent implements OnInit {
   showRooms: { [key: string]: boolean } = {}; // Track room visibility for each foyer
 
   showCard: string = 'list'; // Track which card is visible
+  searchText: string = ''; // Search text for filtering
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }
 
@@ -36,6 +37,15 @@ export class FoyerComponent implements OnInit {
     );
   }
 
+  filteredFoyers(): any[] {
+    if (!this.searchText) {
+      return this.foyers;
+    }
+    return this.foyers.filter(foyer => 
+      foyer.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
   createFoyer(): void {
     this.foyerService.createFoyer(this.newFoyer).subscribe(
       (data) => {
@@ -48,6 +58,7 @@ export class FoyerComponent implements OnInit {
       }
     );
   }
+
 
   onUpdateFoyer(id: string): void {
     this.foyerService.updateFoyer(id, this.selectedFoyer).subscribe(

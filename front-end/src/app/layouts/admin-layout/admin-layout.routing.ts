@@ -13,6 +13,8 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'foyer',   component: FoyerComponent },
     { path: 'restaurant',   component: RestaurantReservationComponent },
+    { path: 'menu-Restau',   component: RestaurantReservationComponent },
+
 
 
     { path: 'tables',         component: TablesComponent },

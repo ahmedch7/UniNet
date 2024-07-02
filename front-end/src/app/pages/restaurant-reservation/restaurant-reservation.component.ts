@@ -8,7 +8,7 @@ import { ReservationRestaurantService } from 'src/app/Services/reservation-resta
   styleUrls: ['./restaurant-reservation.component.scss']
 })
 export class RestaurantReservationComponent implements OnInit {
-  restaurants: any[] = []; // Initialisez à un tableau vide
+  restaurants: any[] = [];
   selectedRestaurant: any = null;
   editMode = false;
   createMode = false;
@@ -22,9 +22,11 @@ export class RestaurantReservationComponent implements OnInit {
     CurrResto: null
   };
   reservationsByRestaurant: { [key: string]: any[] } = {};
+  searchText: string = '';
+  showOnlyAvailablePlaces: boolean = false; // Variable pour contrôler l'affichage des places disponibles
 
   constructor(
-    private restaurantService: RestaurantService, 
+    private restaurantService: RestaurantService,
     private reservationService: ReservationRestaurantService
   ) {}
 
@@ -78,12 +80,10 @@ export class RestaurantReservationComponent implements OnInit {
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Réservation créée avec succès', data);
-        // Mettre à jour localement le nombre de places disponibles
         const restaurant = this.restaurants.find(r => r._id === restaurantId);
         if (restaurant) {
-          restaurant.availablePlaces--; // Décrémente les places disponibles
+          restaurant.availablePlaces--;
         }
-        // Mettre à jour les réservations après réservation réussie
         this.loadReservations(restaurantId);
       },
       (error) => {
@@ -91,7 +91,6 @@ export class RestaurantReservationComponent implements OnInit {
       }
     );
   }
-  
 
   editRestaurant(restaurant: any): void {
     this.selectedRestaurant = { ...restaurant };
@@ -140,26 +139,22 @@ export class RestaurantReservationComponent implements OnInit {
       }
     );
   }
+
   deleteReservation(reservationId: string): void {
     this.reservationService.deleteRestaurantReservation(reservationId).subscribe(
       (data) => {
         console.log('Réservation supprimée avec succès', data);
         if (this.selectedRestaurant) {
-          // Charger à nouveau les réservations après suppression
           this.loadReservations(this.selectedRestaurant._id);
-          // Incrémenter localement les places disponibles
           const restaurant = this.restaurants.find(r => r._id === this.selectedRestaurant._id);
           if (restaurant) {
-            restaurant.availablePlaces++; // Incrémente les places disponibles
+            restaurant.availablePlaces++;
           }
-  
-          // Vérifier si la liste des réservations est vide après suppression
+
           const reservations = this.reservationsByRestaurant[this.selectedRestaurant._id];
           if (reservations && reservations.length === 1 && reservations[0]._id === reservationId) {
-            // Si la seule réservation restante est celle que l'on vient de supprimer, vider la liste localement
             this.reservationsByRestaurant[this.selectedRestaurant._id] = [];
           } else {
-            // Sinon, supprimer la réservation de la liste localement
             this.reservationsByRestaurant[this.selectedRestaurant._id] = this.reservationsByRestaurant[this.selectedRestaurant._id]
               .filter(reservation => reservation._id !== reservationId);
           }
@@ -170,13 +165,28 @@ export class RestaurantReservationComponent implements OnInit {
       }
     );
   }
-  
-  
-  
 
-  // Nouvelle méthode pour charger les réservations et sélectionner un restaurant
   loadReservationsAndSelect(restaurant: any): void {
     this.selectedRestaurant = restaurant;
     this.loadReservations(restaurant._id);
+  }
+
+  // Méthode pour filtrer les restaurants par nom et places disponibles > 0
+  filteredRestaurants(): any[] {
+    if (!this.searchText) {
+      return this.restaurants.filter(restaurant =>
+        !this.showOnlyAvailablePlaces || restaurant.availablePlaces > 0
+      );
+    } else {
+      return this.restaurants.filter(restaurant =>
+        (!this.showOnlyAvailablePlaces || restaurant.availablePlaces > 0) &&
+        restaurant.name.toLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+  }
+
+  // Méthode pour basculer entre l'affichage des restaurants avec places disponibles uniquement ou tous les restaurants
+  toggleAvailabilityFilter(): void {
+    this.showOnlyAvailablePlaces = !this.showOnlyAvailablePlaces;
   }
 }

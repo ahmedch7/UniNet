@@ -7,28 +7,27 @@
         <div class="card shadow">
           <div class="card-header border-0">
             <h3 class="mb-0">List of Foyers</h3>
+            <div class="form-group">
+              <input type="text" [(ngModel)]="searchText" class="form-control" placeholder="Search by name">
+            </div>
           </div>
           <div class="table-responsive">
             <table class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
                   <th scope="col">Name</th>
-                  <th  scope="col">Address</th>
-                  <!-- <th scope="col">Faculty ID</th> -->
+                  <th scope="col">Address</th>
                   <th class="actionTableFoyerCenter" scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let foyer of foyers">
+                <tr *ngFor="let foyer of filteredFoyers()">
                   <th scope="row">
                     {{ foyer.name }}
                   </th>
                   <td>
                     {{ foyer.address }}
                   </td>
-                  <!-- <td>
-                    {{ foyer.facultyId }}
-                  </td> -->
                   <td class="actionTableFoyerCenter">
                     <button (click)="deleteFoyer(foyer._id)" class="btn btn-danger btn-sm">Delete</button>
                     <button (click)="selectFoyerForUpdate(foyer)" class="btn btn-warning btn-sm">Update</button>
@@ -40,6 +39,7 @@
             </table>
           </div>
         </div>
+        
       </div>
     </div>
     <!-- Room details -->
