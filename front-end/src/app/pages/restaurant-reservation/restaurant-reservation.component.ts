@@ -24,6 +24,8 @@ export class RestaurantReservationComponent implements OnInit {
   reservationsByRestaurant: { [key: string]: any[] } = {};
   searchText: string = '';
   showOnlyAvailablePlaces: boolean = false; // Variable pour contrôler l'affichage des places disponibles
+  loadingReservations: boolean = false;
+  noReservationsMessage: string = 'Pas de réservation pour ce restaurant';
 
   constructor(
     private restaurantService: RestaurantService,
@@ -37,14 +39,15 @@ export class RestaurantReservationComponent implements OnInit {
   loadRestaurants(): void {
     this.restaurantService.getRestaurants().subscribe(
       (data) => {
-        console.log('Restaurants loaded:', data);
         this.restaurants = data;
+        console.log('Restaurants loaded:', data);
       },
       (error) => {
         console.error('Error loading restaurants', error);
       }
     );
   }
+  
 
   toggleCreateMode(): void {
     this.createMode = !this.createMode;
@@ -129,12 +132,15 @@ export class RestaurantReservationComponent implements OnInit {
   }
 
   loadReservations(restaurantId: string): void {
+    this.loadingReservations = true;
     this.reservationService.getRestaurantReservations(restaurantId).subscribe(
       (data) => {
-        this.reservationsByRestaurant[restaurantId] = data;
+        this.reservationsByRestaurant[restaurantId] = data || [];
+        this.loadingReservations = false;
         console.log('Réservations chargées :', this.reservationsByRestaurant[restaurantId]);
       },
       (error) => {
+        this.loadingReservations = false;
         console.error('Erreur lors du chargement des réservations', error);
       }
     );
@@ -168,6 +174,7 @@ export class RestaurantReservationComponent implements OnInit {
 
   loadReservationsAndSelect(restaurant: any): void {
     this.selectedRestaurant = restaurant;
+    this.loadingReservations = true; // Commence le chargement des réservations
     this.loadReservations(restaurant._id);
   }
 

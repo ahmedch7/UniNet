@@ -1,12 +1,24 @@
+
+<div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Les restaurants</h1>
+          <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- Page content -->
-<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+<div class="">
   <div class="container-fluid mt--7">
     <div *ngIf="restaurants && restaurants.length > 0">
-      <div class="card shadow">
+      <div class="card shadow" id="margTOPnavb">
         <div class="card-header border-0 bg-gradient-secondary">
           <h2 class="mb-0">Liste des restaurants</h2>
           <div>
-            <button (click)="toggleCreateMode()" class="btn btn-primary">Créer Restaurant</button>
+            <button (click)="toggleCreateMode()" class="btn btn-primary  float-right">Créer Restaurant</button>
           </div>
         </div>
 
@@ -93,7 +105,22 @@
                 <form (submit)="createRestaurant()">
                   <div class="form-group">
                     <label>Nom:</label>
-                    <input type="text" [(ngModel)]="newRestaurant.name" name="name" class="form-control" required>
+                    <input 
+                      type="text" 
+                      [(ngModel)]="newRestaurant.name" 
+                      name="name" 
+                      class="form-control" 
+                      required
+                      minlength="3"
+                      #name="ngModel">
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+                      <div *ngIf="name.errors.required">
+                        Le nom est requis.
+                      </div>
+                      <div *ngIf="name.errors.minlength">
+                        Le nom doit contenir au moins 3 lettres.
+                      </div>
+                    </div>
                   </div>
                   <div class="form-group">
                     <label>Adresse:</label>
@@ -118,18 +145,15 @@
             </div>
           </div>
         </div>
-
-        <!-- Liste des réservations -->
-        <div *ngIf="reservationsByRestaurant[selectedRestaurant._id] && reservationsByRestaurant[selectedRestaurant._id].length > 0">
+        <div *ngIf="selectedRestaurant">
           <h4>Réservations pour restaurant: <span class="highlightNameRest">{{ selectedRestaurant.name }}</span></h4>
+          <div *ngIf="loadingReservations" class="text-info">Chargement des réservations...</div>
+          <div *ngIf="!loadingReservations && (!reservationsByRestaurant[selectedRestaurant._id] || reservationsByRestaurant[selectedRestaurant._id].length === 0)" class="text-warning">{{ noReservationsMessage }}</div>
           <ul>
-            <li *ngFor="let reservation of reservationsByRestaurant[selectedRestaurant._id]" >
-              <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}  <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm">Supprimer Réservation</button>
+            <li *ngFor="let reservation of reservationsByRestaurant[selectedRestaurant._id] || []">
+              <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}
+                <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm">Supprimer Réservation</button>
               </p>
             </li>
           </ul>
         </div>
-      </div>
-    </div>
-  </div>
-</div>

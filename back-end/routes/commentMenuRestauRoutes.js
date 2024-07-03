@@ -1,6 +1,6 @@
 import express from 'express';
 import { body } from 'express-validator';
-import { addComment, getComments } from '../controllers/commentMenuRestauController.js';
+import { addComment, getComments, deleteComment } from '../controllers/commentMenuRestauController.js';
 
 const router = express.Router();
 
@@ -9,7 +9,8 @@ const validateComment = [
   body('author').isMongoId().withMessage('Author must be a valid user ID')
 ];
 
-router.post('/:menuId/comments', validateComment, addComment);
+router.post('/:menuId/comments', addComment);
 router.get('/:menuId/comments', getComments);
+router.delete('/:menuId/comments/:commentId', deleteComment);
 
 export default router;

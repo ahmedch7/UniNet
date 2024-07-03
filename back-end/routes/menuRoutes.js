@@ -20,14 +20,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }).single("image");
 
-const validateMenu = [
-  body('text').isLength({ min: 3 }).withMessage('Text must be at least 3 characters long'),
-  body('restaurantId').isMongoId().withMessage('Invalid restaurant ID')
-];
+ 
 
 router.get('/', getMenus);
-router.post('/', upload, validateMenu, createMenu);
-router.put('/:id', validateMenu, updateMenu);
+router.post('/', upload, createMenu);
+router.put('/:id', upload, updateMenu);
 router.delete('/:id', deleteMenu);
 
 const validateComment = [

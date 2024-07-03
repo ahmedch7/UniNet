@@ -59,7 +59,6 @@ export class FoyerComponent implements OnInit {
     );
   }
 
-
   onUpdateFoyer(id: string): void {
     this.foyerService.updateFoyer(id, this.selectedFoyer).subscribe(
       (data) => {
@@ -132,9 +131,17 @@ export class FoyerComponent implements OnInit {
   }
 
   updateRoom(roomId: string): void {
+    // Update capacity based on room type change
+    if (this.selectedRoom.type === 'double') {
+      this.selectedRoom.capacity = 2; // Update capacity for double rooms
+    } else if (this.selectedRoom.type === 'triple') {
+      this.selectedRoom.capacity = 3; // Update capacity for triple rooms
+    }
+  
+    // Call roomService to update the room
     this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
       (data) => {
-        this.loadRooms(this.selectedFoyer._id); // Refresh the list
+        this.loadRooms(this.selectedFoyer._id); // Refresh the list of rooms
         this.selectedRoom = null; // Clear selectedRoom after update
         this.showCard = 'rooms'; // Show the rooms card after updating a room
       },
@@ -143,6 +150,8 @@ export class FoyerComponent implements OnInit {
       }
     );
   }
+  
+  
 
   deleteRoom(roomId: string): void {
     this.roomService.deleteRoom(roomId).subscribe(
@@ -160,7 +169,7 @@ export class FoyerComponent implements OnInit {
     this.showCard = 'editRoom'; // Show the edit room card
   }
 
-  id_user = '664f89f28fb320b8082864b5';  // ID utilisateur statique
+  id_user = '6683e1c309d9b20f76f09c1d';  // ID utilisateur statique
 
   reserveRoom(roomId: string): void {
     const existingReservation = this.roomsByFoyer[this.selectedFoyer._id].find(room => room._id === roomId)?.reservation;
@@ -229,5 +238,17 @@ export class FoyerComponent implements OnInit {
   // Method to hide all cards except the list of foyers
   hideAllCards(): void {
     this.showCard = 'list'; // Show the list of foyers
+  }
+  showCreateFoyerForm(): void {
+    this.showCard = 'createFoyer';
+  }
+
+  onRoomTypeChange(): void {
+    // Update capacity based on room type
+    if (this.newRoom.type === 'double') {
+      this.newRoom.capacity = 2; // Update capacity for double rooms
+    } else if (this.newRoom.type === 'triple') {
+      this.newRoom.capacity = 3; // Update capacity for triple rooms
+    }
   }
 }

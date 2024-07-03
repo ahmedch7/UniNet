@@ -1,11 +1,26 @@
+
+<div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Les foyers</h1>
+          <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
 <!-- Page content -->
-<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+<div class="">
   <div class="container-fluid mt--7">
     <!-- Table -->
     <div class="row">
       <div class="col">
-        <div class="card shadow">
+        <div class="card shadow" id="margTOPnavb">
           <div class="card-header border-0">
+            <button (click)="showCreateFoyerForm()" class="btn btn-primary float-right">Create Foyer</button>
+
             <h3 class="mb-0">List of Foyers</h3>
             <div class="form-group">
               <input type="text" [(ngModel)]="searchText" class="form-control" placeholder="Search by name">
@@ -155,70 +170,71 @@
     </div></div>
 
     <!-- Create New Room -->
-    <div  *ngIf="showCard === 'createRoom'">
-
-    <div class="row mt-4" *ngIf="selectedFoyer">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header border-0">
-            <h3 class="mb-0">Create New Room</h3>
-          </div>
-          <div class="card-body">
-            <form (submit)="createRoom(selectedFoyer._id)">
-              <div class="form-group">
-                <label>Room Number:</label>
-                <input type="number" [(ngModel)]="newRoom.roomNumber" name="roomNumber" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Type:</label>
-                <select [(ngModel)]="newRoom.type" name="type" class="form-control" required>
-                  <option value="double">Double</option>
-                  <option value="triple">Triple</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Capacity:</label>
-                <input type="number" [(ngModel)]="newRoom.capacity" name="capacity" class="form-control" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Create Room</button>
-            </form>
-          </div>
+   <div *ngIf="showCard === 'createRoom'">
+  <div class="row mt-4" *ngIf="selectedFoyer">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Create New Room</h3>
+        </div>
+        <div class="card-body">
+          <form (submit)="createRoom(selectedFoyer._id)">
+            <div class="form-group">
+              <label>Room Number:</label>
+              <input type="number" [(ngModel)]="newRoom.roomNumber" name="roomNumber" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Type:</label>
+              <select [(ngModel)]="newRoom.type" name="type" class="form-control" (change)="onRoomTypeChange()" required>
+                <option value="double">Double</option>
+                <option value="triple">Triple</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Capacity:</label>
+              <input type="number" [(ngModel)]="newRoom.capacity" name="capacity" class="form-control" [readonly]="true" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Room</button>
+          </form>
         </div>
       </div>
-    </div></div>
+    </div>
+  </div>
+</div>
 
-    <!-- Edit Room -->
-    <div  *ngIf="showCard === 'editRoom'">
-
-    <div class="row mt-4" *ngIf="selectedRoom">
-      <div class="col">
-        <div class="card shadow">
-          <div class="card-header border-0">
-            <h3 class="mb-0">Edit Room</h3>
-          </div>
-          <div class="card-body">
-            <form (submit)="updateRoom(selectedRoom._id)">
-              <div class="form-group">
-                <label>Room Number:</label>
-                <input type="number" [(ngModel)]="selectedRoom.roomNumber" name="roomNumber" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Type:</label>
-                <select [(ngModel)]="selectedRoom.type" name="type" class="form-control" required>
-                  <option value="double">Double</option>
-                  <option value="triple">Triple</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Capacity:</label>
-                <input type="number" [(ngModel)]="selectedRoom.capacity" name="capacity" class="form-control" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Update Room</button>
-            </form>
-          </div>
+   <!-- Edit Room -->
+<div *ngIf="showCard === 'editRoom'">
+  <div class="row mt-4" *ngIf="selectedRoom">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <h3 class="mb-0">Edit Room</h3>
+        </div>
+        <div class="card-body">
+          <form (submit)="updateRoom(selectedRoom._id)">
+            <div class="form-group">
+              <label>Room Number:</label>
+              <input type="number" [(ngModel)]="selectedRoom.roomNumber" name="roomNumber" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Type:</label>
+              <select [(ngModel)]="selectedRoom.type" name="type" class="form-control" (change)="onRoomTypeChange()" required>
+                <option value="double">Double</option>
+                <option value="triple">Triple</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Capacity:</label>
+              <input type="number" [(ngModel)]="selectedRoom.capacity" name="capacity" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Room</button>
+          </form>
         </div>
       </div>
-    </div></div>
+    </div>
+  </div>
+</div>
+
 
   </div>
 </div>

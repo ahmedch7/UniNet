@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuRestauService } from '../../services/menu-restau.service';
-import { CommentRestauService } from '../../services/comment-restau.service';
+import { MenuRestauService } from 'src/app/Services/menu-restau.service';
+import { CommentRestauService } from 'src/app/Services/comment-restau.service';
 
 @Component({
   selector: 'app-menu-restau',
@@ -16,7 +16,7 @@ export class MenuRestauComponent implements OnInit {
   };
   newComment: any = {
     content: '',
-    author: '664f89f28fb320b8082864b5',//ID statique d auteur
+    author: '6683e1c309d9b20f76f09c1d', // ID statique de l'auteur
     menuId: ''
   };
 
@@ -29,8 +29,12 @@ export class MenuRestauComponent implements OnInit {
   loadMenus(): void {
     this.menuService.getMenus().subscribe(
       (data) => {
-        // Ajoutez la propriété showComments pour chaque menu
-        this.menus = data.map(menu => ({ ...menu, showComments: false, editMode: false, editText: menu.text }));
+        this.menus = data.map(menu => ({
+          ...menu,
+          showComments: false,
+          editMode: false,
+          editText: menu.text
+        }));
       },
       (error) => {
         console.error('Error loading menus', error);
@@ -63,9 +67,9 @@ export class MenuRestauComponent implements OnInit {
         this.newMenu = {
           text: '',
           image: null,
-          restaurantId: '667da145289a0643f337fa8e' // Réinitialisation à l'ID statique après création
+          restaurantId: '667da145289a0643f337fa8e'
         };
-        this.loadMenus(); // Rechargez la liste des menus après la création
+        this.loadMenus();
       },
       (error) => {
         console.error('Error creating menu', error);
@@ -77,7 +81,6 @@ export class MenuRestauComponent implements OnInit {
     const menu = this.menus.find(menu => menu._id === menuId);
     const formData = new FormData();
     formData.append('text', menu.editText);
-    formData.append('restaurantId', menu.restaurantId);
     if (menu.editImage) {
       formData.append('image', menu.editImage);
     }
@@ -85,7 +88,7 @@ export class MenuRestauComponent implements OnInit {
     this.menuService.updateMenu(menuId, formData).subscribe(
       (data) => {
         console.log('Menu updated successfully', data);
-        this.loadMenus(); // Rechargez la liste des menus après la mise à jour
+        this.loadMenus();
       },
       (error) => {
         console.error('Error updating menu', error);
@@ -97,7 +100,7 @@ export class MenuRestauComponent implements OnInit {
     this.menuService.deleteMenu(menuId).subscribe(
       (data) => {
         console.log('Menu deleted successfully', data);
-        this.loadMenus(); // Rechargez la liste des menus après la suppression
+        this.loadMenus();
       },
       (error) => {
         console.error('Error deleting menu', error);
@@ -126,8 +129,6 @@ export class MenuRestauComponent implements OnInit {
 
   toggleComments(menuId: string): void {
     this.menus = this.menus.map(menu => {
-      // Si le menu est celui cliqué, alternez son état showComments
-      // Si un autre menu a showComments true, mettez-le à false
       if (menu._id === menuId) {
         menu.showComments = !menu.showComments;
         if (menu.showComments) {
@@ -145,6 +146,19 @@ export class MenuRestauComponent implements OnInit {
       }
       return menu;
     });
+  }
+
+  deleteComment(menuId: string, commentId: string): void {
+    this.commentService.deleteComment(menuId, commentId).subscribe(
+      (data) => {
+        console.log('Comment deleted successfully', data);
+        // Rechargez les commentaires pour le menu après la suppression
+        this.loadMenus();
+      },
+      (error) => {
+        console.error('Error deleting comment', error);
+      }
+    );
   }
 
   editMenu(menu: any): void {

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CommentRestauService {
-  private apiUrl = 'http://localhost:9090/api/menus'; // Assurez-vous que l'URL correspond à votre API backend
+  private apiUrl = 'http://localhost:9090/api/comments'; // Mise à jour de l'URL de base
 
   constructor(private http: HttpClient) { }
 
@@ -17,5 +17,8 @@ export class CommentRestauService {
   getComments(menuId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${menuId}/comments`);
   }
-  
+
+  deleteComment(menuId: string, commentId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${menuId}/comments/${commentId}`);
+  }
 }

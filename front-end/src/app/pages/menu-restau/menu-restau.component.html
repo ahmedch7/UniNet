@@ -1,98 +1,107 @@
+<!-- menu-restau.component.html -->
+
 <div class="header bg-gradient-danger py-7 py-lg-8">
-    <div class="container">
-      <div class="header-body text-center mb-7">
-        <div class="row justify-content-center">
-          <div class="col-lg-5 col-md-6">
-            <h1 class="text-white">Créer un nouveau menu</h1>
-            <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
-          </div>
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Créer un nouveau menu</h1>
+          <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
         </div>
       </div>
     </div>
-    <div class="separator separator-bottom separator-skew zindex-100">
-      <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
-      </svg>
-    </div>
   </div>
-  
-  <div class="container mt--8 pb-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-12 col-md-8">
-        <div class="card bg-secondary shadow border-0">
-          <div class="card-header bg-transparent pb-5">
-            <div class="text-muted text-center mt-2 mb-4"><small>Liste des menus</small></div>
-          </div>
-          <div class="card-body px-lg-5 py-lg-5">
-            <!-- Formulaire de création de menu -->
-            <form (submit)="createMenu()">
-              <div class="form-group">
-                <label class="form-control-label" for="text">Texte du menu:</label>
-                <textarea class="form-control" id="text" name="text" [(ngModel)]="newMenu.text" required></textarea>
+  <div class="separator separator-bottom separator-skew zindex-100">
+    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+
+
+<div class="container mt--8 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-12 col-md-8">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+          <div class="text-muted text-center mt-2 mb-4"><small>Liste des menus</small></div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <!-- Formulaire de création de menu -->
+          <form (ngSubmit)="createMenu()">
+            <div class="form-group">
+              <label class="form-control-label" for="text">Texte du menu:</label>
+              <textarea class="form-control" id="text" name="text" [(ngModel)]="newMenu.text" required></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-control-label" for="image">Image du menu:</label>
+              <input type="file" id="image" (change)="onFileChange($event)" class="form-control-file">
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Créer Menu</button>
+          </form>
+
+          <hr class="my-4">
+
+          <!-- Liste des menus -->
+          <div *ngFor="let menu of menus" class="card mb-4">
+            <div class="card-body">
+              <h3 class="card-title">{{ menu.text }}</h3>
+              <img *ngIf="menu.image" [src]="'http://localhost:9090/' + menu.image" class="img-fluid rounded mb-3" alt="Menu image">
+              
+              <!-- Bouton pour afficher/masquer les commentaires -->
+              <button (click)="toggleComments(menu._id)" class="btn btn-secondary">Afficher Commentaires</button>
+
+              <!-- Affichage conditionnel des commentaires -->
+              <div *ngIf="menu.showComments" class="mt-3">
+                <h4>Commentaires</h4>
+                <ul class="list-unstyled">
+                 <!-- Affichage des commentaires avec bouton de suppression -->
+<div *ngFor="let comment of menu.comments" class="card mb-2">
+  <div class="card-body">
+    <p>{{ comment.content }}</p>
+    <!-- Bouton de suppression -->
+    <button (click)="deleteComment(menu._id, comment._id)" class="btn btn-sm btn-danger">Supprimer</button>
+  </div>
+</div>
+
+                </ul>
               </div>
-              <div class="form-group">
-                <label class="form-control-label" for="image">Image du menu:</label>
-                <input type="file" id="image" (change)="onFileChange($event)" class="form-control-file">
+
+              <!-- Formulaire pour ajouter un commentaire -->
+              <form (ngSubmit)="addComment(menu._id)" class="mt-3">
+                <div class="form-group">
+                  <label class="form-control-label" for="content">Ajouter un commentaire:</label>
+                  <textarea class="form-control" id="content" name="content" [(ngModel)]="newComment.content" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter Commentaire</button>
+              </form>
+
+              <!-- Boutons de mise à jour et de suppression -->
+              <div class="mt-3">
+                <button (click)="editMenu(menu)" class="btn btn-sm btn-primary">Modifier Menu</button>
+                <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer Menu</button>
               </div>
-              <button type="submit" class="btn btn-primary mt-4">Créer Menu</button>
-            </form>
-  
-            <hr class="my-4">
-  
-            <!-- Liste des menus -->
-            <div *ngFor="let menu of menus" class="card mb-4">
-              <div class="card-body">
-                <h3 class="card-title">{{ menu.text }}</h3>
-                <img *ngIf="menu.image" [src]="'http://localhost:9090/' + menu.image" class="img-fluid rounded mb-3" alt="Menu image">
-                
-                <!-- Bouton pour afficher/masquer les commentaires -->
-                <button (click)="toggleComments(menu._id)" class="btn btn-secondary">Afficher Commentaires</button>
-  
-                <!-- Affichage conditionnel des commentaires -->
-                <div *ngIf="menu.showComments" class="mt-3">
-                  <h4>Commentaires</h4>
-                  <ul class="list-unstyled">
-                    <li *ngFor="let comment of menu.comments">
-                      <p>{{ comment.content }}</p>
-                    </li>
-                  </ul>
-                </div>
-  
-                <!-- Formulaire pour ajouter un commentaire -->
-                <form (ngSubmit)="addComment(menu._id)" class="mt-3">
-                  <div class="form-group">
-                    <label class="form-control-label" for="content">Ajouter un commentaire:</label>
-                    <textarea class="form-control" id="content" name="content" [(ngModel)]="newComment.content" required></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Ajouter Commentaire</button>
-                </form>
-  
-                <!-- Boutons de mise à jour et de suppression -->
-                <div class="mt-3">
-                  <button (click)="editMenu(menu)" class="btn btn-sm btn-primary">Modifier Menu</button>
-                  <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer Menu</button>
-                </div>
-  
-                <!-- Formulaire de mise à jour -->
-                <div *ngIf="menu.editMode" class="mt-3">
-                  <h4>Modifier le menu</h4>
-                  <form (submit)="updateMenu(menu._id)">
-                    <div class="form-group">
-                      <label class="form-control-label" for="editText">Texte du menu:</label>
-                      <textarea class="form-control" id="editText" name="editText" [(ngModel)]="menu.editText" required></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-control-label" for="editImage">Image du menu:</label>
-                      <input type="file" id="editImage" (change)="onFileChange($event, menu)" class="form-control-file">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Mettre à jour Menu</button>
-                  </form>
-                </div>
-              </div>
+
+              <!-- Formulaire de mise à jour -->
+             <!-- Formulaire de mise à jour -->
+<div *ngIf="menu.editMode" class="mt-3">
+  <h4>Modifier le menu</h4>
+  <form (ngSubmit)="updateMenu(menu._id)">
+    <div class="form-group">
+      <label class="form-control-label" for="editText">Texte du menu:</label>
+      <textarea class="form-control" id="editText" name="editText" [(ngModel)]="menu.editText" required></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-control-label" for="editImage">Image du menu:</label>
+      <input type="file" id="editImage" (change)="onFileChange($event, menu)" class="form-control-file">
+    </div>
+    <button type="submit" class="btn btn-primary">Mettre à jour Menu</button>
+  </form>
+</div>
+
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

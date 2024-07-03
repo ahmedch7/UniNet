@@ -35,3 +35,28 @@ export const getComments = async (req, res) => {
     res.status(500).json({ message: "Error getting comments", error });
   }
 };
+export const deleteComment = async (req, res) => {
+  const { menuId, commentId } = req.params;
+
+  try {
+    const menu = await Menu.findById(menuId);
+    if (!menu) {
+      return res.status(404).json({ message: 'Menu not found' });
+    }
+
+    // Vérifiez si le commentaire appartient au menu
+    if (!menu.comments.includes(commentId)) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+
+    // Supprimez le commentaire de la liste des commentaires du menu
+    menu.comments = menu.comments.filter(c => c.toString() !== commentId);
+    await menu.save();
+
+    res.status(200).json({ message: 'Comment deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting comment', error });
+  }
+};
