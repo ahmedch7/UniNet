@@ -19,13 +19,14 @@ export class EventListComponent implements OnInit {
     status: ''
   };
   sortOption: string = '';
+  userId: string;
 
   constructor(private eventService: EventService, private router: Router) { }
 
   ngOnInit(): void {
     this.fetchEvents();
-    const userId = '66530a6b9bba527817c159e2'; // Example user ID
-    this.fetchRecommendedEvents(userId);
+    this.userId = localStorage.getItem('userId') || '66530a6b9bba527817c159e2';
+    this.fetchRecommendedEvents(this.userId);
     this.getUserLocationAndFetchNearbyEvents();
   }
 

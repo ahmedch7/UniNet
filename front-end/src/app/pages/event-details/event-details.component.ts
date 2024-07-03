@@ -18,6 +18,8 @@ export class EventDetailsComponent implements OnInit {
   selectedFile: File | null = null;
   selectedComment: any; 
   alerts: { type: string, message: string }[] = [];
+  userId: string;
+  userRole: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,6 +43,10 @@ export class EventDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userId = localStorage.getItem('userId') || '66530a6b9bba527817c159e2';
+    this.userRole = localStorage.getItem('userRole')|| 'admine';
+    console.log('UserRole:', this.userRole);
+    console.log('Userid:', this.userId);
     const eventId = this.route.snapshot.paramMap.get('id')!;
     if (eventId) {
       this.eventService.getEvent(eventId).subscribe(
@@ -62,22 +68,27 @@ export class EventDetailsComponent implements OnInit {
   }
 
   deleteEvent(): void {
+    if (this.userRole !== 'responsable' && this.userRole !== 'admin') {
+      this.addAlert('danger', 'You do not have permission to delete this event.');
+      console.log('UserRole:', this.userRole);
+      console.log('Userid:', this.userId);
+      return;
+    }
+
     const id = this.event._id;
-    if (confirm('Are you sure you want to delete this event?')){
-
-
-    this.eventService.deleteEvent(id).subscribe(() => {
-      this.router.navigate(['/event-list']);
-    })}
+    if (confirm('Are you sure you want to delete this event?')) {
+      this.eventService.deleteEvent(id).subscribe(() => {
+        this.router.navigate(['/event-list']);
+      });
+    }
   }
-  
   participate(): void {
     if (this.event.Nbplaces > 0) {
-      const userId = '66530a6b9bba527817c159e2'; // Replace with the actual user ID
       const username = 'John Doe'; // Replace with the actual username
 
-      this.eventService.participateEvent(this.event._id, userId, username).subscribe(
+      this.eventService.participateEvent(this.event._id, this.userId, username).subscribe(
         (updatedEvent) => {
+          console.log(this.userId)
           this.event = updatedEvent;
           this.addAlert('success', 'Successfully participated in the event! A Email has been sent to you with more informations');
         },
@@ -93,8 +104,8 @@ export class EventDetailsComponent implements OnInit {
   }
 
   removeParticipation(): void {
-    const userId = '66530a6b9bba527817c159e2'; // Replace with actual user ID
-    const participation = this.event.participants.find(participant => participant.user === userId);
+    // Replace with actual user ID
+    const participation = this.event.participants.find(participant => participant.user === this.userId);
 
     if (!participation) {
       console.error('Participant not found');
@@ -126,8 +137,7 @@ export class EventDetailsComponent implements OnInit {
   }
 
   isParticipating(): boolean {
-    const userId = '66530a6b9bba527817c159e2'; // Static user ID
-    return this.event.participants.some(participant => participant.user === userId);
+    return this.event.participants.some(participant => participant.user === this.userId);
   }
 
   checkAndUpdateStatus(): void {
@@ -156,6 +166,10 @@ export class EventDetailsComponent implements OnInit {
   }
 
   enableEditing(): void {
+    if (this.userRole !== 'responsable' && this.userRole !== 'admin') {
+      this.addAlert('danger', 'You do not have permission to edit this event.');
+      return;
+    }
     this.isEditingEvent = true;
   }
 
@@ -166,17 +180,19 @@ export class EventDetailsComponent implements OnInit {
   }
 
   updateEvent(): void {
+    if (this.userRole !== 'responsable' && this.userRole !== 'admin') {
+      this.addAlert('danger', 'You do not have permission to update this event.');
+      return;
+    }
     this.eventService.updateEvent(this.event).subscribe(
       (updatedEvent) => {
         this.event = updatedEvent;
         this.isEditingEvent = false; // Exit editing mode after successful update
         this.addAlert('success', 'Event updated successfully.');
-
       },
       (error) => {
         console.error('Error updating event:', error);
         this.addAlert('danger', 'Error updating event.');
-
       }
     );
   }
@@ -213,6 +229,10 @@ export class EventDetailsComponent implements OnInit {
 
     const eventId = this.event._id; // Adjust based on your event object structure
     const commentId = comment._id; // Ensure _id is defined on the selected comment
+    if (comment.user !== this.userId && this.userRole !== 'admin' && this.userRole !== 'responsable') {
+      this.addAlert('danger', 'You do not have permission to update this comment.');
+      return;
+    }
     this.eventService.updateComment(eventId, commentId, comment.updatedText).subscribe(
       () => {
         // Update the updated comment in local event object
@@ -232,9 +252,8 @@ export class EventDetailsComponent implements OnInit {
 
   addComment(): void {
     if (this.newCommentText.trim()) {
-      const userId = '66530a6b9bba527817c159e2'; // Static user ID
 
-      this.eventService.addComment(this.event._id, this.newCommentText, userId).subscribe(
+      this.eventService.addComment(this.event._id, this.newCommentText, this.userId).subscribe(
         (comment) => {
           this.newCommentText = '';
           this.addAlert('success', 'Comment added successfully.');
@@ -251,6 +270,11 @@ export class EventDetailsComponent implements OnInit {
 
   deleteComment(commentId: string): void {
     const eventId = this.event._id; // Adjust based on your event object structure
+    const comment = this.event.comments.find(comment => comment._id === commentId);
+    if (!comment || (comment.user !== this.userId && this.userRole !== 'admin' && this.userRole !== 'responsable')) {
+      this.addAlert('danger', 'You do not have permission to delete this comment.');
+      return;
+    }
     this.eventService.deleteComment(eventId, commentId).subscribe(
       () => {
         // Update UI or reload event details after successful deletion if needed

@@ -11,7 +11,9 @@
   <div *ngIf="event" class="event-details">
     <div class="event-header">
       <h2>{{ event.name }}</h2>
-      <button class="btn btn-danger" (click)="deleteEvent()">Delete Event</button>
+      <div *ngIf="userRole === 'responsable' || userRole === 'admin'" ><button class="btn btn-danger"
+          (click)="deleteEvent()">Delete Event</button>
+        </div>
     </div>
 
     <div class="event-body">
@@ -35,7 +37,10 @@
         <ng-container *ngIf="!event.participants || event.participants.length === 0">
           <button class="btn btn-success" [disabled]="event.Nbplaces === 0" (click)="participate()">Participate</button>
         </ng-container>
+        <ng-container  *ngIf="userRole === 'responsable' || userRole === 'admin'" >
+
         <button class="btn btn-warning" (click)="enableEditing()">Update</button>
+        </ng-container>
       </div>
     </div>
 
@@ -73,11 +78,15 @@
       <h3>Comments</h3>
       <div *ngFor="let comment of event.comments" class="comment-item">
         <p><strong>{{ comment.nom }}:</strong> {{ comment.text }} ({{ comment.createdAt | date:'short' }})</p>
+        <div *ngIf="comment.user === userId || userRole === 'admin' || userRole === 'responsable'">
+
         <button class="btn btn-danger" (click)="deleteComment(comment._id)">Delete Comment</button>
         <button class="btn btn-warning" *ngIf="!comment.editing" (click)="enableCommentEditing(comment)">Update</button>
+        </div>
         <div *ngIf="comment.editing" class="update-comment-form">
           <textarea class="form-control" rows="3" [(ngModel)]="comment.updatedText"
             placeholder="Update your comment"></textarea>
+            
           <button class="btn btn-primary" (click)="updateComment(comment)">Save</button>
           <button class="btn btn-secondary" (click)="cancelCommentEditing(comment)">Cancel</button>
         </div>

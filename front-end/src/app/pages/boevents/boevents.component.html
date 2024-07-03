@@ -63,7 +63,7 @@
                             <td>{{ event.date | date:'medium' }}</td>
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/event-details', event._id]">Details</button>
-                                <button type="button" class="btn btn-danger btn-sm" (click)="deleteEvent(event.id)">Delete</button>
+                                <button type="button" class="btn btn-danger btn-sm" (click)="deleteEvent(event._id)">Delete</button>
                             </td>
                         </tr>
                         <tr *ngIf="pagedEvents().length === 0">
