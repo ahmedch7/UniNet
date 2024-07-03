@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
 import { NiveauComponent } from './pages/niveau/niveau.component';
 import { NiveauedudetailComponent } from './pages/niveauedudetail/niveauedudetail.component';
+import { CoursdetailsComponent } from './pages/coursdetails/coursdetails.component';
 
 
 
@@ -33,7 +34,8 @@ import { NiveauedudetailComponent } from './pages/niveauedudetail/niveauedudetai
     AdminLayoutComponent,
     AuthLayoutComponent,
     NiveauComponent,
-    NiveauedudetailComponent
+    NiveauedudetailComponent,
+    CoursdetailsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

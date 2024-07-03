@@ -27,6 +27,10 @@ export class ClasseService {
   getClasseByNiveau(niveauEducatifId: string): Observable<Classe[]> {
     return this.http.get<Classe[]>(`${this.apiUrl}/classes/${niveauEducatifId}`);
   }
+
+  getUnassignedStudents(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/student/unassigned`);
+  }
   
   getStudentsByClasse(id: string): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/students/${id}`).pipe(
@@ -41,12 +45,13 @@ export class ClasseService {
     return this.http.patch<any>(`${this.apiUrl}/${Classe._id}`, Classe );
   }
 
-  deleteNiveau(id: string): Observable<any> {
+  deleteClasse(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  assignStudentsToClass(id: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, Classe);
+  assignStudentToClass(classId: string, studentId: string): Observable<any> {
+    const payload = { studentIds: [studentId] }; // Adjust payload as per backend requirements
+    return this.http.post(`${this.apiUrl}/classes/${classId}/assign-students`, payload);
   }
 
 

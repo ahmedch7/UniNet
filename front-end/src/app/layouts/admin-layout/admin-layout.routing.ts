@@ -7,11 +7,13 @@ import { UserProfileComponent } from '../../pages/user-profile/user-profile.comp
 import { TablesComponent } from '../../pages/tables/tables.component';
 import { NiveauComponent } from 'src/app/pages/niveau/niveau.component';
 import { NiveauedudetailComponent } from 'src/app/pages/niveauedudetail/niveauedudetail.component';
+import { CoursdetailsComponent } from 'src/app/pages/coursdetails/coursdetails.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
     { path: 'niveau',         component: NiveauComponent },
     { path: 'niveau-detail/:id',   component:NiveauedudetailComponent},
+    { path: 'cours-detail/:id',   component:CoursdetailsComponent},
 
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'tables',         component: TablesComponent },
