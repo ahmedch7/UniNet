@@ -16,6 +16,7 @@ import { FoyerComponent } from './pages/foyer/foyer.component';
 import { RestaurantReservationComponent } from './pages/restaurant-reservation/restaurant-reservation.component';
 import { FilterPipe } from './filter.pipe';
 import { MenuRestauComponent } from './pages/menu-restau/menu-restau.component';
+import { FoyerStatisticsComponent } from './pages/foyer-statistics/foyer-statistics.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { MenuRestauComponent } from './pages/menu-restau/menu-restau.component';
     ComponentsModule,
     NgbModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+    
   ],
   declarations: [
     AppComponent,
@@ -35,7 +37,8 @@ import { MenuRestauComponent } from './pages/menu-restau/menu-restau.component';
     FoyerComponent,
     RestaurantReservationComponent,
     FilterPipe,
-    MenuRestauComponent
+    MenuRestauComponent,
+    FoyerStatisticsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

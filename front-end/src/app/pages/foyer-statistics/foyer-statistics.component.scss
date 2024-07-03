@@ -1,0 +1,55 @@
+.pie-chart {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #f00 0 var(--slice1),
+        #0f0 var(--slice1) calc(var(--slice1) + var(--slice2)),
+        #00f calc(var(--slice1) + var(--slice2)) 100%
+    );
+
+    .center {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .chart-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        font-weight: bold;
+    }
+}
+
+.bar-chart {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 200px;
+    width: 100%;
+    margin-top: 20px;
+
+    .bar {
+        position: relative;
+        width: 30px;
+        background-color: #ccc;
+
+        .bar-label {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
+}

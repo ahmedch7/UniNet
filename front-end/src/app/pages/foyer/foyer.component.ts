@@ -16,14 +16,22 @@ export class FoyerComponent implements OnInit {
   newRoom: any = {};
   selectedRoom: any = null;
   showRooms: { [key: string]: boolean } = {}; // Track room visibility for each foyer
-
+  successMessage: string = '';
+  errorMessage: string = '';
   showCard: string = 'list'; // Track which card is visible
   searchText: string = ''; // Search text for filtering
+  id_user = '6679be5c0a809410213874ad';  // Static user ID
+
+  UsersReserved: any[] = [];
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }
 
   ngOnInit(): void {
     this.loadFoyers();
+  }
+
+  dismissAlert(alertType: 'successMessage' | 'errorMessage'): void {
+    this[alertType] = ''; // Clear the message
   }
 
   loadFoyers(): void {
@@ -41,30 +49,33 @@ export class FoyerComponent implements OnInit {
     if (!this.searchText) {
       return this.foyers;
     }
-    return this.foyers.filter(foyer => 
+    return this.foyers.filter(foyer =>
       foyer.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
 
   createFoyer(): void {
     this.foyerService.createFoyer(this.newFoyer).subscribe(
-      (data) => {
-        this.loadFoyers(); // Refresh the list
+      () => {
+        this.successMessage = 'Foyer created successfully.';
+        this.loadFoyers();
         this.newFoyer = {}; // Clear the form
-        this.showCard = 'list'; // Show the list of foyers after creation
+        this.showCard = 'list'; // Optionally, switch to list view
       },
       (error) => {
+        this.errorMessage = 'Error creating foyer: ' + error.message;
         console.error('Error creating foyer', error);
       }
     );
   }
+  
 
   onUpdateFoyer(id: string): void {
     this.foyerService.updateFoyer(id, this.selectedFoyer).subscribe(
-      (data) => {
-        this.loadFoyers(); // Refresh the list
-        this.selectedFoyer = null; // Clear selectedFoyer after update
-        this.showCard = 'list'; // Show the list of foyers after update
+      () => {
+        this.loadFoyers();
+        this.selectedFoyer = null;
+        this.showCard = 'list';
       },
       (error) => {
         console.error('Error updating foyer', error);
@@ -75,7 +86,7 @@ export class FoyerComponent implements OnInit {
   deleteFoyer(id: string): void {
     this.foyerService.deleteFoyer(id).subscribe(
       () => {
-        this.loadFoyers(); // Refresh the list
+        this.loadFoyers();
       },
       (error) => {
         console.error('Error deleting foyer', error);
@@ -84,24 +95,25 @@ export class FoyerComponent implements OnInit {
   }
 
   selectFoyerForUpdate(foyer: any): void {
-    this.selectedFoyer = { ...foyer }; // Make a copy of foyer object
-    this.showCard = 'editFoyer'; // Show the edit foyer card
+    this.selectedFoyer = { ...foyer };
+    this.showCard = 'editFoyer';
   }
 
   viewRooms(foyer: any): void {
     this.UsersReserved = null;
     this.foyers.forEach(element => {
-      if (element._id != foyer._id)
+      if (element._id !== foyer._id) {
         this.showRooms[element._id] = false;
+      }
     });
 
-    this.selectedFoyer = foyer; // Set the selected foyer
+    this.selectedFoyer = foyer;
     if (this.showRooms[foyer._id]) {
-      this.showRooms[foyer._id] = false; // Hide rooms if already visible
+      this.showRooms[foyer._id] = false;
     } else {
       this.loadRooms(foyer._id);
-      this.showRooms[foyer._id] = true; // Show rooms
-      this.showCard = 'rooms'; // Show the rooms card
+      this.showRooms[foyer._id] = true;
+      this.showCard = 'rooms';
     }
   }
 
@@ -119,10 +131,10 @@ export class FoyerComponent implements OnInit {
   createRoom(foyerId: string): void {
     this.newRoom.foyerId = foyerId;
     this.roomService.createRoom(this.newRoom).subscribe(
-      (data) => {
-        this.loadRooms(foyerId); // Refresh the list
-        this.newRoom = {}; // Clear the form
-        this.showCard = 'list'; // Show the list of foyers after creating a room
+      () => {
+        this.loadRooms(foyerId);
+        this.newRoom = {};
+        this.showCard = 'list';
       },
       (error) => {
         console.error('Error creating room', error);
@@ -131,32 +143,28 @@ export class FoyerComponent implements OnInit {
   }
 
   updateRoom(roomId: string): void {
-    // Update capacity based on room type change
     if (this.selectedRoom.type === 'double') {
-      this.selectedRoom.capacity = 2; // Update capacity for double rooms
+      this.selectedRoom.capacity = 2;
     } else if (this.selectedRoom.type === 'triple') {
-      this.selectedRoom.capacity = 3; // Update capacity for triple rooms
+      this.selectedRoom.capacity = 3;
     }
-  
-    // Call roomService to update the room
+
     this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
-      (data) => {
-        this.loadRooms(this.selectedFoyer._id); // Refresh the list of rooms
-        this.selectedRoom = null; // Clear selectedRoom after update
-        this.showCard = 'rooms'; // Show the rooms card after updating a room
+      () => {
+        this.loadRooms(this.selectedFoyer._id);
+        this.selectedRoom = null;
+        this.showCard = 'rooms';
       },
       (error) => {
         console.error('Error updating room', error);
       }
     );
   }
-  
-  
 
   deleteRoom(roomId: string): void {
     this.roomService.deleteRoom(roomId).subscribe(
       () => {
-        this.loadRooms(this.selectedFoyer._id); // Refresh the list
+        this.loadRooms(this.selectedFoyer._id);
       },
       (error) => {
         console.error('Error deleting room', error);
@@ -165,11 +173,9 @@ export class FoyerComponent implements OnInit {
   }
 
   selectRoomForUpdate(room: any): void {
-    this.selectedRoom = { ...room }; // Make a copy of room object to avoid mutating the original
-    this.showCard = 'editRoom'; // Show the edit room card
+    this.selectedRoom = { ...room };
+    this.showCard = 'editRoom';
   }
-
-  id_user = '6683e1c309d9b20f76f09c1d';  // ID utilisateur statique
 
   reserveRoom(roomId: string): void {
     const existingReservation = this.roomsByFoyer[this.selectedFoyer._id].find(room => room._id === roomId)?.reservation;
@@ -191,12 +197,12 @@ export class FoyerComponent implements OnInit {
   }
 
   private makeReservation(roomId: string): void {
-    const reservation = { roomId, userId: this.id_user, places: 1 };  // Inclure l'ID utilisateur statique
+    const reservation = { roomId, userId: this.id_user, places: 1 };
     this.roomService.reserveRoom(reservation).subscribe(
-      (data) => {
+      () => {
         this.loadFoyers();
         this.viewRooms(this.selectedFoyer);
-        this.loadRooms(this.selectedFoyer._id); // Rafraîchir la liste
+        this.loadRooms(this.selectedFoyer._id);
       },
       (error: any) => {
         console.error('Error reserving room', error);
@@ -204,19 +210,16 @@ export class FoyerComponent implements OnInit {
     );
   }
 
-  public cancelReservation(reservationId: string): Observable<any> {
+  cancelReservation(reservationId: string): Observable<any> {
     return this.roomService.cancelReservation(reservationId);
   }
 
-  // Method to create a new room associated with a specific foyer
   createNewRoom(foyerId: string): void {
-    this.selectedFoyer = this.foyers.find(foyer => foyer._id === foyerId); // Set the selected foyer
-    this.newRoom = {}; // Clear previous newRoom data
-    this.newRoom.foyerId = foyerId; // Assign the foyerId to newRoom
-    this.showCard = 'createRoom'; // Show the create room card
+    this.selectedFoyer = this.foyers.find(foyer => foyer._id === foyerId);
+    this.newRoom = {};
+    this.newRoom.foyerId = foyerId;
+    this.showCard = 'createRoom';
   }
-
-  UsersReserved: any[] = [];
 
   getusersreservationRooms(roomId: string): void {
     this.roomService.getRoomReservationById(roomId).subscribe(
@@ -224,31 +227,20 @@ export class FoyerComponent implements OnInit {
         this.UsersReserved = data;
       },
       (error: any) => {
-        console.error('Error reserving room', error);
+        console.error('Error fetching room reservations', error);
       }
     );
   }
 
-  // Method to show the create foyer card
-  showCreateFoyerCard(): void {
-    this.newFoyer = {}; // Clear previous newFoyer data
-    this.showCard = 'createFoyer'; // Show the create foyer card
-  }
-
-  // Method to hide all cards except the list of foyers
-  hideAllCards(): void {
-    this.showCard = 'list'; // Show the list of foyers
-  }
   showCreateFoyerForm(): void {
     this.showCard = 'createFoyer';
   }
 
   onRoomTypeChange(): void {
-    // Update capacity based on room type
     if (this.newRoom.type === 'double') {
-      this.newRoom.capacity = 2; // Update capacity for double rooms
+      this.newRoom.capacity = 2;
     } else if (this.newRoom.type === 'triple') {
-      this.newRoom.capacity = 3; // Update capacity for triple rooms
+      this.newRoom.capacity = 3;
     }
   }
 }
