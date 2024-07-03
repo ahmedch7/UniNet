@@ -29,8 +29,6 @@ import postRoutes from "./routes/post.route.js";
 import salleRoutes from './routes/salle.route.js';
 import examenRoutes from './routes/examen.route.js';
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
-import multer, {diskStorage} from "multer";
-import path from "path";
 
 
 

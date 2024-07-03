@@ -5,7 +5,8 @@ import {
   updateUser,
   deleteUser,
   getUsersByRole,
-  getUsersByRoleAndUniversity
+  getUsersByRoleAndUniversity,
+  changeUserStatus
 } from "../controllers/user.controller.js";
 import auth from "../middlewares/auth.js";
 import roleAuth from "../middlewares/roleAuth.js";
@@ -35,5 +36,6 @@ router.get("/:id", auth, getUserById);
 router.get('/role/:role',auth,roleAuth(["admin", "responsable"]), getUsersByRole);
 router.get('/role/:role/:universityId/:niveauxEducatif',auth,roleAuth(["admin", "etudiant"]), getUsersByRoleAndUniversity);
 router.patch("/:id", auth,upload, updateUser);
+router.patch("/status/:id", auth, roleAuth(["admin", "responsable"]), changeUserStatus); // New route for changing user status
 router.delete("/:id", auth, roleAuth(["admin", "responsable"]), deleteUser);
 export default router;

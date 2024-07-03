@@ -1,4 +1,4 @@
-import University from "../models/University.js";
+import University from "../models/university.js";
 
 export const create = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
@@ -147,7 +147,9 @@ export const resetPassword = async (req, res) => {
 
     // Validate the new password
     if (newPassword.length < 6) {
-      return res.status(400).send({ error: "Password must be at least 6 characters long" });
+      return res
+        .status(400)
+        .send({ error: "Password must be at least 6 characters long" });
     }
 
     const user = await User.findOne({
@@ -156,7 +158,9 @@ export const resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).send({ error: "Password reset token is invalid or has expired" });
+      return res
+        .status(400)
+        .send({ error: "Password reset token is invalid or has expired" });
     }
 
     // Update the password field
@@ -206,7 +210,9 @@ export const resetPassword = async (req, res) => {
     res.status(200).send({ message: "Password has been reset" });
   } catch (error) {
     console.error("Error resetting password:", error);
-    res.status(500).send({ error: "An error occurred while resetting the password" });
+    res
+      .status(500)
+      .send({ error: "An error occurred while resetting the password" });
   }
 };
 
@@ -214,7 +220,18 @@ export const resetPassword = async (req, res) => {
 export const signup = async (req, res) => {
   try {
     // Extract user data from request body
-    const { nom, prenom, email, motDePasse, dateDeNaissance, numTel, entreprise, role, niveauxEducatif, universiteAssociee } = req.body;
+    const {
+      nom,
+      prenom,
+      email,
+      motDePasse,
+      dateDeNaissance,
+      numTel,
+      entreprise,
+      role,
+      niveauxEducatif,
+      universiteAssociee,
+    } = req.body;
 
     // Create a new user object
     const user = new User({
@@ -239,7 +256,9 @@ export const signup = async (req, res) => {
     await user.save();
 
     // Generate validation code
-    const validationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    const validationCode = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString(); // 6-digit code
     const validationCodeExpires = Date.now() + 3600000; // 1 hour
 
     user.validationCode = validationCode;
@@ -256,7 +275,10 @@ export const signup = async (req, res) => {
     });
 
     // Read email template
-    const templatePath = path.resolve("emailTemplates", "accountActivation.hbs");
+    const templatePath = path.resolve(
+      "emailTemplates",
+      "accountActivation.hbs"
+    );
     const templateSource = fs.readFileSync(templatePath, "utf-8");
     const template = handlebars.compile(templateSource);
 
@@ -275,7 +297,9 @@ export const signup = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     // Send response
-    res.status(201).send({ message: "User registered. Validation email sent." });
+    res
+      .status(201)
+      .send({ message: "User registered. Validation email sent." });
   } catch (error) {
     res.status(400).send(error);
   }
@@ -298,6 +322,11 @@ export const signin = async (req, res) => {
         .status(403)
         .send({ error: "Your account is not active. Please contact support." });
     }
+    if (!user.activeStatus) {
+      return res
+        .status(403)
+        .send({ error: "Your account is deactivated. Please contact support." });
+    }
 
     if (user.twoFactorEnabled) {
       const verified = speakeasy.totp.verify({
@@ -309,7 +338,9 @@ export const signin = async (req, res) => {
         return res.status(400).send({ error: "Invalid 2FA token" });
       }
     }
-
+    // Update last login time
+    user.derniereConnexion = new Date();
+    // generate Authentication token
     const authToken = user.generateAuthToken(rememberMe);
 
     // Save long-lived token if rememberMe is true
@@ -403,10 +434,8 @@ export const disableTwoFactor = async (req, res) => {
       .status(200)
       .send({ message: "Two-Factor Authentication disabled successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        error: "Server error. Unable to disable Two-Factor Authentication",
-      });
+    res.status(500).send({
+      error: "Server error. Unable to disable Two-Factor Authentication",
+    });
   }
 };
