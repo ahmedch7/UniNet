@@ -10,6 +10,8 @@ import { EventService } from '../../Services/Event.Service';
 export class EventListComponent implements OnInit {
   events: any[] = [];
   filteredEvents: any[] = [];
+  recommendedEvents: any[] = [];
+  nearbyEvents: any[] = []
   filters: any = {
     name: '',
     date: '',
@@ -21,6 +23,13 @@ export class EventListComponent implements OnInit {
   constructor(private eventService: EventService, private router: Router) { }
 
   ngOnInit(): void {
+    this.fetchEvents();
+    const userId = '66530a6b9bba527817c159e2'; // Example user ID
+    this.fetchRecommendedEvents(userId);
+    this.getUserLocationAndFetchNearbyEvents();
+  }
+
+  fetchEvents(): void {
     this.eventService.getEvents().subscribe(
       (data) => {
         this.events = data;
@@ -32,20 +41,37 @@ export class EventListComponent implements OnInit {
     );
   }
 
+  fetchRecommendedEvents(userId: string): void {
+    this.eventService.fetchRecommendedEvents(userId).subscribe({
+      next: (data) => {
+        this.recommendedEvents = data; // Assign to recommendedEvents, not events
+      },
+      error: (error) => {
+        console.error('Error fetching recommended events:', error);
+      }
+    });
+  }
+
+  private extractTags(events: any[]): string[] {
+    const tags = events.flatMap(event => event.tags);
+    return [...new Set(tags)]; // Remove duplicates
+  }
+
+  private extractCategories(events: any[]): string[] {
+    const categories = events.flatMap(event => event.categories);
+    return [...new Set(categories)]; // Remove duplicates
+  }
+
   onEventClick(eventId: string): void {
     this.router.navigate(['/event-details', eventId]);
   }
+
   applyFilters(): void {
     this.filteredEvents = this.events.filter(event => {
       const matchesName = event.name.toLowerCase().includes(this.filters.name.toLowerCase());
       const matchesDate = !this.filters.date || new Date(event.date).toDateString() === new Date(this.filters.date).toDateString();
       const matchesLocation = event.location.toLowerCase().includes(this.filters.location.toLowerCase());
       const matchesStatus = !this.filters.status || event.status === this.filters.status;
-      console.log("hello i m clicked")
-      console.log(matchesName)
-      console.log(matchesDate)
-      console.log(matchesLocation)
-      console.log(matchesStatus)
 
       return matchesName && matchesDate && matchesLocation && matchesStatus;
     });
@@ -60,6 +86,7 @@ export class EventListComponent implements OnInit {
     };
     this.filteredEvents = [...this.events];
   }
+
   sortEvents(): void {
     if (this.sortOption === 'dateAsc') {
       this.filteredEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -75,5 +102,32 @@ export class EventListComponent implements OnInit {
       this.filteredEvents.sort((a, b) => b.status.localeCompare(a.status));
     }
   }
-}
   
+  getUserLocationAndFetchNearbyEvents(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          this.fetchNearbyEvents(latitude, longitude);
+        },
+        (error) => {
+          console.error('Error getting user location:', error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }
+
+  fetchNearbyEvents(latitude: number, longitude: number): void {
+    this.eventService.getNearbyEvents(latitude, longitude).subscribe(
+      (events) => {
+        this.nearbyEvents = events;
+      },
+      (error) => {
+        console.error('Error fetching nearby events:', error);
+      }
+    );
+  }
+}

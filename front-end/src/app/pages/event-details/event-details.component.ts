@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute,Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from '../../Services/Event.Service';
 import { Socket } from 'ngx-socket-io';
 @Component({
@@ -11,13 +11,34 @@ export class EventDetailsComponent implements OnInit {
 
   event: any;
   newCommentText: string = '';
-  updatedText: string = ''; 
-  statuses: string[] = ['Available','Planned', 'Ongoing', 'Ended', 'Full'];
-  isEditing: boolean = false;
+  updatedText: string = '';
+  statuses: string[] = ['Available', 'Planned', 'Ongoing', 'Ended', 'Full','Canceled'];
+  isEditingEvent: boolean = false;
   originalEventData: any;
   selectedFile: File | null = null;
-  constructor(private route: ActivatedRoute, private eventService: EventService,    private socket: Socket, private router: Router,
+  selectedComment: any; 
+  alerts: { type: string, message: string }[] = [];
+
+  constructor(
+    private route: ActivatedRoute,
+    private eventService: EventService,
+    private socket: Socket,
+    private router: Router
   ) { }
+  addAlert(type: string, message: string): void {
+    const alert = { type, message };
+    this.alerts.push(alert);
+    setTimeout(() => {
+      this.removeAlert(alert);
+    }, 5000); // Adjust the timeout as needed
+  }
+
+  removeAlert(alert: any): void {
+    const index = this.alerts.indexOf(alert);
+    if (index !== -1) {
+      this.alerts.splice(index, 1);
+    }
+  }
 
   ngOnInit(): void {
     const eventId = this.route.snapshot.paramMap.get('id')!;
@@ -25,7 +46,7 @@ export class EventDetailsComponent implements OnInit {
       this.eventService.getEvent(eventId).subscribe(
         (data) => {
           this.event = data;
-          this.originalEventData = { ...data }; 
+          this.originalEventData = { ...data };
 
           this.checkAndUpdateStatus();
         },
@@ -34,33 +55,79 @@ export class EventDetailsComponent implements OnInit {
         }
       );
     }
+
     this.socket.on('new-comment', (newComment: any) => {
       this.event.comments.push(newComment);
     });
   }
+
   deleteEvent(): void {
     const id = this.event._id;
+    if (confirm('Are you sure you want to delete this event?')){
+
+
     this.eventService.deleteEvent(id).subscribe(() => {
-      this.router.navigate(['/Events']);
-    });
+      this.router.navigate(['/event-list']);
+    })}
   }
+  
   participate(): void {
     if (this.event.Nbplaces > 0) {
-      this.event.Nbplaces--;
-      if (this.event.Nbplaces === 0) {
-        this.event.status = 'Full';
-      }
-      this.eventService.updateEvent(this.event).subscribe(
-        () => {
-          console.log('Event updated successfully');
+      const userId = '66530a6b9bba527817c159e2'; // Replace with the actual user ID
+      const username = 'John Doe'; // Replace with the actual username
+
+      this.eventService.participateEvent(this.event._id, userId, username).subscribe(
+        (updatedEvent) => {
+          this.event = updatedEvent;
+          this.addAlert('success', 'Successfully participated in the event! A Email has been sent to you with more informations');
         },
         (error) => {
-          console.error('Error updating event:', error);
+          console.error('Error participating in event:', error);
+          this.addAlert('danger', 'Failed to participate in the event. Please try again.');
         }
       );
     } else {
       console.log('No more places available');
+      this.addAlert('warning', 'No more places available.');
     }
+  }
+
+  removeParticipation(): void {
+    const userId = '66530a6b9bba527817c159e2'; // Replace with actual user ID
+    const participation = this.event.participants.find(participant => participant.user === userId);
+
+    if (!participation) {
+      console.error('Participant not found');
+      this.addAlert('danger', 'Participant not found.');
+
+      return;
+    }
+
+    const participationId = participation._id;
+    const eventId = this.event._id;
+
+    this.eventService.deleteParticipation(eventId, participationId).subscribe(
+      () => {
+        // Update local event state
+        this.event.Nbplaces++;
+        this.event.status = 'Available'; // Update status as needed
+        // Remove the participant from local event participants array
+        this.event.participants = this.event.participants.filter(participant => participant._id !== participationId);
+        console.log('Participation removed successfully');
+        this.addAlert('success', 'Participation removed successfully.');
+
+      },
+      (error) => {
+        console.error('Error removing participation:', error);
+        this.addAlert('danger', 'Error removing participation.');
+
+      }
+    );
+  }
+
+  isParticipating(): boolean {
+    const userId = '66530a6b9bba527817c159e2'; // Static user ID
+    return this.event.participants.some(participant => participant.user === userId);
   }
 
   checkAndUpdateStatus(): void {
@@ -89,14 +156,31 @@ export class EventDetailsComponent implements OnInit {
   }
 
   enableEditing(): void {
-    this.isEditing = true;
+    this.isEditingEvent = true;
   }
 
   cancelEditing(): void {
-    this.isEditing = false;
+    this.isEditingEvent = false;
     this.event = { ...this.originalEventData };
-    this.selectedFile = null; 
+    this.selectedFile = null;
   }
+
+  updateEvent(): void {
+    this.eventService.updateEvent(this.event).subscribe(
+      (updatedEvent) => {
+        this.event = updatedEvent;
+        this.isEditingEvent = false; // Exit editing mode after successful update
+        this.addAlert('success', 'Event updated successfully.');
+
+      },
+      (error) => {
+        console.error('Error updating event:', error);
+        this.addAlert('danger', 'Error updating event.');
+
+      }
+    );
+  }
+
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
@@ -108,19 +192,81 @@ export class EventDetailsComponent implements OnInit {
     }
   }
 
-  updateEvent(): void {
-    this.eventService.updateEvent(this.event).subscribe(
-      (updatedEvent) => {
-        this.event = updatedEvent;
-        this.originalEventData = { ...updatedEvent };
-        this.isEditing = false;
-        console.log('Event updated successfully');
+  enableCommentEditing(comment: any): void {
+    comment.editing = true; // Set editing flag for the selected comment
+    comment.updatedText = comment.text; // Store original comment text for editing
+    this.selectedComment = comment; // Set selected comment for reference during update
+  }
+
+  cancelCommentEditing(comment: any): void {
+    comment.editing = false; // Clear editing flag
+    comment.updatedText = ''; // Clear updated text
+    this.selectedComment = null; // Clear selected comment
+  }
+
+  updateComment(comment: any): void {
+    if (!comment.updatedText.trim()) {
+      console.error('Cannot update comment: Updated text is empty.');
+      this.addAlert('warning', 'Cannot update comment: Updated text is empty.');
+      return;
+    }
+
+    const eventId = this.event._id; // Adjust based on your event object structure
+    const commentId = comment._id; // Ensure _id is defined on the selected comment
+    this.eventService.updateComment(eventId, commentId, comment.updatedText).subscribe(
+      () => {
+        // Update the updated comment in local event object
+        comment.text = comment.updatedText;
+        console.log('Comment updated successfully');
+        this.cancelCommentEditing(comment); // Clear editing mode after successful update
+        this.addAlert('success', 'Comment updated successfully.');
+
       },
       (error) => {
-        console.error('Error updating event:', error);
+        console.error('Error updating comment:', error);
+        this.addAlert('danger', 'Error updating comment.');
+
       }
     );
   }
+
+  addComment(): void {
+    if (this.newCommentText.trim()) {
+      const userId = '66530a6b9bba527817c159e2'; // Static user ID
+
+      this.eventService.addComment(this.event._id, this.newCommentText, userId).subscribe(
+        (comment) => {
+          this.newCommentText = '';
+          this.addAlert('success', 'Comment added successfully.');
+        },
+        (error) => {
+          console.error('Error adding comment:', error);
+          this.addAlert('danger', 'Error adding comment.');
+        }
+      );
+    } else {
+      this.addAlert('warning', 'Comment text cannot be empty.');
+    }
+  }
+
+  deleteComment(commentId: string): void {
+    const eventId = this.event._id; // Adjust based on your event object structure
+    this.eventService.deleteComment(eventId, commentId).subscribe(
+      () => {
+        // Update UI or reload event details after successful deletion if needed
+        console.log('Comment deleted successfully');
+        this.event.comments = this.event.comments.filter(comment => comment._id !== commentId);
+        this.addAlert('success', 'Comment deleted successfully.');
+
+      },
+      (error) => {
+        console.error('Error deleting comment:', error);
+        this.addAlert('danger', 'Error deleting comment.');
+
+      }
+    );
+  }
+
   likeEvent(): void {
     this.eventService.likeEvent(this.event._id).subscribe(
       (updatedEvent) => {
@@ -141,48 +287,6 @@ export class EventDetailsComponent implements OnInit {
       },
       (error) => {
         console.error('Error disliking event:', error);
-      }
-    );
-  }
-  addComment(): void {
-    if (this.newCommentText.trim()) {
-      //const userId = '66530ac49bba527817c159e8'; 
-      const userId = '66530a6b9bba527817c159e2'; 
-
-      this.eventService.addComment(this.event._id, this.newCommentText, userId).subscribe(
-        (comment) => {
-          this.newCommentText = ''; 
-        },
-        (error) => {
-          console.error('Error adding comment:', error);
-        }
-      );
-    }
-  }
-  deleteComment(eventId: string, commentId: string): void {
-    // Call your event service to delete the comment
-    this.eventService.deleteComment(eventId, commentId).subscribe(
-      () => {
-        // Refresh the event comments after deletion
-        // You might want to reload the event data or refresh the comments list
-        // Example: this.getEventDetails(this.eventId);
-      },
-      (error) => {
-        console.error('Error deleting comment:', error);
-      }
-    );
-  }
-  
-  updateComment(eventId: string, commentId: string): void {
-    // Call your event service to update the comment
-    this.eventService.updateComment(eventId, commentId, this.updatedText).subscribe(
-      () => {
-        // Refresh the event comments after update
-        // You might want to reload the event data or refresh the comments list
-        // Example: this.getEventDetails(this.eventId);
-      },
-      (error) => {
-        console.error('Error updating comment:', error);
       }
     );
   }

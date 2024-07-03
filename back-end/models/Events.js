@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Comment from './Comment.js';
 import Participation from './participant.js';
 import CommentEvent from './CommentEvents.js';
 const EventSchema = new mongoose.Schema({

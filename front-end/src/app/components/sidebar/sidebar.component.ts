@@ -25,7 +25,8 @@ export const ROUTES: RouteInfo[] = [
     class: '',
     children: [
       { path: 'event-list', title: 'Event List' },
-      { path: 'form-event', title: 'Create Event' }
+      { path: 'form-event', title: 'Create Event' },
+      { path: 'BOEvents', title: 'Admin Dashboard' }
     ]
   }
 ];

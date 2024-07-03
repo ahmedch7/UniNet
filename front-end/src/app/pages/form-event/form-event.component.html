@@ -1,146 +1,153 @@
 <div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
-    <div class="container-fluid">
-      <div class="header-body">
+  <div class="container-fluid">
+    <div class="header-body">
+    </div>
+
+  </div>
+</div>
+<div>
+  <div *ngIf="alertMessage" class="alert"
+    [ngClass]="{'alert-success': alertType === 'success', 'alert-warning': alertType === 'error'}" role="alert">
+    <span class="alert-inner--icon"><i class="ni"
+        [ngClass]="{'ni-like-2': alertType === 'success', 'ni-fat-remove': alertType === 'error'}"></i></span>
+    <span class="alert-inner--text"><strong>{{alertTitle}}</strong> {{ alertMessage }}</span>
+  </div>
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="name">Event Name:</label>
+          <input type="text" id="name" class="form-control" formControlName="name" required>
+          <div *ngIf="eventForm.get('name')?.invalid && eventForm.get('name')?.touched">
+            <small *ngIf="eventForm.get('name')?.errors?.['required']">Event name is required.</small>
+            <small *ngIf="eventForm.get('name')?.errors?.['maxlength']">Event name cannot exceed 100 characters.</small>
+          </div>
+        </div>
       </div>
-   
-    </div></div>
-        <div>
-        <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="name">Event Name:</label>
-                <input type="text" id="name" class="form-control" formControlName="name" required>
-                <div *ngIf="eventForm.get('name')?.invalid && eventForm.get('name')?.touched">
-                  <small *ngIf="eventForm.get('name')?.errors?.['required']">Event name is required.</small>
-                  <small *ngIf="eventForm.get('name')?.errors?.['maxlength']">Event name cannot exceed 100 characters.</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="description">Description:</label>
-                <textarea id="description" class="form-control" formControlName="description" rows="4" required></textarea>
-                <div *ngIf="eventForm.get('description')?.invalid && eventForm.get('description')?.touched">
-                  <small *ngIf="eventForm.get('description')?.errors?.['required']">Description is required.</small>
-                  <small *ngIf="eventForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500 characters.</small>
-                </div>
-              </div>
-            </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="description">Description:</label>
+          <textarea id="description" class="form-control" formControlName="description" rows="4" required></textarea>
+          <div *ngIf="eventForm.get('description')?.invalid && eventForm.get('description')?.touched">
+            <small *ngIf="eventForm.get('description')?.errors?.['required']">Description is required.</small>
+            <small *ngIf="eventForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500
+              characters.</small>
           </div>
-  
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="status">Status:</label>
-                <select id="status" class="form-control" formControlName="status" required>
-                  <option value="Available">Available</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="eventDate">Date:</label>
-                <input type="date" id="eventDate" class="form-control" formControlName="eventDate" required>
-                <div *ngIf="eventForm.get('eventDate')?.invalid && eventForm.get('eventDate')?.touched">
-                  <small *ngIf="eventForm.get('eventDate')?.errors?.['required']">Date is required.</small>
-                  <small *ngIf="eventForm.get('eventDate')?.errors?.['invalidDate']">Date cannot be in the past.</small>
-                </div>
-              </div>
-            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="status">Status:</label>
+          <select id="status" class="form-control" formControlName="status" required>
+            <option value="Available">Available</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="eventDate">Date:</label>
+          <input type="date" id="eventDate" class="form-control" formControlName="eventDate" required>
+          <div *ngIf="eventForm.get('eventDate')?.invalid && eventForm.get('eventDate')?.touched">
+            <small *ngIf="eventForm.get('eventDate')?.errors?.['required']">Date is required.</small>
+            <small *ngIf="eventForm.get('eventDate')?.errors?.['invalidDate']">Date cannot be in the past.</small>
           </div>
-  
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="eventTime">Time:</label>
-                <input type="time" id="eventTime" class="form-control" formControlName="eventTime" required>
-                <div *ngIf="eventForm.get('eventTime')?.invalid && eventForm.get('eventTime')?.touched">
-                  <small *ngIf="eventForm.get('eventTime')?.errors?.['required']">Time is required.</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="image">Image URL:</label>
-                <input type="text" id="image" class="form-control" formControlName="image" required>
-                <input type="file" id="imageFile" (change)="onFileSelected($event)">
-                <div *ngIf="eventForm.get('image')?.invalid && eventForm.get('image')?.touched">
-                  <small *ngIf="eventForm.get('image')?.errors?.['required']">Image is required.</small>
-                </div>
-              </div>
-            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="eventTime">Time:</label>
+          <input type="time" id="eventTime" class="form-control" formControlName="eventTime" required>
+          <div *ngIf="eventForm.get('eventTime')?.invalid && eventForm.get('eventTime')?.touched">
+            <small *ngIf="eventForm.get('eventTime')?.errors?.['required']">Time is required.</small>
           </div>
-  
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="Nbplaces">Number of Places:</label>
-                <input type="number" id="Nbplaces" class="form-control" formControlName="Nbplaces" required>
-                <div *ngIf="eventForm.get('Nbplaces')?.invalid && eventForm.get('Nbplaces')?.touched">
-                  <small *ngIf="eventForm.get('Nbplaces')?.errors?.['required']">Number of places is required.</small>
-                  <small *ngIf="eventForm.get('Nbplaces')?.errors?.['min']">Number of places must be at least 20.</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="location">Location:</label>
-                <input type="text" id="location" class="form-control" formControlName="location" required readonly>
-                <button type="button" (click)="toggleMap()">Select Location</button>
-                <div *ngIf="eventForm.get('location')?.invalid && eventForm.get('location')?.touched">
-                  <small *ngIf="eventForm.get('location')?.errors?.['required']">Location is required.</small>
-                </div>
-              </div>
-              <div class="map-container" *ngIf="showMap">
-                <agm-map [latitude]="latitude" [longitude]="longitude" (mapClick)="onChoseLocation($event)">
-                  <agm-marker [latitude]="latitude" [longitude]="longitude" *ngIf="locationChosen"></agm-marker>
-                </agm-map>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="image">Image URL:</label>
+          <input type="text" id="image" class="form-control" formControlName="image" required>
+          <input type="file" id="imageFile" (change)="onFileSelected($event)">
+          <div *ngIf="eventForm.get('image')?.invalid && eventForm.get('image')?.touched">
+            <small *ngIf="eventForm.get('image')?.errors?.['required']">Image is required.</small>
           </div>
-  
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="tags">Tags:</label>
-                <select id="tags" class="form-control" formControlName="tags" multiple required>
-                  <option value="Workshop">Workshop</option>
-                  <option value="Conference">Conference</option>
-                  <option value="Concert">Concert</option>
-                  <option value="Seminar">Seminar</option>
-                  <option value="Networking">Networking</option>
-                  <option value="Exhibition">Exhibition</option>
-                  <option value="Other">Other</option>
-                </select>
-                <div *ngIf="eventForm.get('tags')?.invalid && eventForm.get('tags')?.touched">
-                  <small *ngIf="eventForm.get('tags')?.errors?.['required']">At least one tag is required.</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="categories">Categories:</label>
-                <select id="categories" class="form-control" formControlName="categories" multiple required>
-                  <option value="Technology">Technology</option>
-                  <option value="Business">Business</option>
-                  <option value="Art">Art</option>
-                  <option value="Science">Science</option>
-                  <option value="Education">Education</option>
-                  <option value="Health">Health</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Music">Music</option>
-                  <option value="Food">Food</option>
-                  <option value="Other">Other</option>
-                </select>
-                <div *ngIf="eventForm.get('categories')?.invalid && eventForm.get('categories')?.touched">
-                  <small *ngIf="eventForm.get('categories')?.errors?.['required']">At least one category is required.</small>
-                </div>
-              </div>
-            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Nbplaces">Number of Places:</label>
+          <input type="number" id="Nbplaces" class="form-control" formControlName="Nbplaces" required>
+          <div *ngIf="eventForm.get('Nbplaces')?.invalid && eventForm.get('Nbplaces')?.touched">
+            <small *ngIf="eventForm.get('Nbplaces')?.errors?.['required']">Number of places is required.</small>
+            <small *ngIf="eventForm.get('Nbplaces')?.errors?.['min']">Number of places must be at least 20.</small>
           </div>
-  
-          <button type="submit" [disabled]="eventForm.invalid">Create Event</button>
-        </form>
-    </div> 
-    
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="location">Location:</label>
+          <input type="text" id="location" class="form-control" formControlName="location" required readonly>
+          <button type="button" (click)="toggleMap()">Select Location</button>
+          <div *ngIf="eventForm.get('location')?.invalid && eventForm.get('location')?.touched">
+            <small *ngIf="eventForm.get('location')?.errors?.['required']">Location is required.</small>
+          </div>
+        </div>
+        <div class="map-container" *ngIf="showMap">
+          <agm-map [latitude]="latitude" [longitude]="longitude" (mapClick)="onChoseLocation($event)">
+            <agm-marker [latitude]="latitude" [longitude]="longitude" *ngIf="locationChosen"></agm-marker>
+          </agm-map>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="tags">Tags:</label>
+          <select id="tags" class="form-control" formControlName="tags" multiple required>
+            <option value="Workshop">Workshop</option>
+            <option value="Conference">Conference</option>
+            <option value="Concert">Concert</option>
+            <option value="Seminar">Seminar</option>
+            <option value="Networking">Networking</option>
+            <option value="Exhibition">Exhibition</option>
+            <option value="Other">Other</option>
+          </select>
+          <div *ngIf="eventForm.get('tags')?.invalid && eventForm.get('tags')?.touched">
+            <small *ngIf="eventForm.get('tags')?.errors?.['required']">At least one tag is required.</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="categories">Categories:</label>
+          <select id="categories" class="form-control" formControlName="categories" multiple required>
+            <option value="Technology">Technology</option>
+            <option value="Business">Business</option>
+            <option value="Art">Art</option>
+            <option value="Science">Science</option>
+            <option value="Education">Education</option>
+            <option value="Health">Health</option>
+            <option value="Sports">Sports</option>
+            <option value="Music">Music</option>
+            <option value="Food">Food</option>
+            <option value="Other">Other</option>
+          </select>
+          <div *ngIf="eventForm.get('categories')?.invalid && eventForm.get('categories')?.touched">
+            <small *ngIf="eventForm.get('categories')?.errors?.['required']">At least one category is required.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="eventForm.invalid">Create Event</button>
+  </form>
+</div>

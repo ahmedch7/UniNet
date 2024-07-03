@@ -57,4 +57,73 @@
   .card-text {
     margin-bottom: 10px;
   }
+  .recommended-events-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
   
+  .recommended-events-grid .card {
+    width: calc(33.33% - 20px); /* Adjust the width as per your layout */
+    flex: 1 0 auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .recommended-events-grid .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .recommended-events-grid .card-img-top {
+    width: 100%;
+    height: 150px; /* Adjust as needed */
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .recommended-events-grid .card-body {
+    padding: 10px;
+  }
+  
+  .recommended-events-grid .card-title {
+    font-size: 1rem; /* Adjust font size */
+    margin-bottom: 5px;
+  }
+  
+  .recommended-events-grid .card-text {
+    margin-bottom: 5px;
+  }
+  .image-container {
+    width: 100%; /* Adjust to fit your layout */
+    height: auto; /* Ensures proportional scaling */
+}
+
+.image-container img {
+    width: 100%; /* Ensures image fills its container */
+    height: auto; /* Keeps image proportions */
+}
+
+.recommended-events-carousel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.recommended-event-card {
+  width: calc(33.33% - 20px); /* Adjust the width as per your layout */
+  flex: 1 0 auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.recommended-event-card:hover {
+  transform: scale(1.05);
+}
+
+.recommended-event-image {
+  width: 100%;
+  height: 200px; /* Set a fixed height for all images */
+  object-fit: cover;
+  border-radius: 8px;
+}

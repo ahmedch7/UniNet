@@ -5,6 +5,7 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { EventListComponent } from './pages/event-list/event-list.component';
 import { FormEventComponent } from './pages/form-event/form-event.component';
 import { EventDetailsComponent } from './pages/event-details/event-details.component'; 
+import { BOEventsComponent } from './pages/boevents/boevents.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,9 @@ const routes: Routes = [
       },
       { path: 'event-list', component: EventListComponent }, 
       { path: 'form-event', component: FormEventComponent },
-      { path: 'event-details/:id', component: EventDetailsComponent } 
+      { path: 'event-details/:id', component: EventDetailsComponent } ,
+      { path: 'BOEvents', component: BOEventsComponent } 
+
     ]
   },
   {

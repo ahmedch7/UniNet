@@ -15,14 +15,23 @@ export class FormEventComponent implements OnInit {
   longitude = 10.207183522406792;
   locationChosen = false;
   showMap = false;
-
+  alertMessage: string | null = null;
+  alertType: string = 'success';
+  alertTitle: string = '';
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private eventService: EventService,
     private mapsAPILoader: MapsAPILoader
   ) {}
-
+  showAlert(type: string, title: string, message: string): void {
+    this.alertType = type;
+    this.alertTitle = title;
+    this.alertMessage = message;
+    setTimeout(() => {
+      this.alertMessage = null;
+    }, 3000);
+  }
   ngOnInit(): void {
     this.eventForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
@@ -129,6 +138,8 @@ export class FormEventComponent implements OnInit {
       this.eventService.createEvent(eventPayload).subscribe(
         response => {
           console.log('Event created successfully:', response);
+          this.showAlert('success', 'Success!', 'Event created successfully!');
+          this.eventForm.reset();
         },
         error => {
           console.error('Error creating event:', error);

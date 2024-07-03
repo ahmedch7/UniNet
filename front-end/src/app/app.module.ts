@@ -15,6 +15,9 @@ import { EventListComponent } from './pages/event-list/event-list.component';
 import { EventDetailsComponent } from './pages/event-details/event-details.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io'; 
 import { BrowserModule } from '@angular/platform-browser';
+import { CarouselModule } from 'primeng/carousel';
+import { BOEventsComponent } from './pages/boevents/boevents.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -25,7 +28,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AuthLayoutComponent,
     FormEventComponent,
     EventListComponent,
-    EventDetailsComponent
+    EventDetailsComponent,
+    BOEventsComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyDhJ1QaIMu0XptyDLOUSs1YzQ4SmH7jVG8'
     }),
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    CarouselModule,
+    NgxPaginationModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
