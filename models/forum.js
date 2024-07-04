@@ -18,12 +18,14 @@ const forumSchema = new Schema(
         },
         message: (props) => `Le titre du forum '${props.value}' existe déjà!`,
       },
-      match: /^[a-zA-ZÀ-ÿ0-9\- ]+$/,
+      // The following regex is updated to include a wider range of Unicode characters, which should include all French characters
+      match: /^[\u00C0-\u024F\w\- ]+$/,
     },
 
     descriptionForum: { type: String },
     category: { type: String, required: true },
     userId: { type: Types.ObjectId, required: true, ref: "user" },
+    cv_path: { type: String },
   },
   {
     timestamps: true,

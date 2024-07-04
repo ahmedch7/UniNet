@@ -9,10 +9,12 @@ import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
 import http from "http";
-
+import path from "path";
+import { fileURLToPath } from "url";
 const app = express();
 const databaseName = "uninet";
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 mongoose
   .connect(`mongodb://localhost:27017/${databaseName}`, { family: 4 })
   .then(() => {
@@ -41,6 +43,7 @@ const hostname = "127.0.0.1";
 app.use("/commentaire", commentaireRoutes);
 app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(notFoundError);
 app.use(errorHandler);
