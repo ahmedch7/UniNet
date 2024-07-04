@@ -20,8 +20,8 @@ export class FoyerComponent implements OnInit {
   errorMessage: string = '';
   showCard: string = 'list'; // Track which card is visible
   searchText: string = ''; // Search text for filtering
-  id_user = '6679be5c0a809410213874ad';  // Static user ID
-
+  id_user = '6683e1c309d9b20f76f09c1d';  // Static user ID
+  showModal: boolean = false; // Control modal visibility
   UsersReserved: any[] = [];
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }
@@ -60,7 +60,7 @@ export class FoyerComponent implements OnInit {
         this.successMessage = 'Foyer created successfully.';
         this.loadFoyers();
         this.newFoyer = {}; // Clear the form
-        this.showCard = 'list'; // Optionally, switch to list view
+        this.showModal = false; // Close the modal
       },
       (error) => {
         this.errorMessage = 'Error creating foyer: ' + error.message;
@@ -69,7 +69,7 @@ export class FoyerComponent implements OnInit {
     );
   }
   
-
+  
   onUpdateFoyer(id: string): void {
     this.foyerService.updateFoyer(id, this.selectedFoyer).subscribe(
       () => {
@@ -133,8 +133,8 @@ export class FoyerComponent implements OnInit {
     this.roomService.createRoom(this.newRoom).subscribe(
       () => {
         this.loadRooms(foyerId);
-        this.newRoom = {};
-        this.showCard = 'list';
+        this.newRoom = {}; // Clear the form
+        this.showCard = 'list'; // Switch back to list view
       },
       (error) => {
         console.error('Error creating room', error);
@@ -142,24 +142,29 @@ export class FoyerComponent implements OnInit {
     );
   }
 
-  updateRoom(roomId: string): void {
-    if (this.selectedRoom.type === 'double') {
-      this.selectedRoom.capacity = 2;
-    } else if (this.selectedRoom.type === 'triple') {
-      this.selectedRoom.capacity = 3;
-    }
-
-    this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
-      () => {
-        this.loadRooms(this.selectedFoyer._id);
-        this.selectedRoom = null;
-        this.showCard = 'rooms';
-      },
-      (error) => {
-        console.error('Error updating room', error);
-      }
-    );
+updateRoom(roomId: string): void {
+  // Update capacity based on room type
+  if (this.selectedRoom.type === 'double') {
+    this.selectedRoom.capacity = 2;
+  } else if (this.selectedRoom.type === 'triple') {
+    this.selectedRoom.capacity = 3;
   }
+
+  // Update available places based on new capacity
+  this.selectedRoom.availablePlaces = this.selectedRoom.capacity;
+
+  this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
+    () => {
+      this.loadRooms(this.selectedFoyer._id);
+      this.selectedRoom = null;
+      this.showCard = 'rooms';
+    },
+    (error) => {
+      console.error('Error updating room', error);
+    }
+  );
+}
+
 
   deleteRoom(roomId: string): void {
     this.roomService.deleteRoom(roomId).subscribe(
@@ -220,6 +225,30 @@ export class FoyerComponent implements OnInit {
     this.newRoom.foyerId = foyerId;
     this.showCard = 'createRoom';
   }
+  showCreateFoyerForm(): void {
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+  }
+  onRoomTypeChange(): void {
+  if (this.selectedRoom) {
+    if (this.selectedRoom.type === 'double') {
+      this.selectedRoom.capacity = 2;
+    } else if (this.selectedRoom.type === 'triple') {
+      this.selectedRoom.capacity = 3;
+    }
+  }
+
+  if (this.newRoom) {
+    if (this.newRoom.type === 'double') {
+      this.newRoom.capacity = 2;
+    } else if (this.newRoom.type === 'triple') {
+      this.newRoom.capacity = 3;
+    }
+  }
+}
 
   getusersreservationRooms(roomId: string): void {
     this.roomService.getRoomReservationById(roomId).subscribe(
@@ -232,15 +261,5 @@ export class FoyerComponent implements OnInit {
     );
   }
 
-  showCreateFoyerForm(): void {
-    this.showCard = 'createFoyer';
-  }
 
-  onRoomTypeChange(): void {
-    if (this.newRoom.type === 'double') {
-      this.newRoom.capacity = 2;
-    } else if (this.newRoom.type === 'triple') {
-      this.newRoom.capacity = 3;
-    }
-  }
 }
