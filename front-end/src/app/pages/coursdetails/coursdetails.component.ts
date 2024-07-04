@@ -12,7 +12,8 @@ export class CoursdetailsComponent implements OnInit {
   courses: any[] = [];
   classeId: string;
   coursForm: FormGroup;
-  selectedFile: File | null = null;
+  selectedFiles: { [key: string]: File | null } = {};
+  editing: { [key: string]: boolean } = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -45,8 +46,12 @@ export class CoursdetailsComponent implements OnInit {
     );
   }
 
-  onFileChange(event: any): void {
-    this.selectedFile = event.target.files[0];
+  onFileChange(event: any, course?: any): void {
+    if (course) {
+      this.selectedFiles[course._id] = event.target.files[0];
+    } else {
+      this.selectedFiles['new'] = event.target.files[0];
+    }
   }
 
   onSubmit(): void {
@@ -54,8 +59,8 @@ export class CoursdetailsComponent implements OnInit {
     formData.append('NomCours', this.coursForm.get('NomCours')?.value);
     formData.append('Description', this.coursForm.get('Description')?.value);
     formData.append('classeId', this.classeId); // Corrected field name
-    if (this.selectedFile) {
-      formData.append('files', this.selectedFile);
+    if (this.selectedFiles['new']) {
+      formData.append('files', this.selectedFiles['new']);
     }
 
     this.coursService.createCours(formData).subscribe(
@@ -79,5 +84,33 @@ export class CoursdetailsComponent implements OnInit {
         console.error('Error deleting course:', error);
       }
     );
+  }
+
+  toUpdate(id: string): void {
+    this.editing[id] = true;
+  }
+
+  saveUpdate(course: any): void {
+    this.editing[course._id] = false;
+    const formData = new FormData();
+    formData.append('NomCours', course.NomCours);
+    formData.append('Description', course.Description);
+    if (this.selectedFiles[course._id]) {
+      formData.append('files', this.selectedFiles[course._id]);
+    }
+
+    this.coursService.updateCoursById(course._id, formData).subscribe({
+      next: () => {
+        console.log('Course updated successfully');
+      },
+      error: (error) => {
+        console.error('Failed to update course', error);
+      }
+    });
+  }
+
+  cancelUpdate(id: string): void {
+    this.editing[id] = false;
+    this.loadCoursesByClasse();
   }
 }

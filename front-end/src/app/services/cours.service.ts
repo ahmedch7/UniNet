@@ -6,14 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CoursService {
-
-  private apiUrl =  'http://localhost:9090/cours'
-  constructor( private http: HttpClient) {}
+  private apiUrl = 'http://localhost:9090/cours';
+  constructor(private http: HttpClient) {}
 
   createCours(cours: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, cours);
   }
-
 
   getCours(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/get`);
@@ -27,8 +25,8 @@ export class CoursService {
     return this.http.get<any>(`${this.apiUrl}/courses/classe/${id}`);
   }
 
-  updateCoursById(cours: any): Observable<any> {
-    return this.http.patch<any>(`${this.apiUrl}/${cours._id}`, cours );
+  updateCoursById(id: string, cours: FormData): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}`, cours);
   }
 
   deleteCours(id: string): Observable<any> {
