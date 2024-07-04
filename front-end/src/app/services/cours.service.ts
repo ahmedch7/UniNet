@@ -10,9 +10,10 @@ export class CoursService {
   private apiUrl =  'http://localhost:9090/cours'
   constructor( private http: HttpClient) {}
 
-  createCours(cours: any): Observable<any> {
+  createCours(cours: FormData): Observable<any> {
     return this.http.post(`${this.apiUrl}/create`, cours);
   }
+
 
   getCours(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/get`);

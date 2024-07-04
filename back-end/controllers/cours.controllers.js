@@ -12,9 +12,12 @@ export const createCours = async (req, res) => {
   try {
     const { NomCours, Description, classeId } = req.body;
     const cours = new Cours({ NomCours, Description, classeId });
+    console.log("cours req",cours)
     if (req.file) {
       cours.files = req.file.path
+      console.log("cours req",cours)
     }
+    
     await cours.save();
     res.status(201).json(cours);
   } catch (error) {

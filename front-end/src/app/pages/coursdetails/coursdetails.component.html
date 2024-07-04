@@ -43,3 +43,19 @@
 <ng-template #noCourses>
   <p>No courses found for this class.</p>
 </ng-template>
+<h2>Create New Course</h2>
+<form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="NomCours">Course Name</label>
+    <input id="NomCours" formControlName="NomCours" class="form-control" />
+  </div>
+  <div class="form-group">
+    <label for="Description">Description</label>
+    <textarea id="Description" formControlName="Description" class="form-control"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="files">Upload File</label>
+    <input type="file" id="files" (change)="onFileChange($event)" class="form-control" />
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

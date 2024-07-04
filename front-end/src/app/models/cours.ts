@@ -1,4 +1,3 @@
-import { Classe } from "./classe";
 
 export class Cours{
     _id!: string;
@@ -6,5 +5,5 @@ export class Cours{
     Description:string
     Datepub:Date
     files:string
-    classe: Classe[]=[];
+    classe: String
 }
