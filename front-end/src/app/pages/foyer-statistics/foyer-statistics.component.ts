@@ -16,7 +16,7 @@ export class FoyerStatisticsComponent implements OnInit {
   totalFoyers: number = 0;
   totalRooms: number = 0;
   totalAvailablePlaces: number = 0;
-  itemsPerPage: number = 5;
+  itemsPerPage: number = 3;
   currentPage: number = 1;
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }

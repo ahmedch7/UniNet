@@ -260,6 +260,19 @@ updateRoom(roomId: string): void {
       }
     );
   }
-
+  cancelUserReservation(reservationId: string): void {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation?')) {
+      this.roomService.cancelReservation(reservationId).subscribe(
+        () => {
+          // Mettez à jour les réservations après annulation
+          this.getusersreservationRooms(this.selectedRoom._id); // ou ajustez selon votre logique pour recharger les réservations
+        },
+        (error) => {
+          console.error('Erreur lors de l\'annulation de la réservation', error);
+        }
+      );
+    }
+  }
+  
 
 }

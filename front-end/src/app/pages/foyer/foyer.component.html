@@ -1,7 +1,7 @@
 
 
 <!-- Inside the container-fluid div -->
-<div class="container-fluid mt--7">
+ 
 
   <!-- Success alert when a foyer is successfully created -->
   <div class="alert alert-success alert-dismissible fade show" *ngIf="successMessage" role="alert">
@@ -20,7 +20,7 @@
   </div>
 
   <!-- Header section -->
-  <div class="header bg-gradient-danger py-7 py-lg-8">
+  <div class="header bg-gradient-info py-7 py-lg-8">
     <div class="container">
       <div class="header-body text-center mb-7">
         <div class="row justify-content-center">
@@ -113,6 +113,7 @@
                       <ul>
                         <li *ngFor="let reservation of UsersReserved">
                           {{ reservation.userId.nom }} - {{ reservation.date | date }}
+                          <button (click)="cancelUserReservation(reservation._id)" class="btn btn-danger btn-sm ml-2">Supprimer</button>
                         </li>
                       </ul>
                     </td>
@@ -256,4 +257,4 @@
 
     </div>
   </div>
-</div>
+ 
