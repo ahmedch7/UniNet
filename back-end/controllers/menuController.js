@@ -30,8 +30,7 @@ export const createMenu = async (req, res) => {
     res.status(500).json({ message: "Error creating menu", error });
   }
 };
-
-
+// Update an existing menu
 export const updateMenu = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -43,7 +42,7 @@ export const updateMenu = async (req, res) => {
   let imagePath = req.body.image; // Default to existing image
 
   if (req.file) {
-    imagePath = req.file.path.replace('public/', ''); // Remove 'public/' to keep the relative path
+    imagePath = req.file.filename; // Remove 'public/' to keep the relative path
   }
 
   try {

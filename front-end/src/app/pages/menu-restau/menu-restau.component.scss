@@ -1,0 +1,62 @@
+.menuRestau-size-image {
+    width: 450px; 
+    height: 350px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+  }
+  
+  .menu-card {
+    background: #fff; /* Couleur de fond des cartes */
+    border: 1px solid #ddd; /* Bordure légère */
+    border-radius: 8px; /* Coins arrondis */
+    overflow: hidden; /* Pour les bordures arrondies */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  }
+  
+  .menu-card-body {
+    position: relative; 
+    padding: 15px; /* Espacement intérieur */
+  }
+  
+  .menu-card-title {
+    margin-bottom: 10px; /* Espacement sous le titre */
+    font-size: 1.25rem; /* Taille du texte du titre */
+    font-weight: 700; /* Poids du texte */
+  }
+  
+  .menu-buttons {
+    position: absolute; 
+    top: 10px;
+    right: 10px;
+  }
+  
+  .menu-comment-card {
+    background: #f9f9f9; /* Couleur de fond des commentaires */
+    border: 1px solid #ddd; /* Bordure légère */
+    border-radius: 4px; /* Coins arrondis */
+    overflow: hidden; /* Pour les bordures arrondies */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre légère */
+  }
+  
+  .menu-comment-body {
+    padding: 10px; /* Espacement intérieur */
+  }
+  
+  ul.list-unstyled {
+    padding-left: 0; 
+  }
+  
+  .menu-card-body form {
+    margin-top: 20px;
+  }
+  
+  .menu-card-body h4 {
+    margin-top: 20px;
+  }
+  .menu-card-body .btn-secondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px; /* Espace sous le bouton */
+  }
+  
