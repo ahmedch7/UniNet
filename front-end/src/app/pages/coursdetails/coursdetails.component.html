@@ -4,40 +4,39 @@
     </div>
   </div>
 </div>
+
 <h2 class="card-title">Available Courses</h2>
-<div class="cours-container row">
-  <div *ngFor="let course of courses" class="col-xl-3 col-lg-6 cours-card">
-    <div class="card card-stats mb-4 mb-xl-0">
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            <h5 class="card-title text-uppercase text-muted mb-0" *ngIf="!editing[course._id]">{{ course.NomCours }}</h5>
-            <input class="form-control" *ngIf="editing[course._id]" [(ngModel)]="course.NomCours">
-            <p class="mt-3 mb-0 text-muted text-sm" *ngIf="!editing[course._id]">
-              {{ course.Description }}
-            </p>
-            <textarea class="form-control" *ngIf="editing[course._id]" [(ngModel)]="course.Description"></textarea>
-            <p class="mt-3 mb-0 text-muted text-sm">
-              Published on: {{ course.Datepub | date:'short' }}
-            </p>
-            <p class="mt-3 mb-0 text-muted text-sm">
-              Files: {{ course.files }}
-            </p>
-            <input type="file" *ngIf="editing[course._id]" (change)="onFileChange($event, course)">
-          </div>
-          <div class="col-auto">
-            <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-              <i class="fas fa-book"></i>
+<div class="card card-stats mb-4 mb-xl-0">
+  <div class="cours-container row">
+    <div *ngFor="let course of courses" class="col-xl-3 col-lg-6 cours-card">
+      <div class="card card-stats mb-4 mb-xl-0">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <h5 class="card-title text-uppercase text-muted mb-0" *ngIf="!editing[course._id]">{{ course.NomCours }}</h5>
+              <input class="form-control" *ngIf="editing[course._id]" [(ngModel)]="course.NomCours">
+              <ng-container *ngIf="!editing[course._id]">
+                <div class="mt-3 text-muted text-sm">
+                  {{ course.Description }}
+                </div>
+                <div class="mt-3 text-muted text-sm">
+                  Published on: {{ course.Datepub | date:'short' }}
+                </div>
+                <div class="mt-3 text-muted text-sm">
+                  Files: {{ course.files }}
+                </div>
+              </ng-container>
+              <textarea class="form-control" *ngIf="editing[course._id]" [(ngModel)]="course.Description"></textarea>
+              <input type="file" *ngIf="editing[course._id]" (change)="onFileChange($event, course)">
             </div>
           </div>
-        </div>
-        <div class="row mt-3 mb-0 text-muted text-sm">
-          <div class="col">
-            <button mat-button class="btn btn-danger btn-sm" (click)="deleteCours(course._id)">Delete</button>
-            <button mat-button class="btn btn-outline-danger btn-sm" *ngIf="!editing[course._id]" (click)="toUpdate(course._id)">Mettre à jour</button>
-            <button mat-button class="btn btn-outline-success btn-sm" *ngIf="editing[course._id]" (click)="saveUpdate(course)">Sauvegarder</button>
-            <button mat-button class="btn btn-outline-secondary btn-sm" *ngIf="editing[course._id]" (click)="cancelUpdate(course._id)">Annuler</button>
-            <button mat-button class="btn btn-outline-primary btn-sm" (click)="downloadFile(course.files)">Download File</button>
+          <div class="row mt-3 mb-0 text-muted text-sm">
+            <div class="col">
+              <button mat-button class="btn btn-danger btn-sm" (click)="deleteCours(course._id)">Delete</button>
+              <button mat-button class="btn btn-outline-danger btn-sm" *ngIf="!editing[course._id]" (click)="toUpdate(course._id)">Mettre à jour</button>
+              <button mat-button class="btn btn-outline-success btn-sm" *ngIf="editing[course._id]" (click)="saveUpdate(course)">Sauvegarder</button>
+              <button mat-button class="btn btn-outline-secondary btn-sm" *ngIf="editing[course._id]" (click)="cancelUpdate(course._id)">Annuler</button>
+            </div>
           </div>
         </div>
       </div>
@@ -49,44 +48,57 @@
   <p>No courses found for this class.</p>
 </ng-template>
 
-<h3>Chat Messages</h3>
+<h2>Chat Messages</h2>
+<div class="card card-stats mb-4 mb-xl-0">
   <div *ngIf="classe?.messages">
     <ul>
       <li *ngFor="let message of classe.messages">
-
-        {{message.nom}}
-        {{ message.text }}
-        {{ message.createdAt | date:'short'}}
+        <div class="message-container">
+          <div class="message-content">
+            <strong>{{ message.nom }}</strong> <!-- Assuming nom is the name -->
+            <p>{{ message.text }}</p>
+          </div>
+          <div class="message-date">
+            <small>{{ message.createdAt | date:'short' }}</small>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
+</div>
 
-  <input [(ngModel)]="newMessageText" placeholder="Type your message">
-  <button (click)="addMessage()">Send</button>
+<form>
+  <div class="form-group">
+    <textarea class="form-control form-control-alternative" rows="3" placeholder="Write a large text here ..." [(ngModel)]="newMessageText"></textarea>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="addMessage()">Send</button>
+</form>
 
 <h2 class="card-title">Create New Course</h2>
-<form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="NomCours">Course Name</label>
-        <input id="NomCours" formControlName="NomCours" class="form-control form-control-alternative" placeholder="Enter Course Name"/>
+<div class="card card-stats mb-4 mb-xl-0">
+  <form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="NomCours">Course Name</label>
+          <input id="NomCours" formControlName="NomCours" class="form-control form-control-alternative" placeholder="Enter Course Name"/>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Description">Description</label>
+          <textarea id="Description" formControlName="Description" class="form-control form-control-alternative" placeholder="Enter Description"></textarea>
+        </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="Description">Description</label>
-        <textarea id="Description" formControlName="Description" class="form-control form-control-alternative" placeholder="Enter Description"></textarea>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="files">Upload File</label>
+          <input type="file" id="files" (change)="onFileChange($event)" class="form-control form-control-alternative"/>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label for="files">Upload File</label>
-        <input type="file" id="files" (change)="onFileChange($event)" class="form-control form-control-alternative"/>
-      </div>
-    </div>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
