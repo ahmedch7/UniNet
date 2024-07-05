@@ -1,13 +1,12 @@
 <!-- menu-restau.component.html -->
 
-<div class="header bg-gradient-danger py-7 py-lg-8">
+<div class="header bg-gradient-info py-7 py-lg-8">
   <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
-          <h1 class="text-white">Créer un nouveau menu</h1>
-          <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
-        </div>
+          <h1 class="text-white">Menu</h1>
+         </div>
       </div>
     </div>
   </div>
@@ -16,7 +15,7 @@
       <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
     </svg>
   </div>
-</div>
+
 
 <div class="container mt--8 pb-5">
   <div class="row justify-content-center">
@@ -43,18 +42,20 @@
           
 
           <hr class="my-4">
-
-          <!-- Liste des menus -->
-          <div *ngFor="let menu of menus" class="menu-card mb-4">
-            <div class="menu-card-body">
-              <div class="d-flex justify-content-between">
-                <h3 class="menu-card-title">{{ menu.text }}</h3>
-                <div class="menu-buttons">
-                  <button (click)="startEditMenu(menu)" class="btn btn-primary">Modifier</button>
-                  <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer</button>
-                </div>
-              </div>
-              <img *ngIf="menu.image" [src]="'http://localhost:9090/img/' + menu.image" class="img-fluid rounded mb-3 menuRestau-size-image" alt="Menu image">
+ <!-- Liste des menus -->
+ <div *ngFor="let menu of menus" class="menu-card mb-4">
+  <div class="menu-card-body">
+    <div class="d-flex justify-content-between">
+      <div>
+        <small class="text-muted">{{ menu.date | date: 'yyyy-MM-dd' }} à {{ menu.date | date: 'HH:mm' }}</small> <!-- Afficher la date en petit avant le texte du menu -->
+        <h3 class="menu-card-title">{{ menu.text }}</h3>
+      </div>      
+      <div class="menu-buttons">
+        <button (click)="startEditMenu(menu)" class="btn btn-primary">Modifier</button>
+        <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer</button>
+      </div>
+    </div>
+    <img *ngIf="menu.image" [src]="'http://localhost:9090/img/' + menu.image" class="img-fluid rounded mb-3 menuRestau-size-image" alt="Menu image">
 
               <!-- Bouton pour afficher/masquer les commentaires -->
               <button (click)="toggleComments(menu._id)" class="btn btn-secondary mb-2">Afficher Commentaires</button>
