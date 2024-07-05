@@ -104,13 +104,13 @@
             <div class="col">
               <ul class="nav nav-pills justify-content-end">
                 <li class="nav-item mr-2 mr-md-0" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[0];updateOptions()">
-                  <a    class="nav-link py-2 px-3" [ngClass]="{'active':clicked===true}" data-toggle="tab" (click)="clicked=true;clicked1=false">
+                  <a class="nav-link py-2 px-3" [ngClass]="{'active':clicked===true}" data-toggle="tab" (click)="clicked=true;clicked1=false">
                     <span class="d-none d-md-block">Month</span>
                     <span class="d-md-none">M</span>
                   </a>
                 </li>
                 <li class="nav-item" data-toggle="chart" data-target="#chart-sales"  (click)="data=datasets[1];updateOptions()">
-                  <a    class="nav-link py-2 px-3" [ngClass]="{'active':clicked1===true}" data-toggle="tab" (click)="clicked=false;clicked1=true">
+                  <a class="nav-link py-2 px-3" [ngClass]="{'active':clicked1===true}" data-toggle="tab" (click)="clicked=false;clicked1=true">
                     <span class="d-none d-md-block">Week</span>
                     <span class="d-md-none">W</span>
                   </a>
@@ -156,7 +156,7 @@
               <h3 class="mb-0">Page visits</h3>
             </div>
             <div class="col text-right">
-              <a  class="btn btn-sm btn-primary">See all</a>
+              <a class="btn btn-sm btn-primary">See all</a>
             </div>
           </div>
         </div>
@@ -366,4 +366,78 @@
       </div>
     </div>
   </div>
+
+  <!-- Custom Dashboard Section -->
+  <div class="row mt-5 card bg-gradient-default shadow">
+    <div class="col-xl-12">
+      <div class="card bg-gradient-default shadow">
+        <div class="card-header border-0">
+          <div class="row align-items-center">
+            <div class="col">
+              <h3 class="mb-0">Dashboard</h3>
+            </div>
+            <div class="col text-right">
+              <button class="btn btn-sm btn-primary" (click)="createUniversity()">Create University</button>
+              <button class="btn btn-sm btn-danger" (click)="signout()">Sign out</button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+          
+          <h3>Users</h3>
+          <div class="table-responsive">
+            <table class="table bg-gradient-default ">
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Prenom</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td>{{ user.nom }}</td>
+                  <td>{{ user.prenom }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.role }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-success" (click)="viewUserDetails(user._id)">Details</button>
+                    <button class="btn btn-sm btn-warning" (click)="updateUser(user._id)">Update</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteUser(user._id)">Delete</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="banUser(user._id)">Ban</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <h3>Universities</h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead class="thead-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Adresse</th>
+                  <th>Contact Email</th>
+                  <th>Contact Telephone</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let university of universities">
+                  <td>{{ university.nom }}</td>
+                  <td>{{ university.adresse }}</td>
+                  <td>{{ university.emailContact }}</td>
+                  <td>{{ university.telephoneContact }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
