@@ -20,7 +20,7 @@ export class FoyerComponent implements OnInit {
   errorMessage: string = '';
   showCard: string = 'list'; // Track which card is visible
   searchText: string = ''; // Search text for filtering
-  id_user = '6683e1c309d9b20f76f09c1d';  // Static user ID
+  id_user = '6679be5c0a809410213874ad';  // Static user ID
   staticFacultyId = '1234567890abcdef12345678';  // Static faculty ID
   showModal: boolean = false; // Control modal visibility
   UsersReserved: any[] = [];

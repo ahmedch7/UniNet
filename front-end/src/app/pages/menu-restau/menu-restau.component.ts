@@ -28,7 +28,7 @@ export class MenuRestauComponent implements OnInit {
   newComment: any = {
     
     content: '',
-    author: '6683e1c309d9b20f76f09c1d', // ID statique de l'auteur
+    author: '6679be5c0a809410213874ad', // ID statique de l'auteur
     menuId: ''
   };
 

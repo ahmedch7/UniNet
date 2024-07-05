@@ -62,7 +62,9 @@ export class RestaurantReservationComponent implements OnInit {
     this.createMode = !this.createMode;
   }
 
+ 
   createRestaurant(): void {
+    this.newRestaurant.facultyId = '664f8ada4e9fad61bed84dc6'; // Définir l'ID statique ici
     this.restaurantService.createRestaurant(this.newRestaurant).subscribe(
       (data) => {
         console.log('Restaurant created successfully', data);
@@ -83,12 +85,13 @@ export class RestaurantReservationComponent implements OnInit {
     );
   }
 
+
   cancelCreate(): void {
     this.createMode = false;
   }
 
   createReservation(restaurantId: string): void {
-    const userId = '664f89f28fb320b8082864b5'; // Static user ID for testing
+    const userId = '6679be5c0a809410213874ad'; // Static user ID for testing
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Réservation créée avec succès', data);

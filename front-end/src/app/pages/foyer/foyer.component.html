@@ -1,13 +1,6 @@
 <!-- Inside the container-fluid div -->
 
-<!-- Success alert when a foyer is successfully created -->
-<div class="alert alert-success alert-dismissible fade show" *ngIf="successMessage" role="alert">
-  {{ successMessage }}
-  <button type="button" class="close" aria-label="Close" (click)="dismissAlert('successMessage')">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-
+ 
 <!-- Error alert for any errors -->
 <div class="alert alert-danger alert-dismissible fade show" *ngIf="errorMessage" role="alert">
   {{ errorMessage }}
@@ -28,7 +21,7 @@
       </div>
     </div>
   </div>
-</div>
+ 
 
 <!-- Page content -->
 <div class="container-fluid mt--7">
