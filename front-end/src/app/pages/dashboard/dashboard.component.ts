@@ -8,6 +8,7 @@ import {
   chartExample1,
   chartExample2
 } from "../../variables/charts";
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
   public clicked: boolean = true;
   public clicked1: boolean = false;
 
+  constructor(private authService: AuthService) { }
   ngOnInit() {
 
     this.datasets = [
@@ -55,6 +57,10 @@ export class DashboardComponent implements OnInit {
   public updateOptions() {
     this.salesChart.data.datasets[0].data = this.data;
     this.salesChart.update();
+  }
+
+  signout() {
+    this.authService.logout();
   }
 
 }
