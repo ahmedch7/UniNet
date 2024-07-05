@@ -97,10 +97,14 @@
           <div class="form-group">
             <label for="anneeUniversitaire">Academic Year</label>
             <input type="text" class="form-control form-control-alternative" id="anneeUniversitaire" formControlName="anneeUniversitaire" placeholder="Enter Academic Year">
+            <div *ngIf="anneeUniversitaire!.invalid && anneeUniversitaire!.touched">
+              <div *ngIf="anneeUniversitaire!.errors!['pattern']">Academic Year must be "YEAR/YEAR"</div>
+
+            </div>
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Create Class</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid" >Create Class</button>
     </form>
   </div>
 </div>

@@ -23,8 +23,12 @@ export class NiveauedudetailComponent implements OnInit {
 
   form = new FormGroup({
     nomClasse: new FormControl('', [Validators.required]),
-    anneeUniversitaire: new FormControl('', [Validators.required])
+    anneeUniversitaire: new FormControl('', [Validators.required, Validators.pattern('^[0-9/]*$')])
   });
+
+  get anneeUniversitaire(){
+    return this.form.get('anneeUniversitaire')
+  }
 
   constructor(
     private route: ActivatedRoute,
