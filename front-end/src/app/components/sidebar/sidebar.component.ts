@@ -9,18 +9,18 @@ declare interface RouteInfo {
     acces: string[];
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '',acces:['admin','responsable'] },
-    { path: '/icons', title: 'Icons',  icon:'ni-planet text-blue', class: '' ,acces:['admin','responsable'] },
-    { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '',acces:['admin','responsable']  },
-    { path: '/user-profile', title: 'User profile',  icon:'ni-single-02 text-yellow', class: '',acces:['admin','responsable']  },
+    { path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '',acces:['admin','responsable','etudiant'] },
+    { path: '/icons', title: 'Icons',  icon:'ni-planet text-blue', class: '' ,acces:['admin','responsable','etudiant'] },
+    { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '',acces:['admin','responsable','etudiant']  },
+    { path: '/user-profile', title: 'User profile',  icon:'ni-single-02 text-yellow', class: '',acces:['admin','responsable','etudiant']  },
     { path: '/stat-foyer', title: 'TK Statistiques foyer',  icon: 'ni-building text-red', class: '',acces:['admin','responsable'] },
-    { path: '/foyer', title: 'TK Foyer',  icon: 'ni-building text-red', class: '' ,acces:['admin','responsable'] },
-    { path: '/restaurant', title: 'TK Restaurant',  icon: 'ni-building text-red', class: '' ,acces:['admin','responsable'] },
-    { path: '/menu-Restau', title: 'TK Menu-Restaurant',  icon: 'ni-building text-red', class: '',acces:['admin','responsable']  },
+    { path: '/foyer', title: 'TK Foyer',  icon: 'ni-building text-red', class: '' ,acces:['admin','responsable','etudiant'] },
+    { path: '/restaurant', title: 'TK Restaurant',  icon: 'ni-building text-red', class: '' ,acces:['admin','responsable','etudiant'] },
+    { path: '/menu-Restau', title: 'TK Menu-Restaurant',  icon: 'ni-building text-red', class: '',acces:['admin','responsable','etudiant']  },
 
-    { path: '/tables', title: 'Tables',  icon:'ni-bullet-list-67 text-red', class: '' ,acces:['admin','responsable'] },
-    { path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '',acces:['admin','responsable']  },
-    { path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '',acces:['admin','responsable']  }
+    { path: '/tables', title: 'Tables',  icon:'ni-bullet-list-67 text-red', class: '' ,acces:['admin','responsable','etudiant'] },
+    { path: '/login', title: 'Login',  icon:'ni-key-25 text-info', class: '',acces:['admin','responsable','etudiant']  },
+    { path: '/register', title: 'Register',  icon:'ni-circle-08 text-pink', class: '',acces:['admin','responsable','etudiant']  }
 ];
 
 @Component({

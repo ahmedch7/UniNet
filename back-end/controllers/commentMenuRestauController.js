@@ -29,7 +29,15 @@ export const getComments = async (req, res) => {
   const { menuId } = req.params;
 
   try {
-    const menu = await Menu.findById(menuId).populate('comments');
+    const menu = await Menu.findById(menuId).populate({
+      path: 'comments',
+      populate: {
+        path: 'author',
+        model: 'User', 
+        select: 'nom' 
+      }
+    });
+
     res.status(200).json(menu.comments);
   } catch (error) {
     res.status(500).json({ message: "Error getting comments", error });

@@ -32,6 +32,15 @@ export class RestaurantReservationComponent implements OnInit {
     private reservationService: ReservationRestaurantService
   ) {}
 
+  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
+
+
+
+  currentUser={
+    role:"admin"
+  }
+
+
   ngOnInit(): void {
     this.loadRestaurants();
   }

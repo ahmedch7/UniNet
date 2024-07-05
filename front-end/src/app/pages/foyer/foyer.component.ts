@@ -21,10 +21,20 @@ export class FoyerComponent implements OnInit {
   showCard: string = 'list'; // Track which card is visible
   searchText: string = ''; // Search text for filtering
   id_user = '6683e1c309d9b20f76f09c1d';  // Static user ID
+  staticFacultyId = '1234567890abcdef12345678';  // Static faculty ID
   showModal: boolean = false; // Control modal visibility
   UsersReserved: any[] = [];
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }
+
+  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
+
+
+
+  currentUser={
+    role:"admin"
+  }
+
 
   ngOnInit(): void {
     this.loadFoyers();
@@ -55,7 +65,12 @@ export class FoyerComponent implements OnInit {
   }
 
   createFoyer(): void {
-    this.foyerService.createFoyer(this.newFoyer).subscribe(
+    const newFoyer = {
+      ...this.newFoyer,
+      facultyId: this.staticFacultyId  // Add the static faculty ID here
+    };
+
+    this.foyerService.createFoyer(newFoyer).subscribe(
       () => {
         this.successMessage = 'Foyer created successfully.';
         this.loadFoyers();
@@ -68,7 +83,6 @@ export class FoyerComponent implements OnInit {
       }
     );
   }
-  
   
   onUpdateFoyer(id: string): void {
     this.foyerService.updateFoyer(id, this.selectedFoyer).subscribe(
@@ -142,29 +156,28 @@ export class FoyerComponent implements OnInit {
     );
   }
 
-updateRoom(roomId: string): void {
-  // Update capacity based on room type
-  if (this.selectedRoom.type === 'double') {
-    this.selectedRoom.capacity = 2;
-  } else if (this.selectedRoom.type === 'triple') {
-    this.selectedRoom.capacity = 3;
-  }
-
-  // Update available places based on new capacity
-  this.selectedRoom.availablePlaces = this.selectedRoom.capacity;
-
-  this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
-    () => {
-      this.loadRooms(this.selectedFoyer._id);
-      this.selectedRoom = null;
-      this.showCard = 'rooms';
-    },
-    (error) => {
-      console.error('Error updating room', error);
+  updateRoom(roomId: string): void {
+    // Update capacity based on room type
+    if (this.selectedRoom.type === 'double') {
+      this.selectedRoom.capacity = 2;
+    } else if (this.selectedRoom.type === 'triple') {
+      this.selectedRoom.capacity = 3;
     }
-  );
-}
 
+    // Update available places based on new capacity
+    this.selectedRoom.availablePlaces = this.selectedRoom.capacity;
+
+    this.roomService.updateRoom(roomId, this.selectedRoom).subscribe(
+      () => {
+        this.loadRooms(this.selectedFoyer._id);
+        this.selectedRoom = null;
+        this.showCard = 'rooms';
+      },
+      (error) => {
+        console.error('Error updating room', error);
+      }
+    );
+  }
 
   deleteRoom(roomId: string): void {
     this.roomService.deleteRoom(roomId).subscribe(
@@ -225,6 +238,7 @@ updateRoom(roomId: string): void {
     this.newRoom.foyerId = foyerId;
     this.showCard = 'createRoom';
   }
+
   showCreateFoyerForm(): void {
     this.showModal = true;
   }
@@ -232,23 +246,24 @@ updateRoom(roomId: string): void {
   closeModal(): void {
     this.showModal = false;
   }
-  onRoomTypeChange(): void {
-  if (this.selectedRoom) {
-    if (this.selectedRoom.type === 'double') {
-      this.selectedRoom.capacity = 2;
-    } else if (this.selectedRoom.type === 'triple') {
-      this.selectedRoom.capacity = 3;
-    }
-  }
 
-  if (this.newRoom) {
-    if (this.newRoom.type === 'double') {
-      this.newRoom.capacity = 2;
-    } else if (this.newRoom.type === 'triple') {
-      this.newRoom.capacity = 3;
+  onRoomTypeChange(): void {
+    if (this.selectedRoom) {
+      if (this.selectedRoom.type === 'double') {
+        this.selectedRoom.capacity = 2;
+      } else if (this.selectedRoom.type === 'triple') {
+        this.selectedRoom.capacity = 3;
+      }
+    }
+
+    if (this.newRoom) {
+      if (this.newRoom.type === 'double') {
+        this.newRoom.capacity = 2;
+      } else if (this.newRoom.type === 'triple') {
+        this.newRoom.capacity = 3;
+      }
     }
   }
-}
 
   getusersreservationRooms(roomId: string): void {
     this.roomService.getRoomReservationById(roomId).subscribe(
@@ -260,6 +275,7 @@ updateRoom(roomId: string): void {
       }
     );
   }
+
   cancelUserReservation(reservationId: string): void {
     if (confirm('Êtes-vous sûr de vouloir annuler cette réservation?')) {
       this.roomService.cancelReservation(reservationId).subscribe(
@@ -273,7 +289,4 @@ updateRoom(roomId: string): void {
       );
     }
   }
-  
-  
-
 }

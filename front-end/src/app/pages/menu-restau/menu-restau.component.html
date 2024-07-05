@@ -27,7 +27,7 @@
         </div>
         <div class="card-body px-lg-5 py-lg-5">
           <!-- Formulaire de création de menu -->
-          <form (ngSubmit)="createMenu()">
+          <form (ngSubmit)="createMenu()" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">
             <div class="form-group">
               <label class="form-control-label" for="text">Texte du menu:</label>
               <textarea class="form-control" id="text" name="text" [(ngModel)]="newMenu.text" required></textarea>
@@ -52,29 +52,31 @@
         <h3 class="menu-card-title">{{ menu.text }}</h3>
       </div>      
       <div class="menu-buttons">
-        <button (click)="startEditMenu(menu)" class="btn btn-primary">Modifier</button>
-        <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer</button>
+        <button (click)="startEditMenu(menu)" class="btn btn-primary" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Modifier</button>
+        <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer</button>
       </div>
     </div>
     <img *ngIf="menu.image" [src]="'http://localhost:9090/img/' + menu.image" class="img-fluid rounded mb-3 menuRestau-size-image" alt="Menu image">
+<!-- Bouton pour afficher/masquer les commentaires -->
+<button (click)="toggleComments(menu._id)" class="btn btn-secondary mb-2">Afficher Commentaires</button>
 
-              <!-- Bouton pour afficher/masquer les commentaires -->
-              <button (click)="toggleComments(menu._id)" class="btn btn-secondary mb-2">Afficher Commentaires</button>
+<!-- Affichage conditionnel des commentaires -->
+<div *ngIf="menu.showComments" class="mt-3">
+  <h4>Commentaires</h4>
+  <ul class="list-unstyled">
+    <!-- Affichage des commentaires avec bouton de suppression -->
+    <div *ngFor="let comment of menu.comments" class="menu-comment-card mb-2">
+      <div class="menu-comment-body">
+        <p>{{ comment.content }}</p>
+        <small class="text-muted">Par {{ comment.author.name }} le {{ comment.createdAt | date:'short' }}</small>
+        <!-- Bouton de suppression -->
+        <button (click)="deleteComment(menu._id, comment._id)" class="btn btn-sm btn-danger" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer</button>
+      </div>
+    </div>
+  </ul>
+</div>
 
-              <!-- Affichage conditionnel des commentaires -->
-              <div *ngIf="menu.showComments" class="mt-3">
-                <h4>Commentaires</h4>
-                <ul class="list-unstyled">
-                  <!-- Affichage des commentaires avec bouton de suppression -->
-                  <div *ngFor="let comment of menu.comments" class="menu-comment-card mb-2">
-                    <div class="menu-comment-body">
-                      <p>{{ comment.content }}</p>
-                      <!-- Bouton de suppression -->
-                      <button (click)="deleteComment(menu._id, comment._id)" class="btn btn-sm btn-danger">Supprimer</button>
-                    </div>
-                  </div>
-                </ul>
-              </div>
+
 
               <!-- Formulaire pour ajouter un commentaire -->
               <form (ngSubmit)="addComment(menu._id)" class="mt-3">
@@ -84,14 +86,13 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Ajouter Commentaire</button>
               </form>
-
 <!-- Edit Menu Modal -->
 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': showEditModal, 'd-block': showEditModal}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Modifier le menu</h5>
-        <button  type="button" class="close" aria-label="Close" (click)="closeEditModal()">
+        <button type="button" class="close" aria-label="Close" (click)="closeEditModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -103,8 +104,8 @@
           </div>
           <div class="form-group">
             <label class="form-control-label" for="image">Image du menu:</label>
-            <input type="file" id="image" (change)="onFileChange($event)" class="form-control-file">
-            <img *ngIf="newMenu.previewImage" [src]="newMenu.previewImage" class="img-fluid rounded mb-3 menuRestau-size-image" alt="Menu image preview">
+            <input type="file" id="image" (change)="onFileChange($event, currentEditMenu)" class="form-control-file">
+            <img *ngIf="newMenu.previewImage || currentEditMenu.editImage" [src]="currentEditMenu.editImage ? currentEditMenu.editImage : newMenu.previewImage" class="img-fluid rounded mb-3 menuRestau-size-image" alt="Menu image preview">
           </div>
           
           <button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -113,6 +114,7 @@
     </div>
   </div>
 </div>
+
 
 
             </div>

@@ -10,9 +10,15 @@ import { CommentRestauService } from 'src/app/Services/comment-restau.service';
 export class MenuRestauComponent implements OnInit {
   menus: any[] = [];
 
-  datafromlocalstorge={
-    role:1
+  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
+
+
+
+  currentUser={
+    role:"admin"
   }
+
+
   newMenu: any = {
     text: '',
     image: null,

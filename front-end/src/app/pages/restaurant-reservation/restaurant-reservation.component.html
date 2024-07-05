@@ -18,7 +18,7 @@
         <div class="card-header border-0 bg-gradient-secondary">
           <h2 class="mb-0">Liste des restaurants</h2>
           <div>
-            <button (click)="toggleCreateMode()" class="btn btn-primary  float-right">Créer Restaurant</button>
+            <button (click)="toggleCreateMode()" class="btn btn-primary  float-right" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Créer Restaurant</button>
           </div>
         </div>
 
@@ -50,9 +50,9 @@
                 <td>{{ restaurant.availablePlaces }}</td>
                 <td>
                   <!-- Appel de createReservation directement -->
-                  <button (click)="createReservation(restaurant._id)" class="btn btn-success btn-sm">Réserver</button>
-                  <button (click)="editRestaurant(restaurant)" class="btn btn-warning btn-sm">Modifier</button>
-                  <button (click)="deleteRestaurant(restaurant._id)" class="btn btn-danger btn-sm">Supprimer</button>
+                  <button (click)="createReservation(restaurant._id)" class="btn btn-success btn-sm" >Réserver</button>
+                  <button (click)="editRestaurant(restaurant)" class="btn btn-warning btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Modifier</button>
+                  <button (click)="deleteRestaurant(restaurant._id)" class="btn btn-danger btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer</button>
                   <!-- Mettre à jour le bouton pour inclure l'action de sélection -->
                   <button (click)="loadReservationsAndSelect(restaurant)" class="btn btn-secondary btn-sm">Voir Réservations</button>
                 </td>
@@ -96,7 +96,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Créer un nouveau restaurant</h5>
+                <h5 class="modal-title" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Créer un nouveau restaurant</h5>
                 <button type="button" class="close" (click)="cancelCreate()">
                   <span>&times;</span>
                 </button>
@@ -152,7 +152,7 @@
           <ul>
             <li *ngFor="let reservation of reservationsByRestaurant[selectedRestaurant._id] || []">
               <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}
-                <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm">Supprimer Réservation</button>
+                <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer Réservation</button>
               </p>
             </li>
           </ul>
