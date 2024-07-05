@@ -1,9 +1,11 @@
+// socketService.js
 import { Server } from 'socket.io';
 import Chat from '../models/chat.js';
 
 let io;
 
 export const init = (server) => {
+  console.log("Initializing Socket.IO");
   io = new Server(server, {
     cors: {
       origin: 'http://localhost:4200',

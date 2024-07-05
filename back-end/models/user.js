@@ -40,6 +40,8 @@ const userSchema = new Schema({
   longLivedToken: { type: String },
   twoFactorSecret: { type: String },
   twoFactorEnabled: { type: Boolean, default: false },
+  participatedEvents: [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+
 });
 
 // Index unique sur l'email

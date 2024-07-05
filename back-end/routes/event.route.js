@@ -12,10 +12,16 @@ import {
     updateComment,
     participateEvent,
     deleteParticipation,
+    participatedEvents,
+    getRecommendedEvents,
+    getNearbyEvents,
 } from '../controllers/event.controller.js';
 
 export default (io) => {
     const router = express.Router();
+
+    router.get('/recommended-events', getRecommendedEvents);
+    router.get('/nearby-events', getNearbyEvents);
 
     router.get('/', getEvents);
     router.get('/:id', getEvent);
@@ -29,6 +35,7 @@ export default (io) => {
     router.delete('/:eventId/comments/:commentId', deleteComment);
     router.post('/:id/participate', participateEvent);
     router.delete('/:eventId/participants/:participationId', deleteParticipation);
+    router.post('/:eventId/participate/:userId', participatedEvents);
 
     return router;
 };

@@ -2,6 +2,8 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
+import http from "http";
+import { Server } from 'socket.io';
 import userRouter from "./routes/user.route.js";
 import universityRouter from "./routes/university.route.js";
 import authRoutes from "./routes/auth.route.js";
@@ -16,23 +18,26 @@ import restaurantRoutes from "./routes/restaurantRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import paymentRoutes from "./routes/payment.route.js";
 import eventRoute from "./routes/event.route.js";
-import { init as initSocketService } from "./Socket/socketService.js";
-import http from "http";
-import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
-import { Server } from 'socket.io';
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
-import salleRoutes from './routes/salle.route.js';
-import examenRoutes from './routes/examen.route.js';
+import salleRoutes from "./routes/salle.route.js";
+import examenRoutes from "./routes/examen.route.js";
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
 import chatRouter from './routes/chat.route.js'; // Import chatRouter
+import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
 
 const app = express();
 const databaseName = "uninet";
 
+// Middleware setup
+app.use(cors());
+app.use(morgan('dev'));
+app.use(express.json());
+
+// MongoDB connection
 mongoose
-  .connect(`mongodb://localhost:27017/${databaseName}`, { family: 4 })
+  .connect(`mongodb://localhost:27017/${databaseName}`, { useNewUrlParser: true, useUnifiedTopology: true, family: 4 })
   .then(() => {
     console.log("Database connected");
   })
@@ -53,12 +58,6 @@ io.on('connection', (socket) => {
 
   // Additional Socket.IO event listeners can be added here as needed
 });
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(morgan("dev"));
-app.use(express.static("public"));
 
 // Routes setup
 app.use("/api/auth", authRoutes);

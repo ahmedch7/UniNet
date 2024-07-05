@@ -1,5 +1,9 @@
 import Event from '../models/Events.js';
 import User from '../models/User.js';
+import CommentEvent from '../models/CommentEvents.js';
+import { sendParticipationEmail } from '../controllers/email.controller.js';
+import axios from 'axios';
+
 export const getEvents = async (req, res) => {
     try {
         const { name, date, location, status, sortField, sortOrder } = req.query;
@@ -87,6 +91,7 @@ export const deleteEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const likeEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -98,7 +103,6 @@ export const likeEvent = async (req, res) => {
         }
 
         if (!event.likes.includes(userId)) {
-            // Remove user from dislikes if already disliked
             const dislikeIndex = event.dislikes.indexOf(userId);
             if (dislikeIndex !== -1) {
                 event.dislikes.splice(dislikeIndex, 1);
@@ -125,7 +129,6 @@ export const dislikeEvent = async (req, res) => {
         }
 
         if (!event.dislikes.includes(userId)) {
-            // Remove user from likes if already liked
             const likeIndex = event.likes.indexOf(userId);
             if (likeIndex !== -1) {
                 event.likes.splice(likeIndex, 1);
@@ -140,7 +143,6 @@ export const dislikeEvent = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 export const addComment = async (io, req, res) => {
     try {
@@ -167,6 +169,7 @@ export const addComment = async (io, req, res) => {
             nom: user.nom,
             createdAt: new Date()
         };
+        const comment = await CommentEvent.create(newComment);
 
         event.comments.push(newComment);
         await event.save();
@@ -227,6 +230,7 @@ export const updateComment = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 export const participateEvent = async (req, res) => {
     try {
         const eventId = req.params.id;
@@ -242,14 +246,34 @@ export const participateEvent = async (req, res) => {
             return res.status(400).json({ message: 'User is already participating in this event' });
         }
 
-        event.participants.push({ user: userId, username });
-        await event.save();
+        if (event.Nbplaces > 0) {
+            event.Nbplaces--;
+            if (event.Nbplaces === 0) {
+                event.status = 'Full';
+            }
 
-        res.status(200).json(event);
+            event.participants.push({ user: userId, username });
+            await event.save();
+
+            await User.findByIdAndUpdate(userId, { $addToSet: { participatedEvents: eventId } });
+
+            // Send participation email
+            const user = await User.findById(userId);
+            if (user) {
+                await sendParticipationEmail(user.email, user.nom, user.prenom, event.name, event.location, event.date, event.description,eventId);
+                console.log(event.eventId)
+            }
+
+            res.status(200).json(event);
+        } else {
+            res.status(400).json({ message: 'No more places available' });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
 export const deleteParticipation = async (req, res) => {
     try {
         const { eventId, participationId } = req.params;
@@ -273,9 +297,127 @@ export const deleteParticipation = async (req, res) => {
         res.status(200).json({ message: 'Participation deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }};
+
+export const participatedEvents= async (req, res) => {
+    try {
+      const { eventId, userId } = req.params;
+  
+      // Add event to user's participatedEvents
+      await User.findByIdAndUpdate(userId, { $addToSet: { participatedEvents: eventId } });
+  
+      // Add user to event's participants
+      const event = await Event.findByIdAndUpdate(eventId, {
+        $addToSet: { participants: { user: userId } }
+      }, { new: true });
+  
+      res.json(event);
+    } catch (error) {
+      console.error('Error participating in event:', error);
+      res.status(500).send('Server error');
+    }
+  };
+  export const getRecommendedEvents = async (req, res) => {
+    try {
+        const { userId } = req.query;
+
+        // Find the user and populate the participatedEvents field
+        const user = await User.findById(userId).populate('participatedEvents');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Extract tags and categories from user's participated events
+        const tags = new Set();
+        const categories = new Set();
+
+        user.participatedEvents.forEach(event => {
+            event.tags.forEach(tag => tags.add(tag));
+            event.categories.forEach(category => categories.add(category));
+        });
+
+        const tagArray = Array.from(tags);
+        const categoryArray = Array.from(categories);
+
+        // Query events based on tags and categories
+        const recommendedEvents = await Event.find({
+            $or: [
+                { tags: { $in: tagArray } },
+                { categories: { $in: categoryArray } }
+            ]
+        });
+
+        res.status(200).json(recommendedEvents);
+    } catch (error) {
+        console.error('Error fetching recommended events:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const convertToCoordinates = async (address) => {
+    const apiKey = 'AIzaSyDhJ1QaIMu0XptyDLOUSs1YzQ4SmH7jVG8'; // Replace with your actual API key
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+    try {
+        const response = await axios.get(url);
+        const data = response.data;
+
+        if (data.status === 'OK') {
+            const { lat, lng } = data.results[0].geometry.location;
+            return { latitude: lat, longitude: lng };
+        } else {
+            throw new Error(`Geocoding failed with status: ${data.status} - ${data.error_message}`);
+        }
+    } catch (error) {
+        console.error('Error converting address to coordinates:', error);
+        throw error;
+    }
+};
+export const getNearbyEvents = async (req, res) => {
+    const { latitude, longitude } = req.query;
+    if (!latitude || !longitude) {
+        return res.status(400).json({ error: 'Latitude and longitude are required' });
+    }
+
+    try {
+        const events = await Event.find();
+        const nearbyEvents = [];
+
+        for (const event of events) {
+            try {
+                const { location } = event;
+                const { latitude: eventLat, longitude: eventLng } = await convertToCoordinates(location);
+
+                const distance = calculateDistance(latitude, longitude, eventLat, eventLng);
+
+                if (distance <= 100) { 
+                    nearbyEvents.push(event);
+                }
+            } catch (conversionError) {
+                console.error(`Error converting address for event ${event._id}:`, conversionError.message);
+            }
+        }
+
+        res.json(nearbyEvents);
+    } catch (error) {
+        console.error('Error fetching nearby events:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 
 
-
+// Helper function to calculate distance between two coordinates (Haversine formula)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
+}
 

@@ -1,0 +1,252 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body"></div>
+    </div>
+  </div>
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>Event List</h2>
+            <button type="button" class="btn btn-success btn-sm" (click)="downloadExcel()">Download XLSX</button>
+        </div>
+        <div class="card-body">
+            <!-- Filter Controls -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label for="statusSelect">Status:</label>
+                    <select class="form-control" id="statusSelect" [(ngModel)]="filterStatus" (change)="applyFilters()">
+                        <option value="">All</option>
+                        <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="categorySelect">Category:</label>
+                    <select class="form-control" id="categorySelect" [(ngModel)]="filterCategory" (change)="applyFilters()">
+                        <option value="">All</option>
+                        <option *ngFor="let category of categoryOptions" [value]="category">{{ category }}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="locationSelect">Location:</label>
+                    <select class="form-control" id="locationSelect" [(ngModel)]="filterLocation" (change)="applyFilters()">
+                        <option value="">All</option>
+                        <option *ngFor="let location of locationOptions" [value]="location">{{ location }}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="dateInput">Date:</label>
+                    <input type="date" class="form-control" id="dateInput" [(ngModel)]="filterDate" (change)="applyFilters()">
+                </div>
+            </div>
+
+            <!-- Event List Table -->                   
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Status</th>
+                            <th>Category</th>
+                            <th>Tag</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let event of pagedEvents()">
+                            <td>{{ event.name }}</td>
+                            <td>{{ event.status }}</td>
+                            <td>{{ event.categories.join(', ') }}</td>
+                            <td>{{ event.tags.join(', ') }}</td>
+                            <td>{{ event.location }}</td>
+                            <td>{{ event.date | date:'medium' }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/event-details', event._id]">Details</button>
+                                <button type="button" class="btn btn-danger btn-sm" (click)="deleteEvent(event._id)">Delete</button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="pagedEvents().length === 0">
+                            <td colspan="7" class="text-center">No events found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation example" *ngIf="filteredEvents.length > itemsPerPage">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" [class.disabled]="p === 1">
+                        <a class="page-link" (click)="previousPage()" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" *ngFor="let page of totalPagesArray()" [class.active]="page === p">
+                        <a class="page-link" (click)="setPage(page)">{{ page }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="p === totalPages()">
+                        <a class="page-link" (click)="nextPage()" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+
+    <!-- Event Statistics and Charts Section -->
+    <div class="row mt-4">
+        <!-- Events by Status -->
+        <div class="col-lg-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Events Status</h5>
+                </div>
+                <div class="card-body">
+
+
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Per Month and React Statistics -->
+        <div class="col-lg-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Events This Month</h5>
+                    <div class="form-group">
+                        <label for="yearSelect">Select Year:</label>
+                        <select class="form-control" id="yearSelect" (change)="onYearChange($event.target.value)">
+                            <option *ngFor="let year of availableYears()" [value]="year"
+                                [selected]="year === selectedYear">{{ year }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="chart-events-per-month" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Created Per Month -->
+
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Events Created per Month</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="chart-events-created-per-month" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-12">
+          <div class="card mb-3">
+            <div class="card-header">
+              <h5 class="card-title">Geographical Insights</h5>
+            </div>
+            <div class="card-body">
+              <div id="eventMap" style="height: 500px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- Category and Tag Lists Section -->
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Events by Category</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li *ngFor="let category of categoryOptions"
+                            class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ category }}
+                            <span class="badge badge-primary badge-pill">{{ categoryCounts[category] || 0 }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Events by Tag</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li *ngFor="let tag of tagOptions"
+                            class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ tag }}
+                            <span class="badge badge-primary badge-pill">{{ tagCounts[tag] || 0 }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">React Statistics</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Total Events
+                                <span class="badge badge-primary badge-pill">{{ events.length }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Likes
+                                <span class="badge badge-primary badge-pill">{{ likesCount }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Dislikes
+                                <span class="badge badge-primary badge-pill">{{ dislikesCount }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Location-Based Analytics -->
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Location-Based Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Most Popular Region
+                            <span class="badge badge-primary badge-pill">{{ mostPopularRegion }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Participants
+                            <span class="badge badge-primary badge-pill">{{ totalParticipants }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

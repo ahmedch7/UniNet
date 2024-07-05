@@ -1,36 +1,54 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { AgmCoreModule } from '@agm/core';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
-import { TestComponent } from './test/test.component';
+import { FormEventComponent } from './pages/form-event/form-event.component';
+import { EventListComponent } from './pages/event-list/event-list.component';
+import { EventDetailsComponent } from './pages/event-details/event-details.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io'; 
+import { BrowserModule } from '@angular/platform-browser';
+import { CarouselModule } from 'primeng/carousel';
+import { BOEventsComponent } from './pages/boevents/boevents.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
+const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
 
 @NgModule({
-  imports: [
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpClientModule,
-    ComponentsModule,
-    NgbModule,
-    RouterModule,
-    AppRoutingModule
-  ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    TestComponent
+    FormEventComponent,
+    EventListComponent,
+    EventDetailsComponent,
+    BOEventsComponent
   ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
+    ComponentsModule,
+    ReactiveFormsModule,
+    NgbModule,
+    RouterModule,
+    AppRoutingModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyDhJ1QaIMu0XptyDLOUSs1YzQ4SmH7jVG8'
+    }),
+    SocketIoModule.forRoot(config),
+    CarouselModule,
+    NgxPaginationModule
+  ],
+
   providers: [],
   bootstrap: [AppComponent]
 })

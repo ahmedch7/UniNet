@@ -1,0 +1,102 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body"></div>
+  </div>
+</div>
+
+<div class="container">
+  <div *ngFor="let alert of alerts" class="alert alert-{{ alert.type }}" role="alert">
+    <strong>{{ alert.type }}!</strong> {{ alert.message }}
+  </div>
+  <div *ngIf="event" class="event-details">
+    <div class="event-header">
+      <h2>{{ event.name }}</h2>
+      <div *ngIf="userRole === 'responsable' || userRole === 'admin'" ><button class="btn btn-danger"
+          (click)="deleteEvent()">Delete Event</button>
+        </div>
+    </div>
+
+    <div class="event-body">
+      <div class="event-image-container">
+        <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="event-image" />
+      </div>
+      <div class="event-info">
+        <p>{{ event.description }}</p>
+        <p><strong>Status:</strong> {{ event.status }}</p>
+        <p><strong>Date:</strong> {{ event.date | date:'short' }}</p>
+        <p><strong>Location:</strong> {{ event.location }}</p>
+        <p><strong>Tags:</strong> {{ event.tags.join(', ') }}</p>
+        <p><strong>Categories:</strong> {{ event.categories.join(', ') }}</p>
+        <p><strong>N° Places:</strong> {{ event.Nbplaces }}</p>
+        <ng-container *ngIf="event.participants && event.participants.length > 0">
+          <button class="btn btn-danger" *ngIf="isParticipating()" (click)="removeParticipation()">Remove
+            Participation</button>
+          <button class="btn btn-success" *ngIf="!isParticipating()" [disabled]="event.Nbplaces === 0"
+            (click)="participate()">Participate</button>
+        </ng-container>
+        <ng-container *ngIf="!event.participants || event.participants.length === 0">
+          <button class="btn btn-success" [disabled]="event.Nbplaces === 0" (click)="participate()">Participate</button>
+        </ng-container>
+        <ng-container  *ngIf="userRole === 'responsable' || userRole === 'admin'" >
+
+        <button class="btn btn-warning" (click)="enableEditing()">Update</button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="isEditingEvent" class="event-editing">
+      <h2>
+        <input [(ngModel)]="event.name" placeholder="Event Name" />
+      </h2>
+      <div>
+        <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="event-image" />
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+      <textarea [(ngModel)]="event.description" placeholder="Event Description"></textarea>
+      <label>
+        <strong>Status:</strong>
+        <select [(ngModel)]="event.status">
+          <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+        </select>
+      </label>
+      <input type="date" [(ngModel)]="event.date" placeholder="Event Date" />
+      <input [(ngModel)]="event.location" placeholder="Event Location" />
+      <input [(ngModel)]="event.tags" placeholder="Event Tags" />
+      <input [(ngModel)]="event.categories" placeholder="Event Categories" />
+      <input type="number" [(ngModel)]="event.Nbplaces" placeholder="Number of Places" />
+      <button class="btn btn-primary" (click)="updateEvent()">Save</button>
+      <button class="btn btn-secondary" (click)="cancelEditing()">Cancel</button>
+    </div>
+
+    <div class="event-actions">
+      <button class="btn btn-outline-primary" (click)="likeEvent()">Like ({{ event.likes?.length || 0 }})</button>
+      <button class="btn btn-outline-danger" (click)="dislikeEvent()">Dislike ({{ event.dislikes?.length || 0
+        }})</button>
+    </div>
+
+    <div class="comments-section">
+      <h3>Comments</h3>
+      <div *ngFor="let comment of event.comments" class="comment-item">
+        <p><strong>{{ comment.nom }}:</strong> {{ comment.text }} ({{ comment.createdAt | date:'short' }})</p>
+        <div *ngIf="comment.user === userId || userRole === 'admin' || userRole === 'responsable'">
+
+        <button class="btn btn-danger" (click)="deleteComment(comment._id)">Delete Comment</button>
+        <button class="btn btn-warning" *ngIf="!comment.editing" (click)="enableCommentEditing(comment)">Update</button>
+        </div>
+        <div *ngIf="comment.editing" class="update-comment-form">
+          <textarea class="form-control" rows="3" [(ngModel)]="comment.updatedText"
+            placeholder="Update your comment"></textarea>
+            
+          <button class="btn btn-primary" (click)="updateComment(comment)">Save</button>
+          <button class="btn btn-secondary" (click)="cancelCommentEditing(comment)">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="add-comment">
+      <h4>Add a comment</h4>
+      <textarea [(ngModel)]="newCommentText" placeholder="Enter your comment here" class="form-control"></textarea>
+      <button class="btn btn-primary mt-2" (click)="addComment()">Add Comment</button>
+    </div>
+  </div>
+</div>

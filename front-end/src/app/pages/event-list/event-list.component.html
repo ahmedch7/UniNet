@@ -1,0 +1,120 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+      <div class="header-body"></div>
+    </div>
+  </div>
+  <div class="container">
+    <h3>Recommended Events</h3>
+  
+    <p-carousel [value]="recommendedEvents" [numVisible]="3" [numScroll]="1" [circular]="true" autoplayInterval="3000">
+      <ng-template let-event pTemplate="item">
+        <div class="card event-box" (click)="onEventClick(event._id)">
+          <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="card-img-top recommended-event-image" />
+          <div class="card-body">
+            <h5 class="card-title">{{ event.name }}</h5>
+            <p class="card-text">{{ event.description }}</p>
+            <p><strong>Status:</strong> {{ event.status }}</p>
+            <p><strong>Date:</strong> {{ event.date | date:'short' }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <a [routerLink]="['/event', event._id]" class="btn btn-primary">View Event</a>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  
+    <div *ngIf="recommendedEvents.length === 0">
+      <p>No recommended events available.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <h3>Nearby Events</h3>
+  
+    <p-carousel *ngIf="nearbyEvents.length > 0" [value]="nearbyEvents" [numVisible]="3" [numScroll]="1" [circular]="true" autoplayInterval="3000">
+      <ng-template let-event pTemplate="item">
+        <div class="card event-box" (click)="onEventClick(event._id)">
+          <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="card-img-top recommended-event-image" />
+          <div class="card-body">
+            <h5 class="card-title">{{ event.name }}</h5>
+            <p class="card-text">{{ event.description }}</p>
+            <p><strong>Status:</strong> {{ event.status }}</p>
+            <p><strong>Date:</strong> {{ event.date | date:'short' }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <a [routerLink]="['/event-details', event._id]" class="btn btn-primary">View Event</a>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  
+    <div *ngIf="nearbyEvents.length === 0">
+      <p>No nearby events found.</p>
+    </div>
+  <div class="container">
+    <h2 class="mt-4">Events</h2>
+    
+    <form (ngSubmit)="applyFilters()" class="filter-form">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="filters.name" name="name">
+      </div>
+  
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" class="form-control" id="date" [(ngModel)]="filters.date" name="date">
+      </div>
+  
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" class="form-control" id="location" [(ngModel)]="filters.location" name="location">
+      </div>
+  
+      <div class="form-group">
+        <label for="status">Status:</label>
+        <select class="form-control" id="status" [(ngModel)]="filters.status" name="status">
+          <option value="">All</option>
+          <option value="Full">Full</option>
+          <option value="Available">Available</option>
+          <option value="Ended">Ended</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Apply Filters</button>
+      <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reset Filters</button>
+    </form>
+  
+    <div class="sort-by">
+      <label for="sortOption">Sort by:</label>
+      <select class="form-control" id="sortOption" [(ngModel)]="sortOption" (change)="sortEvents()">
+        <option value="">Select</option>
+        <option value="dateAsc">Date Ascending</option>
+        <option value="dateDesc">Date Descending</option>
+        <option value="placesAsc">Places Ascending</option>
+        <option value="placesDesc">Places Descending</option>
+        <option value="statusAsc">Status Ascending</option>
+        <option value="statusDesc">Status Descending</option>
+      </select>
+    </div>
+
+  
+    <div class="event-list-container">
+      <div *ngIf="filteredEvents.length > 0; else noEvents" class="event-grid">
+        <div class="card event-box" *ngFor="let event of filteredEvents" (click)="onEventClick(event._id)">
+          <img *ngIf="event.image" [src]="event.image" alt="{{ event.name }}" class="card-img-top event-image" />
+          <div class="card-body">
+            <h5 class="card-title">{{ event.name }}</h5>
+            <p class="card-text">{{ event.description }}</p>
+            <p><strong>Status:</strong> {{ event.status }}</p>
+            <p><strong>Date:</strong> {{ event.date | date:'short' }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Tags:</strong> {{ event.tags.join(', ') }}</p>
+            <p><strong>Categories:</strong> {{ event.categories.join(', ') }}</p>
+            <p><strong>N° of places left:</strong> {{ event.Nbplaces }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noEvents>
+      <p>No events available.</p>
+    </ng-template>
+  </div>
+  
