@@ -89,11 +89,13 @@ export const deleteReservation = async (req, res) => {
     room.availablePlaces += reservation.places;
     await room.save();
 
-    await reservation.remove();
+    console.log(reservation);
+    await reservation.deleteOne();
 
     res.status(200).json({ message: 'Reservation cancelled successfully' });
   } catch (error) {
-    console.error('Error deleting reservation:', error); // Log the error here
+    console.log(error);
+
     res.status(500).json({ message: 'Error deleting reservation', error });
   }
 };
