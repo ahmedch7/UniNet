@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CoursService } from 'src/app/services/cours.service';
+import { Classe } from 'src/app/models/classe';
+import { ChatService } from 'src/app/services/chat.service';
+import { ChatMessage } from 'src/app/models/chatMessage';
 
 @Component({
   selector: 'app-coursdetails',
@@ -9,6 +12,8 @@ import { CoursService } from 'src/app/services/cours.service';
   styleUrls: ['./coursdetails.component.scss']
 })
 export class CoursdetailsComponent implements OnInit {
+  classe: Classe = { messages: [] } as Classe; // Initialize classe with an empty messages array
+  newMessageText: string = '';
   courses: any[] = [];
   classeId: string;
   coursForm: FormGroup;
@@ -18,6 +23,7 @@ export class CoursdetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private coursService: CoursService,
+    private cs: ChatService,
     private fb: FormBuilder
   ) {
     this.coursForm = this.fb.group({
@@ -31,6 +37,7 @@ export class CoursdetailsComponent implements OnInit {
       this.classeId = params.get('id'); // Assumes the URL contains a parameter named 'id'
       if (this.classeId) {
         this.loadCoursesByClasse();
+        this.loadChatMessages(); // Load chat messages for the class
       }
     });
   }
@@ -42,6 +49,17 @@ export class CoursdetailsComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching courses:', error);
+      }
+    );
+  }
+
+  loadChatMessages(): void {
+    this.cs.getChatMessages(this.classeId).subscribe(
+      (messages: ChatMessage[]) => {
+        this.classe.messages = messages; // Load messages into the classe object
+      },
+      (error) => {
+        console.error('Error fetching chat messages:', error);
       }
     );
   }
@@ -131,5 +149,23 @@ export class CoursdetailsComponent implements OnInit {
         console.error('Error downloading file:', error);
       }
     );
+  }
+
+  addMessage(): void {
+    if (this.newMessageText.trim()) {
+      const userId = '666593b3542d755d1837c67b'; // Replace with actual logic to get user ID
+      this.cs.addChatMessage(this.classeId, this.newMessageText, userId).subscribe(
+        (message: ChatMessage) => {
+          if (!this.classe.messages) {
+            this.classe.messages = []; // Initialize messages array if it doesn't exist
+          }
+          this.classe.messages.push(message); // Add newly created message to local array
+          this.newMessageText = ''; // Clear input field after successful addition
+        },
+        (error) => {
+          console.error('Error adding message:', error);
+        }
+      );
+    }
   }
 }

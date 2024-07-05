@@ -48,6 +48,22 @@
 <ng-template #noCourses>
   <p>No courses found for this class.</p>
 </ng-template>
+
+<h3>Chat Messages</h3>
+  <div *ngIf="classe?.messages">
+    <ul>
+      <li *ngFor="let message of classe.messages">
+
+        {{message.nom}}
+        {{ message.text }}
+        {{ message.createdAt | date:'short'}}
+      </li>
+    </ul>
+  </div>
+
+  <input [(ngModel)]="newMessageText" placeholder="Type your message">
+  <button (click)="addMessage()">Send</button>
+
 <h2 class="card-title">Create New Course</h2>
 <form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
   <div class="row">

@@ -1,3 +1,4 @@
+import { ChatMessage } from "./chatMessage";
 import { User } from "./user";
 
 export class Classe {
@@ -6,5 +7,10 @@ export class Classe {
     AnneUniversitaire!: string;
     NiveauEducatifId!: string;
     User: User[] = [];
+    messages?: ChatMessage[]; // Add messages property
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
 
 }
