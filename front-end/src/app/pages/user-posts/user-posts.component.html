@@ -1,0 +1,91 @@
+<div class="top-padding"></div>
+<div class="container mt-5">
+
+  <!-- Form for creating a new post -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Create a new post</h5>
+      <form (ngSubmit)="createPost()">
+        <div class="mb-3">
+          <label for="postContent" class="form-label">Post Content</label>
+          <textarea id="postContent" [(ngModel)]="newPostContent" name="content" class="form-control" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Post</button>
+      </form>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="mid-padding"></div>
+
+  <!-- Display existing posts -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div *ngFor="let post of filteredPosts" class="card mb-3">
+        <div *ngIf="!post.isVerifed" class="card-body">
+          <h5 class="card-title">{{ post.contenuPost }}</h5>
+          <p class="card-text">{{ post.userId }}</p>
+          <p class="card-text">Created At: {{ post.createdAt | date:'medium' }}</p>
+          <hr>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <button class="btn btn-primary" (click)="likePost(post)">
+                <i class="bi bi-hand-thumbs-up"></i> Like
+              </button>
+              <button class="btn btn-primary" (click)="dislikePost(post)">
+                <i class="bi bi-hand-thumbs-down"></i> Dislike
+              </button>
+              <button class="btn btn-warning" (click)="reportPost(post)">
+                <i class="bi bi-exclamation-circle"></i> Report
+              </button>
+              <button class="btn btn-info" (click)="toggleCommentField(post)">
+                <i class="bi bi-chat-dots"></i> Comment
+              </button>
+              <button class="btn btn-info" (click)="applyToPost(post)">
+                <i class="bi bi-arrow-right-circle"></i> Apply
+              </button>
+            </div>
+            <div>
+              <span class="badge bg-primary">{{ post.likes.length }} Likes</span>
+              <span class="badge bg-danger">{{ post.dislikes.length }} Dislikes</span>
+            </div>
+          </div>
+          <div class="comment-section" *ngIf="post.showCommentField">
+            <form class="comment-form" (ngSubmit)="addComment(post)">
+              <div class="mb-3">
+                <label for="commentContent" class="form-label">Add Comment</label>
+                <textarea id="commentContent" [(ngModel)]="post.newCommentContent" name="commentContent" class="form-control" rows="2"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+            <div class="comment-list">
+              <div *ngFor="let comment of post.comments" class="card mt-2">
+                <div class="card-body">
+                  <p class="card-text">{{ comment.contenuCommentaire }}</p>
+                  <p class="card-text"><small class="text-muted">By {{ comment.userId }}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter sidebar -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-body">
+
+          <form (ngSubmit)="applyFilter()">
+            <div class="mb-3">
+              <select id="filterType" class="form-select" [(ngModel)]="filterType">
+                <option value="recent">Recent Posts</option>
+                <option value="old">Old Posts</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Apply Filter</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

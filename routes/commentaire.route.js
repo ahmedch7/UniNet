@@ -8,7 +8,7 @@ import {
   deleteCommentaire,
   likeCommentaire,
   dislikecommentaire,
-  
+  getCommentByPostId,
 } from "../controllers/commentaire.controller.js";
 
 const router = Router();
@@ -37,10 +37,10 @@ router.put(
 router.delete("/:id", deleteCommentaire);
 
 // Like Commentaire
-router.post("/:commentaireId",likeCommentaire)
+router.post("/:commentaireId", likeCommentaire);
 
 // Dislike Commentaire
-router.post("/:commentaireId",dislikecommentaire)
-
+router.post("/:commentaireId", dislikecommentaire);
+router.get("/getByPostId", getCommentByPostId);
 
 export default router;

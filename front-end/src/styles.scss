@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+.cdk-overlay-container {
+  z-index: 1000 !important;
+}
+
+.mat-dialog-container {
+  z-index: 1001 !important;
+}

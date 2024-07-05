@@ -1,0 +1,52 @@
+<div class="container mt-5">
+  <h1>Manage Forums</h1>
+
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="toggleCreateForm()">Create New Forum</button>
+  </div>
+
+  <div *ngIf="showCreateForm" class="mb-3">
+    <h2>Create Forum</h2>
+    <!-- Create Forum Form -->
+  </div>
+
+  <div *ngIf="forums.length > 0">
+    <h2>Forum List</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Category</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let forum of forums">
+        <td>{{ forum.titreForum }}</td>
+        <td>{{ forum.descriptionForum }}</td>
+        <td>{{ forum.category }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="deleteForum(forum._id)">Delete</button>
+          <button class="btn btn-info btn-sm" (click)="showDetails(forum)">Details</button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedForum && selectedForum._id === selectedForum._id">
+        <td colspan="4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ selectedForum.titreForum }}</h5>
+              <p class="card-text"><strong>Description:</strong> {{ selectedForum.descriptionForum }}</p>
+              <p class="card-text"><strong>Category:</strong> {{ selectedForum.category }}</p>
+              <p class="card-text"><strong>User ID:</strong> {{ selectedForum.userId }}</p>
+              <!-- Download File Button -->
+              <button *ngIf="selectedForum.cv_path" class="btn btn-primary btn-sm" (click)="downloadFile(selectedForum.cv_path)">Download File</button>
+              <button class="btn btn-secondary btn-sm" (click)="closeDetails()">Close</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
