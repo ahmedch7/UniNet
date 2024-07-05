@@ -20,7 +20,7 @@ export const createMenu = async (req, res) => {
   const { text, restaurantId } = req.body;
   let imagePath = '';
   if (req.file) {
-    imagePath = req.file.path.replace('public/', ''); // Remove 'public/' to keep the relative path
+    imagePath = req.file.filename // Remove 'public/' to keep the relative path
   }
   try {
     const newMenu = new Menu({ text, image: imagePath, restaurantId });
@@ -30,8 +30,7 @@ export const createMenu = async (req, res) => {
     res.status(500).json({ message: "Error creating menu", error });
   }
 };
-
-
+// Update an existing menu
 export const updateMenu = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -39,14 +38,22 @@ export const updateMenu = async (req, res) => {
   }
 
   const { id } = req.params;
-  const { text, image, restaurantId } = req.body;
+  const { text } = req.body;
+  let imagePath = req.body.image; // Default to existing image
+
+  if (req.file) {
+    imagePath = req.file.filename; // Remove 'public/' to keep the relative path
+  }
+
   try {
-    const updatedMenu = await Menu.findByIdAndUpdate(id, { text, image, restaurantId }, { new: true });
+    const updatedMenu = await Menu.findByIdAndUpdate(id, { text, image: imagePath }, { new: true });
     res.status(200).json(updatedMenu);
   } catch (error) {
     res.status(500).json({ message: "Error updating menu", error });
   }
 };
+
+
 
 export const deleteMenu = async (req, res) => {
   const { id } = req.params;

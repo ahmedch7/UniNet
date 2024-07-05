@@ -18,19 +18,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CarouselModule } from 'primeng/carousel';
 import { BOEventsComponent } from './pages/boevents/boevents.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { FoyerComponent } from './pages/foyer/foyer.component';
+import { RestaurantReservationComponent } from './pages/restaurant-reservation/restaurant-reservation.component';
+import { FilterPipe } from './filter.pipe';
+import { MenuRestauComponent } from './pages/menu-restau/menu-restau.component';
+import { FoyerStatisticsComponent } from './pages/foyer-statistics/foyer-statistics.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    AdminLayoutComponent,
-    AuthLayoutComponent,
-    FormEventComponent,
-    EventListComponent,
-    EventDetailsComponent,
-    BOEventsComponent
-  ],
+  
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -47,6 +44,24 @@ const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
     SocketIoModule.forRoot(config),
     CarouselModule,
     NgxPaginationModule
+    
+  ],
+  declarations: [
+    AppComponent,
+    AdminLayoutComponent,
+    AuthLayoutComponent,
+    FoyerComponent,
+    RestaurantReservationComponent,
+    FilterPipe,
+    MenuRestauComponent,
+    FoyerStatisticsComponent,
+    AppComponent,
+    AdminLayoutComponent,
+    AuthLayoutComponent,
+    FormEventComponent,
+    EventListComponent,
+    EventDetailsComponent,
+    BOEventsComponent
   ],
 
   providers: [],

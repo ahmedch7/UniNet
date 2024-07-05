@@ -63,6 +63,7 @@ io.on('connection', (socket) => {
 app.use("/api/auth", authRoutes);
 app.use("/user", userRouter);
 app.use("/university", universityRouter);
+app.use('/img',express.static('public/images/'))
 app.use("/api/payment", paymentRoutes);
 app.use("/api/foyers", foyerRoutes);
 app.use("/api/menus", menuRoutes);
