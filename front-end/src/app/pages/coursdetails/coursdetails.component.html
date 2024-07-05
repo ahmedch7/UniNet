@@ -4,6 +4,7 @@
     </div>
   </div>
 </div>
+<h2 class="card-title">Available Courses</h2>
 <div class="cours-container row">
   <div *ngFor="let course of courses" class="col-xl-3 col-lg-6 cours-card">
     <div class="card card-stats mb-4 mb-xl-0">
@@ -46,19 +47,29 @@
 <ng-template #noCourses>
   <p>No courses found for this class.</p>
 </ng-template>
-<h2>Create New Course</h2>
+<h2 class="card-title">Create New Course</h2>
 <form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
-  <div class="form-group">
-    <label for="NomCours">Course Name</label>
-    <input id="NomCours" formControlName="NomCours" class="form-control" />
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="NomCours">Course Name</label>
+        <input id="NomCours" formControlName="NomCours" class="form-control form-control-alternative" placeholder="Enter Course Name"/>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="Description">Description</label>
+        <textarea id="Description" formControlName="Description" class="form-control form-control-alternative" placeholder="Enter Description"></textarea>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="Description">Description</label>
-    <textarea id="Description" formControlName="Description" class="form-control"></textarea>
-  </div>
-  <div class="form-group">
-    <label for="files">Upload File</label>
-    <input type="file" id="files" (change)="onFileChange($event)" class="form-control" />
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="files">Upload File</label>
+        <input type="file" id="files" (change)="onFileChange($event)" class="form-control form-control-alternative"/>
+      </div>
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>

@@ -10,39 +10,48 @@
     <div class="card-body">
       <div class="row">
         <div class="col">
-          <h5 class="card-title text-uppercase text-muted mb-0">Related Classes</h5>
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Nom de la Classe</th>
-                <th scope="col">Année Universitaire</th>
-                <th scope="col">Étudiants</th>
-                <th scope="col">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let classe of classes">
-                <td *ngIf="!editing[classe._id]; else editName">
-                  <i class="fa-solid fa-graduation-cap"></i> {{ classe.NomClasse }}
-                </td>
-                <ng-template #editName>
-                  <input [(ngModel)]="classe.NomClasse" placeholder="Nom de la Classe" />
-                </ng-template>
-                <td *ngIf="!editing[classe._id]; else editYear">{{ classe.AnneUniversitaire }}</td>
-                <ng-template #editYear>
-                  <input [(ngModel)]="classe.AnneUniversitaire" placeholder="Année Universitaire" />
-                </ng-template>
-                <td>{{ classe.User }}   </td>
-                <td>
-                  <button type="button" class="btn btn-outline-danger btn-secondary btn-sm" [routerLink]="['/cours-detail', classe._id]">Voir Détails</button>
-                  <button type="button" class="btn btn-outline-danger btn-secondary btn-sm" *ngIf="!editing[classe._id]" (click)="toUpdate(classe._id)">Mettre à jour</button>
-                  <button type="button" class="btn btn-outline-danger btn-secondary btn-sm" *ngIf="editing[classe._id]" (click)="saveUpdate(classe)">Sauvegarder</button>
-                  <button type="button" class="btn btn-outline-danger btn-secondary btn-sm" (click)="deleteClass(classe._id)">Supprimer</button>
-                  <button type="button" class="btn btn-outline-danger btn-secondary btn-sm" *ngIf="editing[classe._id]" (click)="cancelUpdate(classe._id)">Annuler</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h5 class="card-title">Related Classes</h5>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Class Name</th>
+                  <th scope="col">Academic Year</th>
+                  <th scope="col">Students</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let classe of classes">
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <i class="fa-solid fa-graduation-cap mr-3"></i>
+                      <div class="media-body">
+                        <span class="mb-0 text-sm" *ngIf="!editing[classe._id]; else editName">{{ classe.NomClasse }}</span>
+                        <ng-template #editName>
+                          <input [(ngModel)]="classe.NomClasse" placeholder="Class Name" class="form-control form-control-sm"/>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </th>
+                  <td>
+                    <span *ngIf="!editing[classe._id]; else editYear">{{ classe.AnneUniversitaire }}</span>
+                    <ng-template #editYear>
+                      <input [(ngModel)]="classe.AnneUniversitaire" placeholder="Academic Year" class="form-control form-control-sm"/>
+                    </ng-template>
+                  </td>
+                  <td>{{ classe.User }}</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" [routerLink]="['/cours-detail', classe._id]">View Details</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="!editing[classe._id]" (click)="toUpdate(classe._id)">Update</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="editing[classe._id]" (click)="saveUpdate(classe)">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteClass(classe._id)">Delete</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="editing[classe._id]" (click)="cancelUpdate(classe._id)">Cancel</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="col-auto">
           <div class="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -53,7 +62,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- Loading section -->
 <div *ngIf="!niveau && classes.length === 0">
@@ -78,35 +86,55 @@
   <div class="card-body">
     <h5 class="card-title">Add New Class</h5>
     <form [formGroup]="form" (ngSubmit)="createClass()">
-      <div class="form-group">
-        <label for="nomClasse">Nom de la Classe</label>
-        <input type="text" class="form-control" id="nomClasse" formControlName="nomClasse" placeholder="Enter Class Name">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="nomClasse">Class Name</label>
+            <input type="text" class="form-control form-control-alternative" id="nomClasse" formControlName="nomClasse" placeholder="Enter Class Name">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="anneeUniversitaire">Academic Year</label>
+            <input type="text" class="form-control form-control-alternative" id="anneeUniversitaire" formControlName="anneeUniversitaire" placeholder="Enter Academic Year">
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="anneeUniversitaire">Année Universitaire</label>
-        <input type="text" class="form-control" id="anneeUniversitaire" formControlName="anneeUniversitaire" placeholder="Enter Academic Year">
-      </div>
-      <button type="submit" class="btn btn-primary">Créer Classe</button>
+      <button type="submit" class="btn btn-primary">Create Class</button>
     </form>
   </div>
 </div>
+
 <!-- Unassigned Students section -->
 <div *ngIf="unassignedStudents.length > 0">
   <div class="card card-stats mb-4 mb-xl-0">
     <div class="card-body">
-      <h5 class="card-title text-uppercase text-muted mb-0">Unassigned Students</h5>
-      <ul class="list-unstyled">
-        <li *ngFor="let student of unassignedStudents">
-          {{ student.nom }} {{ student.prenom }}
-          <div class="form-group mt-2">
-            <select class="form-control" [(ngModel)]="student.selectedClassId">
-              <option value="" disabled>Select Class</option>
-              <option *ngFor="let classe of classes" [value]="classe._id">{{ classe.NomClasse }}</option>
-            </select>
-            <button class="btn btn-primary btn-sm mt-2" (click)="assignStudentToClass(student._id, student.selectedClassId)">Assign</button>
-          </div>
-        </li>
-      </ul>
+      <h5 class="card-title">Unassigned Students</h5>
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Student Name</th>
+              <th scope="col">Assign Class</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let student of unassignedStudents">
+              <td>{{ student.nom }} {{ student.prenom }}</td>
+              <td>
+                <select class="form-control form-control-alternative" [(ngModel)]="student.selectedClassId">
+                  <option value="" disabled>Select Class</option>
+                  <option *ngFor="let classe of classes" [value]="classe._id">{{ classe.NomClasse }}</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm" (click)="assignStudentToClass(student._id, student.selectedClassId)">Assign</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
