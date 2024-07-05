@@ -50,7 +50,7 @@
               <div class="d-flex justify-content-between">
                 <h3 class="menu-card-title">{{ menu.text }}</h3>
                 <div class="menu-buttons">
-                  <button (click)="startEditMenu(menu)" class="btn btn-primary">Modifier</button>
+                  <button (click)="startEditMenu(menu)"  *ngIf="datafromlocalstorge.role==2" class="btn btn-primary">Modifier</button>
                   <button (click)="deleteMenu(menu._id)" class="btn btn-sm btn-danger ml-2">Supprimer</button>
                 </div>
               </div>
@@ -89,7 +89,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Modifier le menu</h5>
-        <button type="button" class="close" aria-label="Close" (click)="closeEditModal()">
+        <button  type="button" class="close" aria-label="Close" (click)="closeEditModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

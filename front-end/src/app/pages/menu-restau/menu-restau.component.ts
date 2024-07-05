@@ -9,6 +9,10 @@ import { CommentRestauService } from 'src/app/Services/comment-restau.service';
 })
 export class MenuRestauComponent implements OnInit {
   menus: any[] = [];
+
+  datafromlocalstorge={
+    role:1
+  }
   newMenu: any = {
     text: '',
     image: null,
@@ -16,6 +20,7 @@ export class MenuRestauComponent implements OnInit {
     previewImage: null // Pour stocker l'URL de l'aperçu de l'image
   };
   newComment: any = {
+    
     content: '',
     author: '6683e1c309d9b20f76f09c1d', // ID statique de l'auteur
     menuId: ''
