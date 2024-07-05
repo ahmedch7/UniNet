@@ -45,7 +45,7 @@
           <div *ngFor="let menu of menus" class="card mb-4">
             <div class="card-body">
               <h3 class="card-title">{{ menu.text }}</h3>
-              <img *ngIf="menu.image" [src]="'http://localhost:9090/' + menu.image" class="img-fluid rounded mb-3" alt="Menu image">
+              <img *ngIf="menu.image" [src]="'http://localhost:9090/img/' + menu.image" class="img-fluid rounded mb-3" alt="Menu image">
               
               <!-- Bouton pour afficher/masquer les commentaires -->
               <button (click)="toggleComments(menu._id)" class="btn btn-secondary">Afficher Commentaires</button>

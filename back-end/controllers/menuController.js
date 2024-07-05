@@ -20,7 +20,7 @@ export const createMenu = async (req, res) => {
   const { text, restaurantId } = req.body;
   let imagePath = '';
   if (req.file) {
-    imagePath = req.file.path.replace('public/', ''); // Remove 'public/' to keep the relative path
+    imagePath = req.file.filename // Remove 'public/' to keep the relative path
   }
   try {
     const newMenu = new Menu({ text, image: imagePath, restaurantId });
