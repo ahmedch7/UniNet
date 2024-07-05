@@ -1,0 +1,25 @@
+<div class="container mt-5">
+  <h1>Create New Forum</h1>
+
+  <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+    <div class="mb-3">
+      <label for="titreForum" class="form-label">Title</label>
+      <input type="text" class="form-control" id="titreForum" name="titreForum" ngModel required>
+    </div>
+    <div class="mb-3">
+      <label for="descriptionForum" class="form-label">Description</label>
+      <input type="text" class="form-control" id="descriptionForum" name="descriptionForum" ngModel>
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <select class="form-control" id="category" name="category" ngModel required>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="cv_path" class="form-label">CV Upload</label>
+      <input type="file" class="form-control" id="cv_path" (change)="onFileChange($event)">
+    </div>
+    <button type="submit" class="btn btn-success">Create Forum</button>
+  </form>
+</div>

@@ -1,0 +1,18 @@
+<div class="container mt-5">
+  <h3>List of Candidatures</h3>
+  <div *ngIf="candidatures.length > 0; else noCandidatures">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let candidature of candidatures">
+        <div>
+          <h6>{{ candidature.userName }}</h6>
+          <p>Phone: {{ candidature.phoneNumber }}</p>
+          <p>Post Name: {{ candidature.postId }}</p>
+          <button class="btn btn-primary" (click)="downloadCV(candidature.cv_path)">Download CV</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noCandidatures>
+    <p>No candidatures found.</p>
+  </ng-template>
+</div>

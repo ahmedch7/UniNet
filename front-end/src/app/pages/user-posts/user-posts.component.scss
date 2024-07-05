@@ -1,0 +1,81 @@
+.top-padding {
+  padding-top: 50px;
+  background-color: #f0f0f0;
+}
+
+.mid-padding {
+  padding-top: 30px;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.btn-group button {
+  margin-right: 10px;
+}
+
+.btn-primary, .btn-warning, .btn-info {
+  border-radius: 5px;
+}
+
+.btn-primary i, .btn-warning i, .btn-info i {
+  margin-right: 5px;
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 5px 10px;
+}
+
+.comment-section {
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.comment-form {
+  margin-top: 10px;
+}
+
+.comment-list {
+  margin-top: 10px;
+}
+/* Adjust styles as needed */
+.top-padding {
+  padding-top: 20px;
+}
+
+.mid-padding {
+  padding-top: 40px;
+}
+
+.divider {
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+.comment-section {
+  margin-top: 10px;
+}
+
+/* Ensure proper spacing */
+.card {
+  margin-bottom: 20px;
+}
+

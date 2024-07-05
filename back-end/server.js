@@ -26,6 +26,7 @@ import examenRoutes from "./routes/examen.route.js";
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
 import chatRouter from './routes/chat.route.js'; // Import chatRouter
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";
+import candidatureRoute from "./routes/candidature.route.js"
 
 const app = express();
 const databaseName = "uninet";
@@ -83,6 +84,7 @@ app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
 app.use('/salles', salleRoutes);
 app.use('/examens', examenRoutes);
+app.use('/candidature', candidatureRoute);
 
 app.get('/cours/files/:filename', (req, res) => {
   const filename = req.params.filename;
