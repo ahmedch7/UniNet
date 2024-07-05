@@ -33,7 +33,7 @@ export class CoursService {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  downloadFile(courseId: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/download/${courseId}`, { responseType: 'blob' });
+  downloadFile(filePath: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/files/${filePath}`, { responseType: 'blob' });
   }
 }

@@ -83,6 +83,18 @@ app.use("/forum", forumRoutes);
 app.use('/salles', salleRoutes);
 app.use('/examens', examenRoutes);
 
+app.get('/cours/files/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filepath = path.join(__dirname, 'public/images', filename);
+  res.download(filepath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(404).send({ message: 'File not found' });
+    }
+  });
+});
+
+
 app.use(notFoundError);
 app.use(errorHandler);
 

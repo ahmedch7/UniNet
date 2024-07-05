@@ -1,6 +1,10 @@
 <div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
   <div class="container-fluid">
     <div class="header-body">
+    </div>
+  </div>
+</div>
+<h2 class="card-title">Niveau Educatif</h2>
       <div class="niveau-container row">
         <div *ngFor="let n of niveauList" class="col-xl-3 col-lg-6 niveau-card">
           <div class="card card-stats mb-4 mb-xl-0">
@@ -35,17 +39,15 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- New section -->
+<h2 class="card-title">Creation niveau Educatif</h2>
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
       <div class="card">
         <div class="card-body">
-          <h1 class="card-title">Nouveau Niveau</h1>
           <p class="card-text">Donner le nom du nouveau niveau éducatif</p>
           <form [formGroup]="form" class="form-container">
             <div class="input-container">
