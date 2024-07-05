@@ -14,28 +14,30 @@
           <!-- Available Courses -->
           
           <div *ngFor="let course of courses" class="col-xl-3 col-lg-6">
-            <div class="card bg-secondary shadow border-0 mb-4">
-              <div class="card-body">
-                <h5 class="card-title text-uppercase text-muted mb-3" *ngIf="!editing[course._id]">{{ course.NomCours }}</h5>
-                <input class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.NomCours">
-                <ng-container *ngIf="!editing[course._id]">
-                  <p class="text-muted">{{ course.Description }}</p>
-                  <p class="text-muted">Published on: {{ course.Datepub | date:'short' }}</p>
-                  <p class="text-muted">Files: {{ course.files }}</p>
-                </ng-container>
-                <textarea class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.Description"></textarea>
-                <input type="file" class="form-control mb-3" *ngIf="editing[course._id]" (change)="onFileChange($event, course)">
-                <div class="row mt-3">
-                  <div class="col">
-                    <button mat-button class="btn btn-danger btn-sm" (click)="deleteCours(course._id)">Delete</button>
-                    <button mat-button class="btn btn-outline-danger btn-sm" *ngIf="!editing[course._id]" (click)="toUpdate(course._id)">Update</button>
-                    <button mat-button class="btn btn-outline-success btn-sm" *ngIf="editing[course._id]" (click)="saveUpdate(course)">Sauvegarder</button>
-                    <button mat-button class="btn btn-outline-secondary btn-sm" *ngIf="editing[course._id]" (click)="cancelUpdate(course._id)">Annuler</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="card bg-secondary shadow border-0 mb-4">
+    <div class="card-body">
+      <h5 class="card-title text-uppercase text-muted mb-3" *ngIf="!editing[course._id]">{{ course.NomCours }}</h5>
+      <input class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.NomCours">
+      <ng-container *ngIf="!editing[course._id]">
+        <p class="text-muted">{{ course.Description }}</p>
+        <p class="text-muted">Published on: {{ course.Datepub | date:'short' }}</p>
+        <p class="text-muted">Files: {{ course.files }}</p>
+        <button mat-button class="btn btn-primary btn-sm" (click)="downloadFile(course.files)">Download File</button>
+
+      </ng-container>
+      <textarea class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.Description"></textarea>
+      <input type="file" class="form-control mb-3" *ngIf="editing[course._id]" (change)="onFileChange($event, course)">
+      <div class="row mt-3">
+        <div class="col">
+          <button mat-button class="btn btn-danger btn-sm" (click)="deleteCours(course._id)">Delete</button>
+          <button mat-button class="btn btn-outline-danger btn-sm" *ngIf="!editing[course._id]" (click)="toUpdate(course._id)">Update</button>
+          <button mat-button class="btn btn-outline-success btn-sm" *ngIf="editing[course._id]" (click)="saveUpdate(course)">Sauvegarder</button>
+          <button mat-button class="btn btn-outline-secondary btn-sm" *ngIf="editing[course._id]" (click)="cancelUpdate(course._id)">Annuler</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
           <ng-container *ngIf="courses.length === 0">
             <p>No courses found for this class.</p>
           </ng-container>
@@ -67,8 +69,11 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="files">Upload File</label>
-              <input type="file" id="files" (change)="onFileChange($event)" class="form-control form-control-alternative"/>
+              <label for="files" class="btn btn-primary">
+                <span>Choose File</span>
+                <input type="file" id="files" (change)="onFileChange($event)" style="display: none;">
+              </label>
+              <span id="fileName">{{ selectedFiles['new'] ? selectedFiles['new'].name : 'No file chosen' }}</span>
             </div>
           </div>
         </div>

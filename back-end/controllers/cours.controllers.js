@@ -90,3 +90,18 @@ export const getCoursesByClasse = async (req, res) => {
   }
 };
 
+export const DownloadFile = async (req, res) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join(__dirname, '../public/images', fileName);
+
+  // Check if file exists
+  if (fs.existsSync(filePath)) {
+    // Set content disposition to attachment to force download
+    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName);
+    // Send the file as response
+    res.sendFile(filePath);
+  } else {
+    // File not found
+    res.status(404).json({ error: 'File not found' });
+  }
+};
