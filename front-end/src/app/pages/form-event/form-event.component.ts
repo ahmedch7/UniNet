@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EventService } from '../../Services/Event.Service';
+import { EventService } from '../../services/Event.Service';
 import { MapsAPILoader } from '@agm/core';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FoyerService } from 'src/app/Services/foyer.service';
-import { RoomService } from 'src/app/Services/room.service';
+import { FoyerService } from 'src/app/services/foyer.service';
+import { RoomService } from 'src/app/services/room.service';
 import { Observable } from 'rxjs';
 
 @Component({

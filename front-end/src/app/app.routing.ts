@@ -10,7 +10,7 @@ import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 
-const routes: Routes = [
+const routes: Routes =[
   {
     path: "",
     redirectTo: "login",

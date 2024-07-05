@@ -1,19 +1,32 @@
 import Chat from '../models/chat.js';
+import User from '../models/User.js';
 
 // Add a new message
-export const addMessage = async (req, res, io) => {
-  const { classId } = req.params;
-  const { user, text } = req.body;
-  try {
-      const newMessage = new Chat({ user, text, classId });
+
+export const addMessage = async (req, res) => {
+    try {
+      const { text, userId } = req.body;
+      const classId = req.params.classId;
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      const newMessage = new Chat({
+        text,
+        user: userId,
+        classId
+      });
+  
       await newMessage.save();
-      // Emit to Socket.IO clients here if needed
-      io.emit('newMessage', newMessage);
+  
       res.status(201).json(newMessage);
-  } catch (error) {
-      res.status(500).json({ error: error.message });
-  }
-};
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
 
 
 // Update a message

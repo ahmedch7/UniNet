@@ -1,0 +1,112 @@
+<div class="header bg-gradient-info pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body"><br><br><br><br><br><br>
+      <br><br><br><br><br>
+
+    </div>
+  </div>
+
+  <div class="container mt--7 mb-5">
+    <div class="card bg-secondary shadow border-0 mb-4"> <!-- Added card classes -->
+      <div class="card-body">
+        <h2 class="card-title">Available Courses</h2><br><br>
+        <div class="row justify-content-center">
+          <!-- Available Courses -->
+          
+          <div *ngFor="let course of courses" class="col-xl-3 col-lg-6">
+            <div class="card bg-secondary shadow border-0 mb-4">
+              <div class="card-body">
+                <h5 class="card-title text-uppercase text-muted mb-3" *ngIf="!editing[course._id]">{{ course.NomCours }}</h5>
+                <input class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.NomCours">
+                <ng-container *ngIf="!editing[course._id]">
+                  <p class="text-muted">{{ course.Description }}</p>
+                  <p class="text-muted">Published on: {{ course.Datepub | date:'short' }}</p>
+                  <p class="text-muted">Files: {{ course.files }}</p>
+                </ng-container>
+                <textarea class="form-control mb-3" *ngIf="editing[course._id]" [(ngModel)]="course.Description"></textarea>
+                <input type="file" class="form-control mb-3" *ngIf="editing[course._id]" (change)="onFileChange($event, course)">
+                <div class="row mt-3">
+                  <div class="col">
+                    <button mat-button class="btn btn-danger btn-sm" (click)="deleteCours(course._id)">Delete</button>
+                    <button mat-button class="btn btn-outline-danger btn-sm" *ngIf="!editing[course._id]" (click)="toUpdate(course._id)">Update</button>
+                    <button mat-button class="btn btn-outline-success btn-sm" *ngIf="editing[course._id]" (click)="saveUpdate(course)">Sauvegarder</button>
+                    <button mat-button class="btn btn-outline-secondary btn-sm" *ngIf="editing[course._id]" (click)="cancelUpdate(course._id)">Annuler</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="courses.length === 0">
+            <p>No courses found for this class.</p>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container mt--7 mb-5" style="margin-top: 7rem !important;">
+  <!-- Create New Course Form -->
+  <div class="card bg-secondary shadow border-0 mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Create New Course</h2>
+      <form [formGroup]="coursForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="NomCours">Course Name</label>
+              <input id="NomCours" formControlName="NomCours" class="form-control form-control-alternative" placeholder="Enter Course Name"/>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="Description">Description</label>
+              <textarea id="Description" formControlName="Description" class="form-control form-control-alternative" placeholder="Enter Description"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="files">Upload File</label>
+              <input type="file" id="files" (change)="onFileChange($event)" class="form-control form-control-alternative"/>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container mt--8" style="margin-top: 7rem !important;">
+  <!-- Chat Messages -->
+  <div class="card bg-secondary shadow border-0 mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Chat Messages</h2>
+      <div *ngIf="classe?.messages">
+        <ul>
+          <li *ngFor="let message of classe.messages">
+            <div class="message-container">
+              <div class="message-content">
+                <strong>{{ message.nom }}</strong>
+                <p>{{ message.text }}</p>
+              </div>
+              <div class="message-date">
+                <small>{{ message.createdAt | date:'short' }}</small>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Chat Message Form -->
+    <form (ngSubmit)="addMessage()">
+      <div class="form-group">
+        <textarea class="form-control form-control-alternative" rows="3" placeholder="Write a large text here ..." [(ngModel)]="newMessageText"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+  </div>
+
+
+</div>

@@ -10,7 +10,9 @@ import { FoyerComponent } from "src/app/pages/foyer/foyer.component";
 import { FoyerStatisticsComponent } from "src/app/pages/foyer-statistics/foyer-statistics.component";
 import { RestaurantReservationComponent } from "src/app/pages/restaurant-reservation/restaurant-reservation.component";
 import { MenuRestauComponent } from "src/app/pages/menu-restau/menu-restau.component";
-
+import { NiveauComponent } from 'src/app/pages/niveau/niveau.component';
+import { NiveauedudetailComponent } from 'src/app/pages/niveauedudetail/niveauedudetail.component';
+import { CoursdetailsComponent } from 'src/app/pages/coursdetails/coursdetails.component';
 export const AdminLayoutRoutes: Routes = [
   {
     path: "dashboard",
@@ -32,4 +34,8 @@ export const AdminLayoutRoutes: Routes = [
   { path: "tables", component: TablesComponent },
   { path: "icons", component: IconsComponent },
   { path: "maps", component: MapsComponent },
+  { path: 'niveau',         component: NiveauComponent },
+    { path: 'niveau-detail/:id',   component:NiveauedudetailComponent},
+    { path: 'cours-detail/:id',   component:CoursdetailsComponent},
+
 ];

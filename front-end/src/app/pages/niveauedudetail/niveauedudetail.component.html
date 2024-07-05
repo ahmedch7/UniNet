@@ -1,0 +1,144 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body"></div>
+  </div>
+</div>
+
+<!-- Related Classes section -->
+<div *ngIf="classes.length > 0">
+  <div class="card card-stats mb-4 mb-xl-0">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <h5 class="card-title">Related Classes</h5>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Class Name</th>
+                  <th scope="col">Academic Year</th>
+                  <th scope="col">Students</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let classe of classes">
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <i class="fa-solid fa-graduation-cap mr-3"></i>
+                      <div class="media-body">
+                        <span class="mb-0 text-sm" *ngIf="!editing[classe._id]; else editName">{{ classe.NomClasse }}</span>
+                        <ng-template #editName>
+                          <input [(ngModel)]="classe.NomClasse" placeholder="Class Name" class="form-control form-control-sm"/>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </th>
+                  <td>
+                    <span *ngIf="!editing[classe._id]; else editYear">{{ classe.AnneUniversitaire }}</span>
+                    <ng-template #editYear>
+                      <input [(ngModel)]="classe.AnneUniversitaire" placeholder="Academic Year" class="form-control form-control-sm"/>
+                    </ng-template>
+                  </td>
+                  <td>{{ classe.User }}</td>
+                  <td>
+                    <button type="button" class="btn btn-outline-danger btn-sm" [routerLink]="['/cours-detail', classe._id]">View Details</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="!editing[classe._id]" (click)="toUpdate(classe._id)">Update</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="editing[classe._id]" (click)="saveUpdate(classe)">Save</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="deleteClass(classe._id)">Delete</button>
+                    <button type="button" class="btn btn-outline-danger btn-sm" *ngIf="editing[classe._id]" (click)="cancelUpdate(classe._id)">Cancel</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+            <i class="fas fa-layer-group"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading section -->
+<div *ngIf="!niveau && classes.length === 0">
+  <div class="card card-stats mb-4 mb-xl-0">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <h5 class="card-title text-uppercase text-muted mb-0">Loading...</h5>
+        </div>
+        <div class="col-auto">
+          <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Class section -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title">Add New Class</h5>
+    <form [formGroup]="form" (ngSubmit)="createClass()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="nomClasse">Class Name</label>
+            <input type="text" class="form-control form-control-alternative" id="nomClasse" formControlName="nomClasse" placeholder="Enter Class Name">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="anneeUniversitaire">Academic Year</label>
+            <input type="text" class="form-control form-control-alternative" id="anneeUniversitaire" formControlName="anneeUniversitaire" placeholder="Enter Academic Year">
+            <div *ngIf="anneeUniversitaire!.invalid && anneeUniversitaire!.touched">
+              <div *ngIf="anneeUniversitaire!.errors!['pattern']">Academic Year must be "YEAR/YEAR"</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid" >Create Class</button>
+    </form>
+  </div>
+</div>
+
+<!-- Unassigned Students section -->
+<div *ngIf="unassignedStudents.length > 0">
+  <div class="card card-stats mb-4 mb-xl-0">
+    <div class="card-body">
+      <h5 class="card-title">Unassigned Students</h5>
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">Student Name</th>
+              <th scope="col">Assign Class</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let student of unassignedStudents">
+              <td>{{ student.nom }} {{ student.prenom }}</td>
+              <td>
+                <select class="form-control form-control-alternative" [(ngModel)]="student.selectedClassId">
+                  <option value="" disabled>Select Class</option>
+                  <option *ngFor="let classe of classes" [value]="classe._id">{{ classe.NomClasse }}</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-primary btn-sm" (click)="assignStudentToClass(student._id, student.selectedClassId)">Assign</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

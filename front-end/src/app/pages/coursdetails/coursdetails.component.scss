@@ -1,0 +1,15 @@
+.message-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .message-content {
+    flex: 1;
+  }
+  
+  .message-date {
+    text-align: right;
+    min-width: 100px; /* Adjust as needed */
+  }
+  

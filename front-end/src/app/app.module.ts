@@ -40,6 +40,10 @@ import { UserDetailsModalComponent } from './user-details-modal/user-details-mod
 import { BanUserModalComponent } from './ban-user-modal/ban-user-modal.component';
 import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.component';
 import { CreateUniversityModalComponent } from './create-university-modal/create-university-modal.component';
+import { NiveauComponent } from './pages/niveau/niveau.component';
+import { NiveauedudetailComponent } from './pages/niveauedudetail/niveauedudetail.component';
+import { CoursdetailsComponent } from './pages/coursdetails/coursdetails.component';
+
 
 const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
 
@@ -69,6 +73,7 @@ const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
     MatInputModule,
     MatCardModule,
     
+    ReactiveFormsModule
   ],
   declarations: [
     AppComponent,
@@ -95,11 +100,15 @@ const config: SocketIoConfig = { url: 'http://localhost:9090', options: {} };
     BanUserModalComponent,
     DeleteUserModalComponent,
     CreateUniversityModalComponent,
+    NiveauComponent,
+    NiveauedudetailComponent,
+    CoursdetailsComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     AuthService,
     AuthGuard,
+    
   ],
   bootstrap: [AppComponent]
 })

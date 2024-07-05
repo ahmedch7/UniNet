@@ -1,0 +1,65 @@
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
+  <div class="container-fluid">
+    <div class="header-body">
+    </div>
+  </div>
+</div>
+<h2 class="card-title">Niveau Educatif</h2>
+      <div class="niveau-container row">
+        <div *ngFor="let n of niveauList" class="col-xl-3 col-lg-6 niveau-card">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field *ngIf="editing[n._id]; else displayMode">
+                    <input matInput [(ngModel)]="n.NomNiveau" placeholder="Nom du Niveau">
+                  </mat-form-field>
+                  <ng-template #displayMode>
+                    <h5 class="card-title text-uppercase text-muted mb-0">{{ n.NomNiveau }}</h5>
+                  </ng-template>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                    <i class="fas fa-layer-group"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3 mb-0 text-muted text-sm">
+                <div class="col">
+                  <button class="btn btn-primary btn-sm" *ngIf="!editing[n._id]" (click)="toUpdate(n._id)">Modifier</button>
+                  <button class="btn btn-success btn-sm" *ngIf="editing[n._id]" (click)="saveUpdate(n)">Sauvegarder</button>
+                  <button class="btn btn-warning btn-sm" *ngIf="editing[n._id]" (click)="cancelUpdate(n._id)">Annuler</button>
+                </div>
+                <div class="col">
+                  <button class="btn btn-info btn-sm" [routerLink]="['/niveau-detail', n._id]">Détails</button>
+                  <button class="btn btn-danger btn-sm" (click)="deleteNiv(n._id)">Supprimer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+<!-- New section -->
+<h2 class="card-title">Creation niveau Educatif</h2>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">Donner le nom du nouveau niveau éducatif</p>
+          <form [formGroup]="form" class="form-container">
+            <div class="input-container">
+              <input matInput formControlName="NomNiveau" placeholder="Nom du Niveau" class="form-control">
+              <mat-error *ngIf="form.get('NomNiveau')?.invalid && form.get('NomNiveau')?.touched">
+                Le nom du niveau est requis !
+              </mat-error>
+              <button class="btn btn-primary mt-3" (click)="create()" [disabled]="form.invalid">Créer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

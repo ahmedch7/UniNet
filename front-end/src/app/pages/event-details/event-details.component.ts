@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EventService } from '../../Services/Event.Service';
+import { EventService } from '../../services/Event.Service';
 import { Socket } from 'ngx-socket-io';
 @Component({
   selector: 'app-event-details',

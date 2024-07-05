@@ -11,23 +11,13 @@ export const createCours = async (req, res) => {
 
   try {
     const { NomCours, Description, classeId } = req.body;
-
-    let files = [];
+    const cours = new Cours({ NomCours, Description, classeId });
+    console.log("cours req",cours)
     if (req.file) {
-      // If a single file is uploaded
-      files.push({
-        name: req.file.originalname,
-        path: req.file.path
-      });
+      cours.files = req.file.filename
+      console.log("cours req",cours)
     }
-
-    const cours = new Cours({
-      NomCours,
-      Description,
-      classeId,
-      files
-    });
-
+    
     await cours.save();
     res.status(201).json(cours);
   } catch (error) {

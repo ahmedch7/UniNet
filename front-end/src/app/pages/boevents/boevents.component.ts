@@ -1,6 +1,6 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventService } from '../../Services/Event.Service';
+import { EventService } from '../../services/Event.Service';
 import { Chart, ChartOptions } from 'chart.js';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';

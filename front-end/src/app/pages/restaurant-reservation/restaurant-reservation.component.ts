@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RestaurantService } from 'src/app/Services/restaurant.service';
-import { ReservationRestaurantService } from 'src/app/Services/reservation-restau.service';
+import { RestaurantService } from 'src/app/services/restaurant.service';
+import { ReservationRestaurantService } from 'src/app/services/reservation-restau.service';
 
 @Component({
   selector: 'app-restaurant-reservation',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuRestauService } from 'src/app/Services/menu-restau.service';
-import { CommentRestauService } from 'src/app/Services/comment-restau.service';
+import { MenuRestauService } from 'src/app/services/menu-restau.service';
+import { CommentRestauService } from 'src/app/services/comment-restau.service';
 
 @Component({
   selector: 'app-menu-restau',
