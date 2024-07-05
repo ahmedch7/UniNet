@@ -20,6 +20,12 @@ export class CoursdetailsComponent implements OnInit {
   selectedFiles: { [key: string]: File | null } = {};
   editing: { [key: string]: boolean } = {};
 
+  showCreateForm: boolean = false;
+  
+
+ 
+  
+
   constructor(
     private route: ActivatedRoute,
     private coursService: CoursService,
@@ -40,6 +46,9 @@ export class CoursdetailsComponent implements OnInit {
         this.loadChatMessages(); // Load chat messages for the class
       }
     });
+  }
+  toggleCreateForm() {
+    this.showCreateForm = !this.showCreateForm;
   }
 
   loadCoursesByClasse(): void {

@@ -14,7 +14,7 @@ export const createCours = async (req, res) => {
     const cours = new Cours({ NomCours, Description, classeId });
     console.log("cours req",cours)
     if (req.file) {
-      cours.files = req.file.path
+      cours.files = req.file.filename
       console.log("cours req",cours)
     }
     
