@@ -28,7 +28,11 @@ export const handleWebhook = async (req, res) => {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -38,8 +42,11 @@ export const handleWebhook = async (req, res) => {
   switch (event.type) {
     case 'payment_intent.succeeded':
       const paymentIntent = event.data.object;
-      // Then define and call a method to handle the successful payment intent.
       handlePaymentIntentSucceeded(paymentIntent);
+      break;
+    case 'payment_method.attached':
+      const paymentMethod = event.data.object;
+      handlePaymentMethodAttached(paymentMethod);
       break;
     // ... handle other event types
     default:
@@ -53,4 +60,9 @@ export const handleWebhook = async (req, res) => {
 const handlePaymentIntentSucceeded = (paymentIntent) => {
   // Handle successful payment intent here
   console.log('PaymentIntent was successful!', paymentIntent);
+};
+
+const handlePaymentMethodAttached = (paymentMethod) => {
+  // Handle payment method attached here
+  console.log('PaymentMethod was attached!', paymentMethod);
 };

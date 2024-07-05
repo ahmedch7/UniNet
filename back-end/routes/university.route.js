@@ -14,9 +14,9 @@ const router = Router();
 
 router.post("/",  create);
 
-router.get("/", auth, roleAuth(["admin"]), getUniversities);
-router.get("/:id", roleAuth(["admin"]), getUniversityById);
-router.patch("/:id", roleAuth(["admin", "responsable"]), updateUniversity);
-router.delete("/:id", roleAuth(["admin"]), deleteUniversity);
+router.get("/",  getUniversities);
+router.get("/:id",auth, roleAuth(["admin"]), getUniversityById);
+router.patch("/:id",auth, roleAuth(["admin", "responsable"]), updateUniversity);
+router.delete("/:id",auth, roleAuth(["admin"]), deleteUniversity);
 
 export default router;

@@ -16,11 +16,11 @@
         <a class="nav-link nav-link-icon" role="button" ngbDropdownToggle>
           <i class="ni ni-bell-55"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
-          <a class="dropdown-item" href="javascript:void(0)">Action</a>
-          <a class="dropdown-item" href="javascript:void(0)">Another action</a>
+        <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
+          <a class="dropdown-item" >Action</a>
+          <a class="dropdown-item" >Another action</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="javascript:void(0)">Something else here</a>
+          <a class="dropdown-item" >Something else here</a>
         </div>
       </li>
       <li class="nav-item" ngbDropdown placement="bottom-right">
@@ -52,9 +52,9 @@
             <span>Support</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#!" class="dropdown-item">
+          <a (click)="signout()"  class="dropdown-item">
             <i class="ni ni-user-run"></i>
-            <span>Logout</span>
+            <button  >Logout</button>
           </a>
         </div>
       </li>
