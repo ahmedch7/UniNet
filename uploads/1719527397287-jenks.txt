@@ -1,0 +1,102 @@
+pipeline {
+    agent any 
+    tools {
+        maven 'Maven'
+    }
+    environment {
+        NEXUS_VERSION ="nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL ="192.168.181.129:8081"
+        NEXUS_REPOSITORY ="projet"
+        NEXUS_CREDENTIAL_ID="nexuscred"
+        
+    }
+    stages {
+        stage('Checkout Git') {
+            steps {
+                echo 'Pulling from Git...'
+                git credentialsId: 'Github_Creds', 
+                branch: 'medtest', url: 'https://github.com/medabbassi/projetdevops.git'
+            }
+        }
+        stage('Clean repo') {
+            steps {
+                echo 'Cleaning...'
+                sh 'mvn clean'
+            }          
+        }
+        stage('Test phase') {
+            steps {
+                echo 'Test...'
+                sh 'mvn test'
+            }
+        }
+        stage('Build package repo') {
+            steps {
+                echo 'Packaging...'
+                sh 'mvn package -DskipTest'
+            }
+        }
+        stage('SonarQube analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                script {
+                    withSonarQubeEnv('sonar') {
+                        def sonarScannerOpts = "-Dsonar.projectKey=devopsspring " +
+                                               "-Dsonar.projectName='devopsspring' " +
+                                               "-Dsonar.host.url=http://127.0.0.1:9000 " +
+                                               "-Dsonar.login=sqa_3bbb019d460dc6e1c7f15d3902ef6cbc7c8c485f " +
+                                               "-Dsonar.token=sqp_f664f51339ad6956e6e3f66272cb2272ebd915e5"
+                        sh "echo message sonar"
+                    }
+                }
+            }
+        }        
+        stage('Docker clean') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-id') {
+                        sh 'docker rm -f  devops-back'
+                    }
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-id') {
+                        sh 'docker build -t abbassiowl/devops-back:test123 .'
+                    }
+                }
+            }
+        }          
+        stage('Docker push') {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker-id') {
+                        sh 'docker push abbassiowl/devops-back:test123'
+                    }
+                }
+            }
+        }
+        stage('Upload to Nexus') {
+            steps {
+                script {
+                    nexusArtifactUploader(
+                        nexusVersion: "${NEXUS_VERSION}",
+                        protocol: "${NEXUS_PROTOCOL}",
+                        nexusUrl: "${NEXUS_URL}",
+                        groupId: 'com.esprit.examen',
+                        version: '1.0.0',
+                        repository: "${NEXUS_REPOSITORY}",
+                        credentialsId: "${NEXUS_CREDENTIAL_ID}",
+                        artifacts: [
+                            [artifactId: 'tpAchatProject', file: './target/tpAchatProject-1.0.jar', type:'jar']
+                            // Add more artifacts as needed
+                        ]
+                    )
+                }
+            }
+        }
+    }
+}

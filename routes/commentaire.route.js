@@ -41,6 +41,10 @@ router.post("/:commentaireId", likeCommentaire);
 
 // Dislike Commentaire
 router.post("/:commentaireId", dislikecommentaire);
+<<<<<<< HEAD
 router.get("/getByPostId", getCommentByPostId);
+=======
+router.get("/getByPostId/:postId", getCommentByPostId);
+>>>>>>> d05f7e52ac0a5feeb570803df29a245142325854
 
 export default router;

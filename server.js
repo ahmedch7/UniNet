@@ -8,7 +8,10 @@ import { Server } from "socket.io";
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
+<<<<<<< HEAD
 import candidatureRoute from "./routes/candidature.route.js";
+=======
+>>>>>>> d05f7e52ac0a5feeb570803df29a245142325854
 import http from "http";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -44,7 +47,10 @@ const hostname = "127.0.0.1";
 app.use("/commentaire", commentaireRoutes);
 app.use("/post", postRoutes);
 app.use("/forum", forumRoutes);
+<<<<<<< HEAD
 app.use("/candidature", candidatureRoute);
+=======
+>>>>>>> d05f7e52ac0a5feeb570803df29a245142325854
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use(notFoundError);
