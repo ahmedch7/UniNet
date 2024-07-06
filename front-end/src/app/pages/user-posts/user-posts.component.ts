@@ -71,16 +71,27 @@ export class UserPostsComponent implements OnInit {
   }
 
   likePost(post: Post): void {
-    console.log(`Liked post with ID: ${post._id}`);
+    this.http.post(`${this.apiUrl}/like/${post._id}`, { userId: '6679b82e858318a7bd652f7f' }) // Replace with actual user ID
+      .subscribe(() => {
+        post.likes.push('6679b82e858318a7bd652f7f'); // Replace with actual user ID
+      });
   }
 
   dislikePost(post: Post): void {
-    console.log(`Disliked post with ID: ${post._id}`);
+    this.http.post(`${this.apiUrl}/dislike/${post._id}`, { userId: '6679b82e858318a7bd652f7f' }) // Replace with actual user ID
+      .subscribe(() => {
+        post.dislikes.push('6679b82e858318a7bd652f7f'); // Replace with actual user ID
+      });
   }
 
+
   reportPost(post: Post): void {
-    console.log(`Reported post with ID: ${post._id}`);
+    this.http.post(`${this.apiUrl}/report/${post._id}`, {})
+      .subscribe(() => {
+        post.reportCount = (post.reportCount || 0) + 1;
+      });
   }
+ 
 
   toggleCommentField(post: Post): void {
     post.showCommentField = !post.showCommentField;
