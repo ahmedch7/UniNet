@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuRestauService } from 'src/app/services/menu-restau.service';
 import { CommentRestauService } from 'src/app/services/comment-restau.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-menu-restau',
@@ -8,11 +9,18 @@ import { CommentRestauService } from 'src/app/services/comment-restau.service';
   styleUrls: ['./menu-restau.component.scss']
 })
 export class MenuRestauComponent implements OnInit {
+  public currentUser: User | null = null;
   menus: any[] = [];
 
-  datafromlocalstorge={
-    role:1
-  }
+  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
+
+
+
+  // currentUser={
+  //   role:"admin"
+  // }
+
+
   newMenu: any = {
     text: '',
     image: null,
@@ -22,7 +30,7 @@ export class MenuRestauComponent implements OnInit {
   newComment: any = {
     
     content: '',
-    author: '6683e1c309d9b20f76f09c1d', // ID statique de l'auteur
+    author: this.currentUser._id, // ID statique de l'auteur
     menuId: ''
   };
 
@@ -32,6 +40,8 @@ export class MenuRestauComponent implements OnInit {
   constructor(private menuService: MenuRestauService, private commentService: CommentRestauService) { }
 
   ngOnInit(): void {
+    const user = localStorage.getItem('currentUser');
+    this.currentUser = JSON.parse(user);
     this.loadMenus();
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestaurantService } from 'src/app/services/restaurant.service';
 import { ReservationRestaurantService } from 'src/app/services/reservation-restau.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-restaurant-reservation',
@@ -8,6 +9,8 @@ import { ReservationRestaurantService } from 'src/app/services/reservation-resta
   styleUrls: ['./restaurant-reservation.component.scss']
 })
 export class RestaurantReservationComponent implements OnInit {
+  private currentUser: User | null = null;
+
   restaurants: any[] = [];
   selectedRestaurant: any = null;
   editMode = false;
@@ -32,7 +35,18 @@ export class RestaurantReservationComponent implements OnInit {
     private reservationService: ReservationRestaurantService
   ) {}
 
+  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
+
+
+
+  // currentUser={
+  //   role:"admin"
+  // }
+
+
   ngOnInit(): void {
+    const user = localStorage.getItem('currentUser');
+    this.currentUser = JSON.parse(user);
     this.loadRestaurants();
   }
 
@@ -53,7 +67,9 @@ export class RestaurantReservationComponent implements OnInit {
     this.createMode = !this.createMode;
   }
 
+ 
   createRestaurant(): void {
+    this.newRestaurant.facultyId = this.currentUser.universiteAssociee; // Définir l'ID statique ici
     this.restaurantService.createRestaurant(this.newRestaurant).subscribe(
       (data) => {
         console.log('Restaurant created successfully', data);
@@ -74,12 +90,13 @@ export class RestaurantReservationComponent implements OnInit {
     );
   }
 
+
   cancelCreate(): void {
     this.createMode = false;
   }
 
   createReservation(restaurantId: string): void {
-    const userId = '664f89f28fb320b8082864b5'; // Static user ID for testing
+    const userId = this.currentUser._id; // Static user ID for testing
     this.reservationService.createReservation({ userId, restaurantId }).subscribe(
       (data) => {
         console.log('Réservation créée avec succès', data);

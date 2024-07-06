@@ -1,11 +1,11 @@
 
-<div class="header bg-gradient-danger py-7 py-lg-8">
+<div class="header bg-gradient-info py-7 py-lg-8">
   <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
           <h1 class="text-white">Les restaurants</h1>
-          <p class="text-lead text-light">Utilisez ce formulaire pour créer un nouveau menu dans votre restaurant.</p>
+          <p class="text-lead text-light">Reserver au restaurant.</p>
         </div>
       </div>
     </div>
@@ -18,7 +18,7 @@
         <div class="card-header border-0 bg-gradient-secondary">
           <h2 class="mb-0">Liste des restaurants</h2>
           <div>
-            <button (click)="toggleCreateMode()" class="btn btn-primary  float-right">Créer Restaurant</button>
+            <button (click)="toggleCreateMode()" class="btn btn-primary  float-right" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Créer Restaurant</button>
           </div>
         </div>
 
@@ -50,9 +50,9 @@
                 <td>{{ restaurant.availablePlaces }}</td>
                 <td>
                   <!-- Appel de createReservation directement -->
-                  <button (click)="createReservation(restaurant._id)" class="btn btn-success btn-sm">Réserver</button>
-                  <button (click)="editRestaurant(restaurant)" class="btn btn-warning btn-sm">Modifier</button>
-                  <button (click)="deleteRestaurant(restaurant._id)" class="btn btn-danger btn-sm">Supprimer</button>
+                  <button (click)="createReservation(restaurant._id)" class="btn btn-success btn-sm" >Réserver</button>
+                  <button (click)="editRestaurant(restaurant)" class="btn btn-warning btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Modifier</button>
+                  <button (click)="deleteRestaurant(restaurant._id)" class="btn btn-danger btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer</button>
                   <!-- Mettre à jour le bouton pour inclure l'action de sélection -->
                   <button (click)="loadReservationsAndSelect(restaurant)" class="btn btn-secondary btn-sm">Voir Réservations</button>
                 </td>
@@ -92,59 +92,57 @@
         </div>
 
         <!-- Modal pour la création -->
-        <div *ngIf="createMode" class="modal" tabindex="-1" role="dialog" style="display: block;">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Créer un nouveau restaurant</h5>
-                <button type="button" class="close" (click)="cancelCreate()">
-                  <span>&times;</span>
-                </button>
+        <!-- Modal pour la création -->
+<div *ngIf="createMode" class="modal" tabindex="-1" role="dialog" style="display: block;">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Créer un nouveau restaurant</h5>
+        <button type="button" class="close" (click)="cancelCreate()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (submit)="createRestaurant()">
+          <div class="form-group">
+            <label>Nom:</label>
+            <input 
+              type="text" 
+              [(ngModel)]="newRestaurant.name" 
+              name="name" 
+              class="form-control" 
+              required
+              minlength="3"
+              #name="ngModel">
+            <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
+              <div *ngIf="name.errors.required">
+                Le nom est requis.
               </div>
-              <div class="modal-body">
-                <form (submit)="createRestaurant()">
-                  <div class="form-group">
-                    <label>Nom:</label>
-                    <input 
-                      type="text" 
-                      [(ngModel)]="newRestaurant.name" 
-                      name="name" 
-                      class="form-control" 
-                      required
-                      minlength="3"
-                      #name="ngModel">
-                    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="text-danger">
-                      <div *ngIf="name.errors.required">
-                        Le nom est requis.
-                      </div>
-                      <div *ngIf="name.errors.minlength">
-                        Le nom doit contenir au moins 3 lettres.
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label>Adresse:</label>
-                    <input type="text" [(ngModel)]="newRestaurant.address" name="address" class="form-control">
-                  </div>
-                  <div class="form-group">
-                    <label>Capacité:</label>
-                    <input type="number" [(ngModel)]="newRestaurant.capacity" name="capacity" class="form-control" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Places disponibles:</label>
-                    <input type="number" [(ngModel)]="newRestaurant.availablePlaces" name="availablePlaces" class="form-control" required>
-                  </div>
-                  <div class="form-group">
-                    <label>ID Faculté:</label>
-                    <input type="text" [(ngModel)]="newRestaurant.facultyId" name="facultyId" class="form-control" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Créer</button>
-                  <button type="button" class="btn btn-secondary" (click)="cancelCreate()">Annuler</button>
-                </form>
+              <div *ngIf="name.errors.minlength">
+                Le nom doit contenir au moins 3 lettres.
               </div>
             </div>
           </div>
-        </div>
+          <div class="form-group">
+            <label>Adresse:</label>
+            <input type="text" [(ngModel)]="newRestaurant.address" name="address" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Capacité:</label>
+            <input type="number" [(ngModel)]="newRestaurant.capacity" name="capacity" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Places disponibles:</label>
+            <input type="number" [(ngModel)]="newRestaurant.availablePlaces" name="availablePlaces" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Créer</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelCreate()">Annuler</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
         <div *ngIf="selectedRestaurant">
           <h4>Réservations pour restaurant: <span class="highlightNameRest">{{ selectedRestaurant.name }}</span></h4>
           <div *ngIf="loadingReservations" class="text-info">Chargement des réservations...</div>
@@ -152,7 +150,7 @@
           <ul>
             <li *ngFor="let reservation of reservationsByRestaurant[selectedRestaurant._id] || []">
               <p>Utilisateur: {{ reservation.userName }} - {{ reservation.date | date }}
-                <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm">Supprimer Réservation</button>
+                <button (click)="deleteReservation(reservation._id)" class="btn btn-danger btn-sm" *ngIf="currentUser.role === 'admin' || currentUser.role === 'responsable'">Supprimer Réservation</button>
               </p>
             </li>
           </ul>

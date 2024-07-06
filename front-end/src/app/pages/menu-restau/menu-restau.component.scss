@@ -60,3 +60,9 @@
     margin-bottom: 10px; /* Espace sous le bouton */
   }
   
+  .modal-content {
+    max-height: 80vh; /* Hauteur maximale de la modal */
+    overflow-y: auto; /* Activer le défilement vertical */
+  }
+  
+ 
