@@ -2,13 +2,6 @@ import Commentaire from "../models/commentaire.js";
 import { validationResult } from "express-validator";
 import Filter from "bad-words";
 const filter = new Filter();
-<<<<<<< HEAD
-import mongoose from "mongoose";
-const { ObjectId } = mongoose.Types;
-import { getPostById } from "./post.controller.js";
-=======
-
->>>>>>> d05f7e52ac0a5feeb570803df29a245142325854
 // Create Commentaire
 export const createCommentaire = async (req, res) => {
   const errors = validationResult(req);
@@ -155,26 +148,6 @@ export const dislikecommentaire = async (req, res, next) => {
 };
 
 export const getCommentByPostId = async (req, res) => {
-<<<<<<< HEAD
-  const { postId } = req.query;
-  console.log("Post ID received:", postId);
-
-  if (!postId || !mongoose.Types.ObjectId.isValid(postId)) {
-    console.log("Invalid postId format");
-    return res.status(400).json({ message: "Invalid postId format" });
-  }
-
-  try {
-    const postObjectId = mongoose.Types.ObjectId(postId);
-    console.log("Converted postId to ObjectId:", postObjectId);
-    const commentaires = await Commentaire.find({ postId: postObjectId });
-    console.log("Comments found:", commentaires);
-    res.status(200).json(commentaires);
-  } catch (error) {
-    console.error("Error getting comments by post ID:", error);
-    console.error(error.stack); // Log the full stack trace
-    res.status(500).json({ message: "Internal Server Error" });
-=======
   const { postId } = req.params;
   try {
     const commentaires = await Commentaire.find({ postId });
@@ -182,6 +155,5 @@ export const getCommentByPostId = async (req, res) => {
   } catch (error) {
     console.error("Error getting comments by post ID:", error);
     res.status(500).json({ message: error.message });
->>>>>>> d05f7e52ac0a5feeb570803df29a245142325854
   }
 };
