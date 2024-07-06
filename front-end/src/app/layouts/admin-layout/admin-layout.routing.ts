@@ -21,6 +21,7 @@ import { AdminPostCandidatureComponent } from "src/app/pages/admin-post-candidat
 import { UserPostCandidatureComponent } from "src/app/pages/user-post-candidature/user-post-candidature.component";
 import { UserCommentaireComponent } from "src/app/pages/user-commentaire/user-commentaire.component";
 import { UserPostsComponent } from "src/app/pages/user-posts/user-posts.component";
+import { CheckoutComponent } from "src/app/pages/checkout/checkout.component";
 export const AdminLayoutRoutes: Routes = [
   {
     path: "dashboard",
@@ -33,6 +34,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: "foyer", component: FoyerComponent },
   { path: "restaurant", component: RestaurantReservationComponent },
   { path: "menu-Restau", component: MenuRestauComponent },
+  {path:'checkout', component: CheckoutComponent},
   {
     path: "user-profile",
     component: UserProfileComponent,
@@ -45,6 +47,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: "niveau", component: NiveauComponent },
   { path: "niveau-detail/:id", component: NiveauedudetailComponent },
   { path: "cours-detail/:id", component: CoursdetailsComponent },
+  { path: 'checkout', component: CheckoutComponent },
   {
     path: "admin-posts",
     component: AdminPostsComponent,

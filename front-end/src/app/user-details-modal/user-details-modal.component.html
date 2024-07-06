@@ -1,1 +1,23 @@
-<p>user-details-modal works!</p>
+<div class="modalpop" *ngIf="user">
+    <h2>User Details</h2>
+    <p><strong>Nom:</strong> {{ user.nom }}</p>
+    <p><strong>Prenom:</strong> {{ user.prenom }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Num Tel:</strong> {{ user.numTel }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+    <p>
+      <strong>Université Associée:</strong> {{ user.universiteAssociee?.nom }}
+    </p>
+    <p><strong>Entreprise:</strong> {{ user.entreprise }}</p>
+    <p><strong>Niveaux Educatif:</strong> {{ user.niveauxEducatif }}</p>
+    <p><strong>Status:</strong> {{ user.activeStatus ? "Yes" : "No" }}</p>
+    <p>
+      <strong>Date d'Inscription:</strong> {{ formatDate(user.dateInscription) }}
+    </p>
+    <p>
+      <strong>derniere Connexion:</strong> {{ formatDate(user.derniereConnexion) }}
+    </p>
+    <button (click)="onClose()">Close</button>
+  </div>
+  <div *ngIf="errorMessage" style="color: red">{{ errorMessage }}</div>
+  

@@ -3,6 +3,7 @@ import { ROUTES } from '../sidebar/sidebar.component';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,8 @@ export class NavbarComponent implements OnInit {
   public focus;
   public listTitles: any[];
   public location: Location;
+  public currentUser: User | null = null;
+  public previewUrl: string | ArrayBuffer | null = null;
   constructor(location: Location,  private element: ElementRef,private authService: AuthService, private router: Router) {
     this.location = location;
   }
@@ -20,6 +23,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    const user = localStorage.getItem('currentUser');
+    this.currentUser = JSON.parse(user);
+    this.previewUrl = `http://localhost:9090/img/${this.currentUser.avatar}`;
   }
   // getTitle(){
   //   var titlee = this.location.prepareExternalUrl(this.location.path());

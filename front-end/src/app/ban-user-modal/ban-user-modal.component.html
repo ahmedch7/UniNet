@@ -1,1 +1,5 @@
-<p>ban-user-modal works!</p>
+<h2>Ban User</h2>
+<p>Are you sure you want to ban this user?</p>
+<div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
+<button (click)="banUser()">Ban</button>
+<button (click)="onCancel()">Cancel</button>

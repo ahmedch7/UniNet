@@ -3,27 +3,6 @@ import { validationResult } from "express-validator";
 
 
 export const createCours = async (req, res) => {
-  if (!validationResult(req).isEmpty()) {
-    return res.status(400).json({
-      validationError: validationResult(req).array()
-    });
-  }
-
-  try {
-    const { NomCours, Description, classeId } = req.body;
-    const cours = new Cours({ NomCours, Description, classeId });
-    console.log("cours req",cours)
-    if (req.file) {
-      cours.files = req.file.filename
-      console.log("cours req",cours)
-    }
-    
-    await cours.save();
-    res.status(201).json(cours);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-    console.error('Error creating cours:', error);
-  }
 };
 
 export const getCours = async (req, res) => {

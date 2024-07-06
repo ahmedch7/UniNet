@@ -1,1 +1,44 @@
-<p>update-user-modal works!</p>
+<h2>Update User</h2>
+<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="nom">Nom</label>
+    <input id="nom" formControlName="nom">
+  </div>
+  <div>
+    <label for="prenom">Prenom</label>
+    <input id="prenom" formControlName="prenom">
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input id="email" formControlName="email">
+  </div>
+  <div>
+    <label for="numTel">Num Tel</label>
+    <input id="numTel" formControlName="numTel">
+  </div>
+  <div>
+    <label for="role">Role</label>
+    <input id="role" formControlName="role">
+  </div>
+  <div>
+    <label for="universiteAssociee">Université Associée</label>
+    <select id="universiteAssociee" formControlName="universiteAssociee">
+      <option *ngFor="let university of universities" [value]="university._id">{{ university.nom }}</option>
+    </select>
+  </div>
+  <div>
+    <label for="entreprise">Entreprise</label>
+    <input id="entreprise" formControlName="entreprise">
+  </div>
+  <div>
+    <label for="niveauxEducatif">Niveaux Educatif</label>
+    <input id="niveauxEducatif" formControlName="niveauxEducatif">
+  </div>
+  <div>
+    <label for="isActive">Active</label>
+    <input type="checkbox" id="isActive" formControlName="isActive">
+  </div>
+  <div *ngIf="errorMessage" style="color: red;">{{ errorMessage }}</div>
+  <button type="submit">Update User</button>
+  <button type="button" (click)="onCancel()">Cancel</button>
+</form>

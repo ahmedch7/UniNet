@@ -51,6 +51,7 @@ const routes: Routes =[
     redirectTo: "not-found",
     component: NotFoundComponent,
   },
+  
 ];
 
 @NgModule({

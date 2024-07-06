@@ -39,7 +39,6 @@ import { UpdateUserModalComponent } from "./update-user-modal/update-user-modal.
 import { UserDetailsModalComponent } from "./user-details-modal/user-details-modal.component";
 import { BanUserModalComponent } from "./ban-user-modal/ban-user-modal.component";
 import { DeleteUserModalComponent } from "./delete-user-modal/delete-user-modal.component";
-import { CreateUniversityModalComponent } from "./create-university-modal/create-university-modal.component";
 import { NiveauComponent } from "./pages/niveau/niveau.component";
 import { NiveauedudetailComponent } from "./pages/niveauedudetail/niveauedudetail.component";
 import { CoursdetailsComponent } from "./pages/coursdetails/coursdetails.component";
@@ -51,6 +50,10 @@ import { AdminForumComponent } from "./pages/admin-forum/admin-forum.component";
 import { UserForumComponent } from "./pages/user-forum/user-forum.component";
 import { UserPostCandidatureComponent } from "./pages/user-post-candidature/user-post-candidature.component";
 import { AdminPostCandidatureComponent } from "./pages/admin-post-candidature/admin-post-candidature.component";
+import { CheckoutComponent } from './pages/checkout/checkout.component';
+import { CreateUniModalComponent } from './pages/create-uni-modal/create-uni-modal.component';
+import { UpdateUniModalComponent } from './pages/update-uni-modal/update-uni-modal.component';
+import { DeleteUniModalComponent } from './pages/delete-uni-modal/delete-uni-modal.component';
 
 const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
 
@@ -62,7 +65,6 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     FormsModule,
     HttpClientModule,
     ComponentsModule,
-    ReactiveFormsModule,
     NgbModule,
     RouterModule,
     AppRoutingModule,
@@ -78,6 +80,7 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
+    
 
     ReactiveFormsModule,
   ],
@@ -105,7 +108,6 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     UserDetailsModalComponent,
     BanUserModalComponent,
     DeleteUserModalComponent,
-    CreateUniversityModalComponent,
     NiveauComponent,
     NiveauedudetailComponent,
     CoursdetailsComponent,
@@ -117,6 +119,12 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     UserForumComponent,
     UserPostCandidatureComponent,
     AdminPostCandidatureComponent,
+    CheckoutComponent,
+    CreateUniModalComponent,
+    DeleteUniModalComponent,
+    UpdateUniModalComponent,
+    
+
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
