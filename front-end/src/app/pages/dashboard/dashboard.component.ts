@@ -20,6 +20,9 @@ import { UserDetailsModalComponent } from 'src/app/user-details-modal/user-detai
 import { BanUserModalComponent } from 'src/app/ban-user-modal/ban-user-modal.component';
 import { DeleteUserModalComponent } from 'src/app/delete-user-modal/delete-user-modal.component';
 import { CreateUniversityModalComponent } from 'src/app/create-university-modal/create-university-modal.component';
+import { CreateUniModalComponent } from '../create-uni-modal/create-uni-modal.component';
+import { UpdateUniModalComponent } from '../update-uni-modal/update-uni-modal.component';
+import { DeleteUniModalComponent } from '../delete-uni-modal/delete-uni-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,12 +37,16 @@ export class DashboardComponent implements OnInit {
   public clicked: boolean = true;
   public clicked1: boolean = false;
 
-
   users: User[] = [];
   universities: University[] = [];
+  filteredUsers: User[] = [];
+  filteredUniversities: University[] = [];
   errorMessage: string = '';
-  constructor(private authService: AuthService,private userService: UserService,private universityService: UniversityService, private router:Router,public dialog: MatDialog) {}
-  
+  userSearchText: string = '';
+  universitySearchText: string = '';
+
+  constructor(private authService: AuthService, private userService: UserService, private universityService: UniversityService, private router: Router, public dialog: MatDialog) { }
+
   ngOnInit() {
     this.loadUsers();
     this.loadUniversities();
@@ -49,11 +56,8 @@ export class DashboardComponent implements OnInit {
     ];
     this.data = this.datasets[0];
 
-
     var chartOrders = document.getElementById('chart-orders');
-
     parseOptions(Chart, chartOptions());
-
 
     var ordersChart = new Chart(chartOrders, {
       type: 'bar',
@@ -62,17 +66,20 @@ export class DashboardComponent implements OnInit {
     });
 
     var chartSales = document.getElementById('chart-sales');
-
     this.salesChart = new Chart(chartSales, {
-			type: 'line',
-			options: chartExample1.options,
-			data: chartExample1.data
-		});
+      type: 'line',
+      options: chartExample1.options,
+      data: chartExample1.data
+    });
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({
-      next: (users) => this.users = users,
+      next: (users) => {
+        this.users = users;
+        this.filteredUsers = users; // Initialize filtered list with all users
+        this.applyUserFilter(); // Apply initial filter
+      },
       error: (err) => {
         this.errorMessage = 'Failed to load users';
         console.error('Get Users error', err);
@@ -128,29 +135,81 @@ export class DashboardComponent implements OnInit {
 
   loadUniversities(): void {
     this.universityService.getUniversities().subscribe({
-      next: (universities) => this.universities = universities,
+      next: (universities) => {
+        this.universities = universities;
+        this.filteredUniversities = universities; // Initialize filtered list with all universities
+        this.applyUniversityFilter(); // Apply initial filter
+      },
       error: (err) => {
         this.errorMessage = 'Failed to load universities';
         console.error('Get Universities error', err);
       }
     });
   }
+
   createUniversity(): void {
-    const dialogRef = this.dialog.open(CreateUniversityModalComponent, {
+    const dialogRef = this.dialog.open(CreateUniModalComponent, {
       width: '400px'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Reload or handle the list of universities if necessary
+        this.loadUniversities();
       }
     });
   }
-  
-  toProfille(){
-    this.router.navigate(['profile']);
+
+  updateUniversity(university: University): void {
+    const dialogRef = this.dialog.open(UpdateUniModalComponent, {
+      width: '400px',
+      data: { university }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUniversities();
+      }
+    });
   }
 
+  deleteUniversity(universityId: string): void {
+    const dialogRef = this.dialog.open(DeleteUniModalComponent, {
+      width: '300px',
+      data: { universityId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUniversities();
+      }
+    });
+  }
+
+  applyUserFilter(): void {
+    if (this.userSearchText.trim().length === 0) {
+      this.filteredUsers = this.users;
+    } else {
+      this.filteredUsers = this.users.filter(user =>
+        user.prenom.toLowerCase().includes(this.userSearchText.toLowerCase())
+      );
+      this.loadUsers();
+
+    }
+  }
+
+  applyUniversityFilter(): void {
+    if (this.universitySearchText.trim().length === 0) {
+      this.filteredUniversities = this.universities;
+    } else {
+      this.filteredUniversities = this.universities.filter(university =>
+        university.nom.toLowerCase().includes(this.universitySearchText.toLowerCase())
+      );
+    }
+  }
+
+  toProfile() {
+    this.router.navigate(['profile']);
+  }
 
   public updateOptions() {
     this.salesChart.data.datasets[0].data = this.data;
@@ -160,5 +219,4 @@ export class DashboardComponent implements OnInit {
   signout() {
     this.authService.logout();
   }
-
 }

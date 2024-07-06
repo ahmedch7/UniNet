@@ -20,7 +20,7 @@
           <div class="col-lg-3 order-lg-2">
             <div class="card-profile-image">
               <a  >
-                <img src="assets/img/theme/team-4-800x800.jpg" class="rounded-circle">
+                <img src="{{previewUrl}}" class="rounded-circle">
               </a>
             </div>
           </div>
@@ -52,7 +52,7 @@
           </div>
           <div class="text-center">
             <h3>
-              Jessica Jones<span class="font-weight-light">, 27</span>
+              {{currentUser.prenom}} {{currentUser.nom}}<span class="font-weight-light">, {{currentUser.niveauxEducatif}}</span>
             </h3>
             <div class="h5 font-weight-300">
               <i class="ni location_pin mr-2"></i>Bucharest, Romania
