@@ -21,8 +21,8 @@ import eventRoute from "./routes/event.route.js";
 import commentaireRoutes from "./routes/commentaire.route.js";
 import forumRoutes from "./routes/forum.route.js";
 import postRoutes from "./routes/post.route.js";
-import salleRoutes from "./routes/salle.route.js";
-import examenRoutes from "./routes/examen.route.js";
+import salleRoutes from "./routes/salleRoute.js";
+import examenRoutes from "./routes/examenRoute.js";
 import reservationRestaurantRoutes from "./routes/reservationRestaurantRoutes.js";
 import chatRouter from './routes/chat.route.js'; // Import chatRouter
 import { errorHandler, notFoundError } from "./middlewares/error-handler.js";

@@ -1,0 +1,37 @@
+.calendar-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff; /* Couleur de fond blanc */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.calendar-title {
+  text-align: center;
+  font-size: 28px; /* Augmentation de la taille de police */
+  margin-bottom: 20px;
+  color: #333333; /* Couleur de texte légèrement plus foncée */
+}
+
+.full-calendar {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Ombre légère pour un effet de profondeur */
+}
+
+/* Style pour les événements dans le calendrier */
+.fc-event {
+  background-color: #4caf50; /* Couleur de fond pour les événements */
+  color: #ffffff; /* Couleur du texte pour les événements */
+  border-color: #388e3c; /* Couleur de la bordure pour les événements */
+  padding: 8px 12px; /* Espacement intérieur des événements */
+  border-radius: 4px; /* Bordure arrondie */
+  cursor: pointer; /* Curseur pointer pour indiquer l'interactivité */
+}
+
+/* Style pour les événements au survol */
+.fc-event:hover {
+  background-color: #43a047; /* Couleur de fond au survol */
+  border-color: #2e7d32; /* Couleur de la bordure au survol */
+}

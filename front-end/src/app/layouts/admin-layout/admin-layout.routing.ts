@@ -6,7 +6,7 @@ import { MapsComponent } from "../../pages/maps/maps.component";
 import { UserProfileComponent } from "../../pages/user-profile/user-profile.component";
 import { TablesComponent } from "../../pages/tables/tables.component";
 import { AuthGuard } from "src/app/auth.guard";
-import { FoyerComponent } from "src/app/pages/foyer/foyer.component";
+ 
 import { FoyerStatisticsComponent } from "src/app/pages/foyer-statistics/foyer-statistics.component";
 import { RestaurantReservationComponent } from "src/app/pages/restaurant-reservation/restaurant-reservation.component";
 import { MenuRestauComponent } from "src/app/pages/menu-restau/menu-restau.component";
@@ -22,6 +22,13 @@ import { UserPostCandidatureComponent } from "src/app/pages/user-post-candidatur
 import { UserCommentaireComponent } from "src/app/pages/user-commentaire/user-commentaire.component";
 import { UserPostsComponent } from "src/app/pages/user-posts/user-posts.component";
 import { CheckoutComponent } from "src/app/pages/checkout/checkout.component";
+import { CreateExamenComponent } from "src/app/pages/create-examen/create-examen.component";
+import { FormSalleComponent } from "src/app/pages/form-salle/form-salle.component";
+import { ListSallesComponent } from "src/app/pages/list-salles/list-salles.component";
+import { CalendrierExamensComponent } from "src/app/pages/calendrier-examens/calendrier-examens.component";
+import { ListExamenComponent } from "src/app/pages/list-examen/list-examen.component";
+import { UpdateExamenComponent } from "src/app/pages/update-examen/update-examen.component";
+import { FoyerComponent } from "src/app/pages/foyer/foyer.component";
 export const AdminLayoutRoutes: Routes = [
   {
     path: "dashboard",
@@ -35,6 +42,14 @@ export const AdminLayoutRoutes: Routes = [
   { path: "restaurant", component: RestaurantReservationComponent },
   { path: "menu-Restau", component: MenuRestauComponent },
   {path:'checkout', component: CheckoutComponent},
+  { path: 'create', component: CreateExamenComponent },
+    { path: 'form-salle', component: FormSalleComponent},
+    //{ path: 'affecter-examen', component: AffecterExamenComponent },
+  
+    { path: 'list-salles', component: ListSallesComponent },
+    { path: 'list-examens', component: ListExamenComponent },
+    { path: 'calendrier-examens',component: CalendrierExamensComponent },
+    { path: 'update/:id', component: UpdateExamenComponent }, // Assurez-vous que le composant est correctement défini
   {
     path: "user-profile",
     component: UserProfileComponent,

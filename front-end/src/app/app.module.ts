@@ -17,7 +17,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { CarouselModule } from "primeng/carousel";
 import { BOEventsComponent } from "./pages/boevents/boevents.component";
 import { NgxPaginationModule } from "ngx-pagination";
-import { FoyerComponent } from "./pages/foyer/foyer.component";
+ 
 import { RestaurantReservationComponent } from "./pages/restaurant-reservation/restaurant-reservation.component";
 import { FilterPipe } from "./filter.pipe";
 import { MenuRestauComponent } from "./pages/menu-restau/menu-restau.component";
@@ -54,6 +54,17 @@ import { CheckoutComponent } from './pages/checkout/checkout.component';
 import { CreateUniModalComponent } from './pages/create-uni-modal/create-uni-modal.component';
 import { UpdateUniModalComponent } from './pages/update-uni-modal/update-uni-modal.component';
 import { DeleteUniModalComponent } from './pages/delete-uni-modal/delete-uni-modal.component';
+import { ExamenDetailsComponent } from "./pages/examen-details/examen-details.component";
+import { UpdateExamenComponent } from "./pages/update-examen/update-examen.component";
+import { FormSalleComponent } from "./pages/form-salle/form-salle.component";
+import { ListSallesComponent } from "./pages/list-salles/list-salles.component";
+import { ListExamenComponent } from "./pages/list-examen/list-examen.component";
+import { CreateExamenComponent } from "./pages/create-examen/create-examen.component";
+import { CalendrierExamensComponent } from "./pages/calendrier-examens/calendrier-examens.component";
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { EditProfileModalComponent } from './pages/edit-profile-modal/edit-profile-modal.component';
+import { FoyerComponent } from "./pages/foyer/foyer.component";
 
 const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
 
@@ -80,7 +91,7 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
-    
+    FullCalendarModule,
 
     ReactiveFormsModule,
   ],
@@ -123,9 +134,18 @@ const config: SocketIoConfig = { url: "http://localhost:9090", options: {} };
     CreateUniModalComponent,
     DeleteUniModalComponent,
     UpdateUniModalComponent,
+    ListSallesComponent,
+    ListExamenComponent,
+    UpdateExamenComponent,
+    CreateExamenComponent,
+    CalendrierExamensComponent,
+    FormSalleComponent,
+    NotFoundComponent,
+    ExamenDetailsComponent,
+    EditProfileModalComponent,
     
 
-  ],
+  ],entryComponents: [ExamenDetailsComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthService,

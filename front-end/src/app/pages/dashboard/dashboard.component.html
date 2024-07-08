@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="header-body">
       <!-- Card stats -->
-      <div class="row">
+      <div class="row" *ngIf="this.currentUser.role == 'etudiant' || this.currentUser.role == 'cllaborateur'">
         <!-- Card 1 -->
         <div class="col-xl-3 col-lg-6">
           <div class="card card-stats mb-4 mb-xl-0">
@@ -98,63 +98,65 @@
 
 <div class="container-fluid mt--7" style="margin-top: 3rem !important;">
   <!-- Users List -->
-  <div class="table-responsive">
-    <h2>Users List</h2>
-    <input type="text" class="form-control mb-3" placeholder="Search by Name" [(ngModel)]="userSearchText">
-    <table class="table align-items-center table-flush">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Nom</th>
-          <th scope="col">Prenom</th>
-          <th scope="col">Email</th>
-          <th scope="col">Role</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of filteredUsers">
-          <td>{{ user.nom }}</td>
-          <td>{{ user.prenom }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>
-            <button class="btn btn-sm btn-success" (click)="viewUserDetails(user._id)">Details</button>
-            <button class="btn btn-sm btn-warning" (click)="updateUser(user._id)">Update</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteUser(user._id)">Delete</button>
-            <button class="btn btn-sm btn-outline-danger" (click)="banUser(user._id)">Ban</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- Users List -->
+<div class="table-responsive">
+  <h2>Users List</h2>
+  <input type="text" class="form-control mb-3" placeholder="Search by Name" [(ngModel)]="userSearchText" (ngModelChange)="applyUserFilter()">
+  <table class="table align-items-center table-flush">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Prenom</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.nom }}</td>
+        <td>{{ user.prenom }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="btn btn-sm btn-success" (click)="viewUserDetails(user._id)">Details</button>
+          <button class="btn btn-sm btn-warning" (click)="updateUser(user._id)">Update</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteUser(user._id)">Delete</button>
+          <button class="btn btn-sm btn-outline-danger" (click)="banUser(user._id)">Ban</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-  <!-- University List -->
-  <div class="table-responsive mt-5">
-    <h2>University List</h2>
-    <input type="text" class="form-control mb-3" placeholder="Search by Name" [(ngModel)]="universitySearchText">
-    <button class="btn btn-primary btn-sm mb-3" (click)="createUniversity()">Create University</button>
-    <table class="table align-items-center table-flush">
-      <thead class="thead-light">
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Adresse</th>
-          <th scope="col">Contact Email</th>
-          <th scope="col">Contact Telephone</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let university of filteredUniversities">
-          <td>{{ university.nom }}</td>
-          <td>{{ university.adresse }}</td>
-          <td>{{ university.emailContact }}</td>
-          <td>{{ university.telephoneContact }}</td>
-          <td>
-            <button class="btn btn-sm btn-warning" (click)="updateUniversity(university)">Update</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteUniversity(university._id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<!-- University List -->
+<div class="table-responsive mt-5">
+  <h2>University List</h2>
+  <input type="text" class="form-control mb-3" placeholder="Search by Name" [(ngModel)]="universitySearchText" (ngModelChange)="applyUniversityFilter()">
+  <button class="btn btn-primary btn-sm mb-3" (click)="createUniversity()">Create University</button>
+  <table class="table align-items-center table-flush">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Adresse</th>
+        <th scope="col">Contact Email</th>
+        <th scope="col">Contact Telephone</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let university of filteredUniversities">
+        <td>{{ university.nom }}</td>
+        <td>{{ university.adresse }}</td>
+        <td>{{ university.emailContact }}</td>
+        <td>{{ university.telephoneContact }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning" (click)="updateUniversity(university)">Update</button>
+          <button class="btn btn-sm btn-danger" (click)="deleteUniversity(university._id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 </div>

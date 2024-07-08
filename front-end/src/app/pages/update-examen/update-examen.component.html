@@ -1,0 +1,48 @@
+<!-- update-examen.component.html -->
+
+<form [formGroup]="examenForm" (ngSubmit)="updateExamen()">
+  <div>
+    <label>Title</label>
+    <input formControlName="title" />
+  </div>
+  <div>
+    <label>Description</label>
+    <input formControlName="description" />
+  </div>
+  <div>
+    <label>Date</label>
+    <input type="date" formControlName="date" />
+  </div>
+  <div>
+    <label>Duration</label>
+    <input type="number" formControlName="duration" />
+  </div>
+  <div>
+    <label>Salle</label>
+    <input formControlName="salle" />
+  </div>
+  <div>
+    <label>Classe</label>
+    <input formControlName="classe" />
+  </div>
+  <div>
+    <label>Module</label>
+    <input formControlName="module" />
+  </div>
+  <div>
+    <label>Heure Debut</label>
+    <input type="time" formControlName="heureDebut" />
+  </div>
+  <div>
+    <label>Heure Fin</label>
+    <input type="time" formControlName="heureFin" />
+  </div>
+  <div>
+    <label>Type Session</label>
+    <select formControlName="typeSession">
+      <option value="principale">Principale</option>
+      <option value="rattrapage">Rattrapage</option>
+    </select>
+  </div>
+  <button type="submit">Update Examen</button>
+</form>

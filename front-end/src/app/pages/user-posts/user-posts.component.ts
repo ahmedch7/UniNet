@@ -132,4 +132,5 @@ export class UserPostsComponent implements OnInit {
       this.filteredPosts = [...this.posts];
     }
   }
+  
 }

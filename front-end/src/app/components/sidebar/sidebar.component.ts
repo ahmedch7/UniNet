@@ -52,17 +52,17 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: "/tables",
-    title: "Tables",
+    title: "Accueil",
     icon: "ni-bullet-list-67 text-red",
     class: "",
   },
-  { path: "/login", title: "Login", icon: "ni-key-25 text-info", class: "" },
-  {
-    path: "/register",
-    title: "Register",
-    icon: "ni-circle-08 text-pink",
-    class: "",
-  },
+  // { path: "/login", title: "Login", icon: "ni-key-25 text-info", class: "" },
+  // {
+  //   path: "/register",
+  //   title: "Register",
+  //   icon: "ni-circle-08 text-pink",
+  //   class: "",
+  // },
   { path: "/niveau", title: "Niveau", icon: "ni-tv-2 text-primary", class: "" },
   {
     path: "/admin-posts",
@@ -112,6 +112,11 @@ export const ROUTES: RouteInfo[] = [
     icon: "ni-circle-08 text-pink",
     class: "",
   },
+  { path: '/create', title: 'Create Exam',  icon: 'ni-fat-add text-blue', class: '' },
+    { path: '/form-salle', title: 'Create room',  icon: 'ni-fat-add text-green', class: '' },
+    { path: '/list-salles', title: 'List of rooms',  icon: 'ni-bullet-list-67 text-orange', class: '' },
+    { path: '/list-examens', title: 'List of exams',  icon: 'ni-bullet-list-67 text-yellow', class: '' },
+    { path: '/calendrier-examens', title: 'Calendar of exams',  icon: 'ni-calendar-grid-58 text-purple', class: '' },
   {
     path: "/events",
     title: "Events",

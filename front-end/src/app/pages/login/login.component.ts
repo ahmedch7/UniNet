@@ -31,13 +31,13 @@ export class LoginComponent  {
           console.log('Login successful', response);
           const role = response.user.role;
           if (role === 'etudiant') {
-            this.router.navigate(['/user-profile']);
+            this.router.navigate(['/tables']);
           } else if (role === 'admin') {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/tables']);
           } else if (role === 'responsable') {
-            this.router.navigate(['/responsable']);
+            this.router.navigate(['/tables']);
           } else if (role === 'collaborateur') {
-            this.router.navigate(['/collaborateur']);
+            this.router.navigate(['/tables']);
           } else {
             this.router.navigate(['/login']); 
           }

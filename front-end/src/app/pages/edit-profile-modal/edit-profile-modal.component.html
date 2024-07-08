@@ -1,0 +1,38 @@
+<h2>Edit Profile</h2>
+<form [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="nom">Nom</label>
+    <input id="nom" class="form-control" formControlName="nom">
+  </div>
+  <div class="form-group">
+    <label for="prenom">Prenom</label>
+    <input id="prenom" class="form-control" formControlName="prenom">
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input id="email" class="form-control" formControlName="email">
+  </div>
+  <div class="form-group">
+    <label for="numTel">Num Tel</label>
+    <input id="numTel" class="form-control" formControlName="numTel">
+  </div>
+  <div class="form-group">
+    <label for="universiteAssociee">Université Associée</label>
+    <input id="universiteAssociee" class="form-control" formControlName="universiteAssociee">
+  </div>
+  <div class="form-group">
+    <label for="entreprise">Entreprise</label>
+    <input id="entreprise" class="form-control" formControlName="entreprise">
+  </div>
+  <div class="form-group">
+    <label for="niveauxEducatif">Niveaux Educatif</label>
+    <input id="niveauxEducatif" class="form-control" formControlName="niveauxEducatif">
+  </div>
+  <div class="form-group">
+    <label for="dateDeNaissance">Date de Naissance</label>
+    <input id="dateDeNaissance" class="form-control" type="date" formControlName="dateDeNaissance">
+  </div>
+  <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
+  <button type="submit" class="btn btn-primary">Update</button>
+  <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+</form>

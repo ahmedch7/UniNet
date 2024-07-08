@@ -3,6 +3,7 @@ import { FoyerService } from 'src/app/services/foyer.service';
 import { RoomService } from 'src/app/services/room.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/models/user';
+import { University } from 'src/app/models/university';
 
 @Component({
   selector: 'app-foyer',
@@ -22,25 +23,21 @@ export class FoyerComponent implements OnInit {
   errorMessage: string = '';
   showCard: string = 'list'; // Track which card is visible
   searchText: string = ''; // Search text for filtering
-  id_user = this.currentUser._id;  // Static user ID
-  staticFacultyId = this.currentUser.universiteAssociee;  // Static faculty ID
+  id_user: string | null = null;  // Static user ID
+  staticFacultyId: string | null = null;  // Static faculty ID
   showModal: boolean = false; // Control modal visibility
   UsersReserved: any[] = [];
 
   constructor(private foyerService: FoyerService, private roomService: RoomService) { }
 
-  currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
-
-
-
-  // currentUser={
-  //   role:"admin"
-  // }
-
-
   ngOnInit(): void {
     const user = localStorage.getItem('currentUser');
-    this.currentUser = JSON.parse(user);
+    this.currentUser = user ? JSON.parse(user) : null;
+    if (this.currentUser) {
+      this.id_user = this.currentUser._id;
+      this.staticFacultyId = this.currentUser.universiteAssociee._id;
+    }
+    console.log(this.currentUser);
     this.loadFoyers();
   }
 
@@ -219,7 +216,7 @@ export class FoyerComponent implements OnInit {
   }
 
   private makeReservation(roomId: string): void {
-    const reservation = { roomId, userId: this.id_user, places: 1 };
+    const reservation = { roomId, userId: this.currentUser._id, places: 1 };
     this.roomService.reserveRoom(reservation).subscribe(
       () => {
         this.loadFoyers();
@@ -271,26 +268,19 @@ export class FoyerComponent implements OnInit {
 
   getusersreservationRooms(roomId: string): void {
     this.roomService.getRoomReservationById(roomId).subscribe(
-      (data) => {
-        this.UsersReserved = data;
+      (reservations: any[]) => {
+        if (reservations && reservations.length > 0) {
+          this.UsersReserved = reservations.map(reservation => ({
+            username: reservation.user.username,
+            email: reservation.user.email
+          }));
+        } else {
+          this.UsersReserved = [];
+        }
       },
-      (error: any) => {
-        console.error('Error fetching room reservations', error);
+      (error) => {
+        console.error('Error loading reservations', error);
       }
     );
-  }
-
-  cancelUserReservation(reservationId: string): void {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation?')) {
-      this.roomService.cancelReservation(reservationId).subscribe(
-        () => {
-          // Actualiser les réservations après annulation
-          this.getusersreservationRooms(this.selectedRoom._id); // Assurez-vous de charger les réservations mises à jour
-        },
-        (error) => {
-          console.error('Erreur lors de l\'annulation de la réservation', error);
-        }
-      );
-    }
   }
 }

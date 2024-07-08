@@ -14,23 +14,15 @@ export class MenuRestauComponent implements OnInit {
 
   currentUser_Test=JSON.parse(localStorage.getItem('currentUser')) ?? '';
 
-
-
-  // currentUser={
-  //   role:"admin"
-  // }
-
-
   newMenu: any = {
     text: '',
     image: null,
-    restaurantId: '667da145289a0643f337fa8e', // ID statique du restaurant
+    restaurantId: '66892e48abed0bd6bea9460a', // ID statique du restaurant
     previewImage: null // Pour stocker l'URL de l'aperçu de l'image
   };
   newComment: any = {
-    
     content: '',
-    author: this.currentUser._id, // ID statique de l'auteur
+    author: '',
     menuId: ''
   };
 
@@ -42,6 +34,12 @@ export class MenuRestauComponent implements OnInit {
   ngOnInit(): void {
     const user = localStorage.getItem('currentUser');
     this.currentUser = JSON.parse(user);
+
+    // Initialize newComment after setting currentUser
+    if (this.currentUser) {
+      this.newComment.author = this.currentUser._id;
+    }
+
     this.loadMenus();
   }
 
@@ -61,7 +59,6 @@ export class MenuRestauComponent implements OnInit {
     );
   }
 
-
   onFileChange(event: any, menu?: any): void {
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
@@ -80,7 +77,6 @@ export class MenuRestauComponent implements OnInit {
     }
   }
   
-
   createMenu(): void {
     const formData = new FormData();
     formData.append('text', this.newMenu.text);
@@ -137,9 +133,6 @@ export class MenuRestauComponent implements OnInit {
   
     this.showEditModal = true;
   }
-  
-  
-  
 
   closeEditModal(): void {
     this.showEditModal = false;
@@ -169,7 +162,7 @@ export class MenuRestauComponent implements OnInit {
         console.log('Comment added successfully', data);
         this.newComment = {
           content: '',
-          author: '',
+          author: this.currentUser?._id || '', // Ensure author is reset correctly
           menuId: ''
         };
         // Rechargez les commentaires pour le menu après l'ajout
@@ -214,6 +207,4 @@ export class MenuRestauComponent implements OnInit {
       }
     );
   }
-
-
 }

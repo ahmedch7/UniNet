@@ -44,7 +44,7 @@ export class EventDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('userId') || '66530a6b9bba527817c159e2';
-    this.userRole = localStorage.getItem('userRole')|| 'admine';
+    this.userRole = localStorage.getItem('userRole')|| 'admin';
     console.log('UserRole:', this.userRole);
     console.log('Userid:', this.userId);
     const eventId = this.route.snapshot.paramMap.get('id')!;

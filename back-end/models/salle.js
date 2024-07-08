@@ -1,21 +1,43 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-const examScheduleSchema = new Schema({
-    date: { type: Date, required: true },
-    duration: { type: Number, required: true }, // Duration in minutes
-    classe: { type: String, required: true },
-    module: { type: String, required: true },
-    heureDebut: { type: String, required: true },
-    heureFin: { type: String, required: true }
+const Schema = mongoose.Schema;
+
+const scheduleSchema = new Schema({
+    examen: {
+        type: Schema.Types.ObjectId,
+        ref: 'Examen'
+    },
+    scheduledDate: {
+        type: Date,
+        required: true
+    },
+    scheduledStartTime: {
+        type: Date,
+        required: true
+    },
+    scheduledEndTime: {
+        type: Date,
+        required: true
+    }
 });
 
-const salleSchema = new Schema(
-    {
-        name: { type: String, required: true },
-        capacity: { type: Number, required: true },
-        location: { type: String, required: true },
-        schedules: [examScheduleSchema]
-    }
-);
+const salleSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    capacity: {
+        type: Number,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    schedules: [scheduleSchema]
+});
 
-export default model('Salle', salleSchema);
+const Salle = mongoose.model('Salle', salleSchema);
+
+export default Salle;

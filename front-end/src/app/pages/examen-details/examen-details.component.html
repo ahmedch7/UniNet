@@ -1,0 +1,17 @@
+<h2>Détails de l'examen</h2>
+
+<div>
+  <p><strong>Titre:</strong> {{ examen.title }}</p>
+  <p><strong>Description:</strong> {{ examen.description }}</p>
+  <p><strong>Date:</strong> {{ examen.date | date:'medium' }}</p>
+  <p><strong>Heure de début:</strong> {{ examen.heureDebut }}</p>
+  <p><strong>Heure de fin:</strong> {{ examen.heureFin}}</p>
+  <p><strong>Salle:</strong> {{ examen.salle ? examen.salle.name : 'N/A' }}</p>
+  <p><strong>Classe:</strong> {{ examen.classe }}</p>
+  <p><strong>Module:</strong> {{ examen.module }}</p>
+  <p><strong>Type de session:</strong> {{ examen.typeSession }}</p>
+</div>
+
+<div style="margin-top: 20px; text-align: right;">
+  <button mat-button color="primary" (click)="close()">Fermer</button>
+</div>

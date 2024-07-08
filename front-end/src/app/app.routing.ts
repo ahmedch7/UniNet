@@ -9,6 +9,11 @@ import { BOEventsComponent } from "./pages/boevents/boevents.component";
 import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
+import { CreateExamenComponent } from './pages/create-examen/create-examen.component';
+import { FormSalleComponent } from './pages/form-salle/form-salle.component';
+import { ListSallesComponent } from './pages/list-salles/list-salles.component';
+import { ListExamenComponent } from './pages/list-examen/list-examen.component';
+import { UpdateExamenComponent } from './pages/update-examen/update-examen.component';
 
 const routes: Routes =[
   {
@@ -16,6 +21,14 @@ const routes: Routes =[
     redirectTo: "login",
     pathMatch: "full",
   },
+  { path: 'create', component: CreateExamenComponent },
+  { path: 'form-salle', component: FormSalleComponent},
+  //{ path: 'affecter-examen', component: AffecterExamenComponent },
+
+  { path: 'list-salles', component: ListSallesComponent },
+  { path: 'list-examens', component: ListExamenComponent },
+  { path: 'update/:id', component: UpdateExamenComponent }, // Assurez-vous que le composant est correctement défini
+  { path: '', redirectTo: '/form-salle', pathMatch: 'full' }, // Redirection vers 'form-salle' par défaut
   {
     path: "",
     component: AdminLayoutComponent,

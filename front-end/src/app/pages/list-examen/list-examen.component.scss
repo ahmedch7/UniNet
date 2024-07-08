@@ -1,0 +1,43 @@
+.custom-table {
+  font-size: 14px;
+}
+
+.custom-table th, 
+.custom-table td {
+  padding: 8px 12px;
+}
+
+.custom-table th {
+  background-color: #80bdff;
+  color: white;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.edit-form .form-group {
+  margin-bottom: 10px;
+}
+
+.edit-form .form-group label {
+  font-weight: bold;
+}
+
+.edit-form .form-control {
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+.edit-form .d-flex {
+  margin-top: 10px;
+}
+
+.container .text-center {
+  margin-bottom: 20px;
+}
+
+.no-exams p {
+  font-size: 18px;
+  color: #777;
+}

@@ -1,0 +1,72 @@
+<div class="header py-7 py-lg-8 bg-gradient-primary">
+  <div class="container">
+    <div class="header-body text-center mb-7">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-6">
+          <h1 class="text-white">Welcome!</h1>
+          <p class="text-lead text-light">Use these awesome forms to add a new room in your project.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Page content -->
+<div class="container mt--8 pb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="card bg-secondary shadow border-0">
+        <div class="card-header bg-transparent pb-5">
+          <div class="text-muted text-center mt-2 mb-3"><small>Add a new room</small></div>
+        </div>
+        <div class="card-body px-lg-5 py-lg-5">
+          <form [formGroup]="salleForm" (ngSubmit)="onSubmit()" class="salle-form">
+            <div class="form-group">
+              <label for="name">Room Name</label>
+              <input type="text" class="form-control form-control-alternative" id="name" formControlName="name"
+                     placeholder="Name">
+              <div *ngIf="salleForm.get('name').invalid && (salleForm.get('name').dirty || salleForm.get('name').touched)"
+                   class="text-danger">
+                <div *ngIf="salleForm.get('name').errors.required">
+                  Room name is required.
+                </div>
+                <div *ngIf="salleForm.get('name').errors.minlength">
+                  Room name must be at least 3 characters.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="capacity">Capacity</label>
+              <input type="number" class="form-control form-control-alternative" id="capacity" formControlName="capacity"
+                     placeholder="Capacity">
+              <div *ngIf="salleForm.get('capacity').invalid && (salleForm.get('capacity').dirty || salleForm.get('capacity').touched)"
+                   class="text-danger">
+                <div *ngIf="salleForm.get('capacity').errors.required">
+                  Capacity is required.
+                </div>
+                <div *ngIf="salleForm.get('capacity').errors.min">
+                  Capacity cannot be less than 0.
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" class="form-control form-control-alternative" id="location" formControlName="location"
+                     placeholder="Location">
+              <div *ngIf="salleForm.get('location').invalid && (salleForm.get('location').dirty || salleForm.get('location').touched)"
+                   class="text-danger">
+                Location is required.
+              </div>
+            </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary mt-4" [disabled]="!salleForm.valid">CREATE ROOM</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

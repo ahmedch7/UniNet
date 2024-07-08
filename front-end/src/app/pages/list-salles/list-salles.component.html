@@ -1,0 +1,48 @@
+<!-- list-salles.component.html -->
+
+<div class="container">
+    <h2 class="text-center mb-4">List of Rooms</h2>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Capacity</th>
+            <th scope="col">Location</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let salle of salles">
+            <tr *ngIf="!salle.editing">
+              <td>{{ salle.name }}</td>
+              <td>{{ salle.capacity }}</td>
+              <td>{{ salle.location }}</td>
+              <td>
+                <button class="btn btn-sm btn-info" (click)="salle.editing = true">Edit</button>
+                <button class="btn btn-sm btn-danger" (click)="deleteSalle(salle._id)">Delete</button>
+              </td>
+            </tr>
+            <tr *ngIf="salle.editing">
+              <td>
+                <input type="text" [formControl]="salleForm.get('name')" [(ngModel)]="salle.name" />
+              </td>
+              <td>
+                <input type="number" [formControl]="salleForm.get('capacity')" [(ngModel)]="salle.capacity" />
+              </td>
+              <td>
+                <input type="text" [formControl]="salleForm.get('location')" [(ngModel)]="salle.location" />
+              </td>
+              <td>
+                <button class="btn btn-sm btn-success" (click)="updateSalle(salle)">Save</button>
+                <button class="btn btn-sm btn-secondary" (click)="salle.editing = false">Cancel</button>
+              </td>
+            </tr>
+          </ng-container>
+          <tr *ngIf="salles.length === 0">
+            <td colspan="4" class="text-center">No rooms found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

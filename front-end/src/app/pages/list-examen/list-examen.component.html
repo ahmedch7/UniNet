@@ -1,0 +1,97 @@
+<div class="container">
+  <h2 class="text-center mb-4">Liste des Examens</h2>
+
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Room</th>
+          <th>Class</th>
+          <th>Module</th>
+          <th>Session Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let examen of examens; let i = index">
+          <tr *ngIf="!examen.editing">
+            <td>{{ examen.title }}</td>
+            <td>{{ examen.description }}</td>
+            <td>{{ examen.date | date: 'medium' }}</td>
+            <td>{{ examen.formattedHeureDebut }}</td>
+            <td>{{ examen.formattedHeureFin }}</td>
+            <td>{{ examen.salle }}</td>
+            <td>{{ examen.classe }}</td>
+            <td>{{ examen.module }}</td>
+            <td>{{ examen.typeSession }}</td>
+            <td>
+              <button class="btn btn-sm btn-info" (click)="editExamen(i)">Edit</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteExamen(examen._id)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="examen.editing">
+            <td colspan="10">
+              <form [formGroup]="examenForm" (submit)="updateExamen(examen)" class="edit-form">
+                <div class="form-group">
+                  <label>Title</label>
+                  <input formControlName="title" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <input formControlName="description" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Date</label>
+                  <input type="date" formControlName="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Start Time</label>
+                  <input type="time" formControlName="heureDebut" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>End Time</label>
+                  <input type="time" formControlName="heureFin" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Room</label>
+                  <input formControlName="salle" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Class</label>
+                  <input formControlName="classe" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Module</label>
+                  <input formControlName="module" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>Session Type</label>
+                  <select formControlName="typeSession" class="form-control">
+                    <option value="principale">Main</option>
+                    <option value="rattrapage">Catch-up</option>
+                  </select>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-success me-2">Save</button>
+                  <button type="button" class="btn btn-secondary" (click)="cancelEdit(examen)">Cancel</button>
+                </div>
+              </form>
+            </td>
+          </tr>
+        </ng-container>
+        <tr *ngIf="examens.length === 0">
+          <td colspan="10" class="text-center">No exams found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="examens.length === 0" class="no-exams">
+    <p>No exams found.</p>
+  </div>
+</div>
